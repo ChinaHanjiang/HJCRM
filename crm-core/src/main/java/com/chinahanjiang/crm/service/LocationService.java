@@ -7,4 +7,6 @@ public interface LocationService {
 	public void save(Location loc);
 
 	public Location findByName(String area);
+	
+	public String getAllLocations();
 }

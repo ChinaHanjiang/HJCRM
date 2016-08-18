@@ -76,7 +76,13 @@ public class ExcelUtilTest {
 		
 		File f = new File("C:\\Users\\tree\\Desktop\\客户关系管理\\40基础资料\\customer.xls");
 		List<LocationDto> lds = ExcelUtil.readLocationInfo(f);
-		System.out.println(lds.size());
+		
+		Location fl = new Location();
+		fl.setName("区域分类");
+		fl.setCreateTime(now);
+		fl.setIsDelete(0);
+		List<Location> flls = new ArrayList<Location>();
+		
 		Map<String,Map<String,List<String>>> maps = new HashMap<String,Map<String,List<String>>>();
 		Map<String,List<String>> m = null;
 		List<String> t = null;
@@ -115,6 +121,8 @@ public class ExcelUtilTest {
 			floc.setName(fs);
 			floc.setCreateTime(now);
 			floc.setIsDelete(0);
+			floc.setParentLoc(fl);
+			flls.add(floc);
 			
 			List<Location> fcls = new ArrayList<Location>();
 			
@@ -146,15 +154,15 @@ public class ExcelUtilTest {
 					
 					scls.add(tloc);
 					
-					System.out.println(fs + "-" + ss + "-" + ts);
 				}
 				
 				sloc.setChildLocs(scls);
 			}
 			
 			floc.setChildLocs(fcls);
-			//持久化loc
-			ls.save(floc);
 		}
+		
+		fl.setChildLocs(flls);
+		ls.save(fl);
 	}
 }

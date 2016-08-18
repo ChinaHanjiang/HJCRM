@@ -20,7 +20,7 @@
 	<!-- Struts Annotation -->
 	<constant name="actionPackages" value="com.chinahanjiang.crm" />
 	
-	<!-- 定义拦截器
+	<!-- 
 	<package name="default" extends="struts-default">
 		 
 		<interceptors>
@@ -42,9 +42,7 @@
 		</action>
 		
 	</package>
-	 -->
 	 
-	 <!-- 
 	<package name="ajaxdefault" extends="json-default">
 	 
 		<interceptors>
