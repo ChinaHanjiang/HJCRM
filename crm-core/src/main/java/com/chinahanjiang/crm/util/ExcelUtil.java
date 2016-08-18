@@ -57,16 +57,13 @@ public class ExcelUtil {
 				}
 				
 				HSSFCell code = hssfRow.getCell(1);
-				if(code != null){
-					
-					if(c!=null){
-						
-						c.setContacts(cts);
-						customers.add(c);
-					}
+				if(code == null){
+					continue;
+				}
+				String _code = getValue(code);
+				if(!_code.equals("")){
 					
 					c = new Customer();
-					String _code = getValue(code);
 					c.setCode(_code);
 					
 					HSSFCell name = hssfRow.getCell(2);
@@ -99,12 +96,17 @@ public class ExcelUtil {
 					
 					cts = new ArrayList<Contact>();
 					ct = getContact(hssfRow);
+					ct.setCustomer(c);
 					cts.add(ct);
+					c.setContacts(cts);
 					
+					customers.add(c);
 					
 				} else {
 					
+					cts = c.getContacts();
 					ct = getContact(hssfRow);
+					ct.setCustomer(c);
 					cts.add(ct);
 				}
 			}
