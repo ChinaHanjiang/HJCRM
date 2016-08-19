@@ -14,6 +14,8 @@ public class CustomerDto {
 	
 	private String address;
 	
+	private String group;
+	
 	private String telephone;
 	
 	private String fax;
@@ -111,5 +113,12 @@ public class CustomerDto {
 	public void setLocId(int locId) {
 		this.locId = locId;
 	}
-	
+
+	public String getGroup() {
+		return group;
+	}
+
+	public void setGroup(String group) {
+		this.group = group;
+	}
 }

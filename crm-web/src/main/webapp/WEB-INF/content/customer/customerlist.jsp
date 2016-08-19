@@ -92,6 +92,7 @@
 						<th data-options="field:'id',width:50">序号</th>
 						<th data-options="field:'code',width:100">客户编码</th>
 						<th data-options="field:'name',width:150">名称</th>
+						<th data-options="field:'group',width:100">隶属集团</th>
 						<th data-options="field:'locId',hidden:true"></th>
 						<th data-options="field:'location',width:80">区域</th>
 						<th data-options="field:'address',width:250">地址</th>

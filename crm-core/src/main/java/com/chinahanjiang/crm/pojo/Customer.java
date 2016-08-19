@@ -32,6 +32,8 @@ public class Customer {
 	
 	private String code;
 	
+	private String group;
+	
 	private Location location;
 	
 	private List<Contact> contacts;
@@ -54,13 +56,14 @@ public class Customer {
 		
 	}
 	
-	public Customer(int id, String name, String code, Location location,
+	public Customer(int id, String name, String code, String group, Location location,
 			List<Contact> contacts, String address, Timestamp createTime,
 			Timestamp updateTime, String telephone, String fax, int isDelete, String remarks) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.code = code;
+		this.group = group;
 		this.location = location;
 		this.contacts = contacts;
 		this.address = address;
@@ -99,6 +102,15 @@ public class Customer {
 
 	public void setCode(String code) {
 		this.code = code;
+	}
+
+	@Column(name="c_group")
+	public String getGroup() {
+		return group;
+	}
+
+	public void setGroup(String group) {
+		this.group = group;
 	}
 
 	@ManyToOne(cascade = CascadeType.ALL, optional = false, fetch = FetchType.LAZY)

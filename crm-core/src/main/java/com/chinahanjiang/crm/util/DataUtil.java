@@ -35,6 +35,7 @@ public class DataUtil {
 			cd.setName(c.getName());
 			cd.setCode(c.getCode());
 			cd.setAddress(c.getAddress());
+			cd.setGroup(c.getGroup());
 			cd.setLocId(c.getLocation()==null?0:c.getLocation().getId());
 			cd.setLocation(c.getLocation()==null?"":c.getLocation().getName());
 			cd.setTelephone(c.getTelephone());
