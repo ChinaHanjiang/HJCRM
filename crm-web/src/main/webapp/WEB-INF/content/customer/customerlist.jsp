@@ -27,23 +27,6 @@
 			$('#addWin').window('open');
 		});
 		
-		$('#c_checkContact').click(function(){
-			$('#contactWin').window('open');
-		});
-		
-		$('#customergrid').datagrid({
-			
-			onDblClickRow:function(index,row){
-				
-				$('#contactWin').window('open');
-				
-				var c_id = row.id;
-				var qp = $('#contactgrid').datagrid('options').queryParams;
-				qp.url = "<%=basePath%>contact/list.do?customerId = " + c_id;
-				$("#contactgrid").datagrid('reload');
-			}
-		});
-		
 		var handleTree = function(str){
 			str.replace("\"","");
 			return str;
@@ -94,7 +77,14 @@
 						pageNumber:1,
 						pageSize:20,
 						sortOrder:'desc',
-						toolbar: '#c_tb' 
+						toolbar: '#c_tb' ,
+						onDblClickRow:function(index,row){
+						
+							$('#contactWin').window('open');
+							var c_id = row.id;
+							$('#contactgrid').datagrid('options').url = '<%=basePath%>contact/list.do?customerId = ' + c_id;
+							$('#contactgrid').datagrid('reload');
+						}
 						">
 				<thead>
 					<tr>
@@ -130,10 +120,12 @@
 				<a id="c_removeGrid" href="#" class="easyui-linkbutton" plain="true"
 					icon="icon-remove">删除</a>
 			</div>
+			<!-- 
 			<div style="float: left;">
 				<a id="c_checkContact" href="#" class="easyui-linkbutton" plain="true"
 					icon="icon-remove">查看联系人</a>
 			</div>
+			 -->
 			<div style="float: left;">
 				<a id="c_export" href="#" class="easyui-linkbutton" plain="true"
 					icon="icon-remove">导出excel</a>
@@ -213,16 +205,16 @@
 			</div>
 		</div>
 
-			<!-- 联系人 -->
+		<!-- 联系人 -->
 		<div id="contactWin" class="easyui-window" title="客户联系人列表"
 			data-options="modal:true,closed:true,iconCls:'icon-save',minimizable:false,collapsible:false,maximizable:false"
-			style="width: 900px; height: 500px; padding: 10px;">
+			style="width: 900px; height: 300px; padding: 10px;">
 
 			<div data-options="region:'center'">
 				<table id="contactgrid" class="easyui-datagrid"
 					data-options="
 						loadMsg:'数据加载中请稍后……',  
-						rownumbers:false,
+						rownumbers:true,
 						singleSelect:true,
 						collapsible:false,
 						autoRowHeight:true,
@@ -233,12 +225,10 @@
 						sortOrder:'desc',
 						toolbar: '#ct_tb' 
 						">
-					<!-- sortName:'id', -->
-
 					<thead>
 						<tr>
 							<th data-options="field:'ck',checkbox:true"></th>
-							<th data-options="field:'id',width:30">序号</th>
+							<th data-options="field:'id',hidden:true">序号</th>
 							<th data-options="field:'name',width:80">姓名</th>
 							<th data-options="field:'sex',width:30">性别</th>
 							<th data-options="field:'phone',width:120">手机</th>

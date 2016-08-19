@@ -57,4 +57,12 @@ public class CustomerServiceImpl implements CustomerService {
 
 		return customerDao.searchAndCount(search);
 	}
+
+	@Override
+	public Customer findById(int id) {
+		// TODO Auto-generated method stub
+		
+		Customer c = customerDao.find(id);
+		return c;
+	}
 }

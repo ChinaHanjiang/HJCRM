@@ -6,8 +6,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.chinahanjiang.crm.dto.ContactDto;
 import com.chinahanjiang.crm.dto.CustomerDto;
 import com.chinahanjiang.crm.dto.EyTreeDto;
+import com.chinahanjiang.crm.pojo.Contact;
 import com.chinahanjiang.crm.pojo.Customer;
 import com.chinahanjiang.crm.pojo.Location;
 import com.google.gson.Gson;
@@ -33,6 +35,7 @@ public class DataUtil {
 			cd.setName(c.getName());
 			cd.setCode(c.getCode());
 			cd.setAddress(c.getAddress());
+			cd.setLocId(c.getLocation()==null?0:c.getLocation().getId());
 			cd.setLocation(c.getLocation()==null?"":c.getLocation().getName());
 			cd.setTelephone(c.getTelephone());
 			cd.setFax(c.getFax());
@@ -86,11 +89,37 @@ public class DataUtil {
 				
 				btd.setIsF(0);
 			}
-
 		}
 
 		return btd;
 		
+	}
+
+	public static List<ContactDto> convertContactToDto(List<Contact> cls) {
+		// TODO Auto-generated method stub
+		
+		List<ContactDto> ctds = new ArrayList<ContactDto>();
+		if(cls!=null){
+			Iterator<Contact> it = cls.iterator();
+			while(it.hasNext()){
+				
+				Contact c = it.next();
+				ContactDto cd = new ContactDto();
+				cd.setId(c.getId());
+				cd.setName(c.getName());
+				cd.setPhone(c.getMobilePhone());
+				cd.setEmail(c.getEmail());
+				cd.setDuty(c.getDuty());
+				cd.setSex(c.getSex()==1?"男":"女");
+				cd.setRemarks(c.getRemarks());
+				cd.setCreateTime(c.getCreateTime()==null?"":sdf_dt.format(c.getCreateTime()));
+				cd.setUpdateTime(c.getUpdateTime()==null?"":sdf_dt.format(c.getUpdateTime()));
+				
+				ctds.add(cd);
+			}
+		}
+		
+		return ctds;
 	}
 
 }

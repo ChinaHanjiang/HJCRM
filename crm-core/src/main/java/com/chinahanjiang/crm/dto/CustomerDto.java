@@ -8,6 +8,8 @@ public class CustomerDto {
 	
 	private String name;
 	
+	private int locId;
+	
 	private String location;
 	
 	private String address;
@@ -100,6 +102,14 @@ public class CustomerDto {
 
 	public void setRemarks(String remarks) {
 		this.remarks = remarks;
+	}
+
+	public int getLocId() {
+		return locId;
+	}
+
+	public void setLocId(int locId) {
+		this.locId = locId;
 	}
 	
 }
