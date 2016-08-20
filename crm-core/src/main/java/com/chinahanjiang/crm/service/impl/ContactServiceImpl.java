@@ -37,6 +37,7 @@ public class ContactServiceImpl implements ContactService {
 		Customer c = customerService.findById(customerId);
 		Search search = new Search();
 		search.addFilterEqual("customer", c);
+		search.addFilterEqual("isDelete",1);
 		search.setMaxResults(row);
 		search.setPage(page - 1 < 0 ? 0 : page - 1);
 		SearchResult<Contact> result = searchAndCount(search);

@@ -43,6 +43,7 @@
 		<mapping class="com.chinahanjiang.crm.pojo.Task" />
 		<mapping class="com.chinahanjiang.crm.pojo.TaskType" />
 		<mapping class="com.chinahanjiang.crm.pojo.User" />
+		<mapping class="com.chinahanjiang.crm.pojo.Groups" />
 		
 	</session-factory>
 </hibernate-configuration>

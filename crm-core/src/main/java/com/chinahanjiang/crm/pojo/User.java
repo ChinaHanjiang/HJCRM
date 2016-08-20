@@ -30,7 +30,7 @@ public class User {
 	
 	private String email;
 	
-	private int isDelete;
+	private int isDelete; /*0-删除,1-没删除*/
 	
 	private String remarks;
 	
@@ -40,6 +40,7 @@ public class User {
 	
 	public User(){
 		
+		this.isDelete = 1;
 	}
 
 	public User(int id, String name, String password, String duty,

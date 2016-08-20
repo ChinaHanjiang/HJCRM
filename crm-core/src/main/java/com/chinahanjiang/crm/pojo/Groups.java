@@ -2,7 +2,6 @@ package com.chinahanjiang.crm.pojo;
 
 import java.sql.Timestamp;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -10,60 +9,57 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 /**
- * 具体事件  2016-8-15
+ * 集团
+ * 
  * @author tree
  *
  */
 @Entity
-@Table(name="item")
-public class Item {
-	
+@Table(name = "Groups")
+public class Groups {
+
 	private int id;
-	
+
 	private String name;
-	
-	private Timestamp createTime;
-	
-	private Timestamp updateTime;
-	
-	private User user;
-	
-	private Task task;
-	
+
+	private String code; // 集团编码
+
 	private int isDelete;
-	
-	private int status;/*0-进行中，1-完成*/
-	
+
+	private Timestamp createTime;
+
+	private Timestamp updateTime;
+
+	private User user;
+
 	private String remarks;
-	
-	public Item(){
-		
+
+	public Groups() {
+
 		this.isDelete = 1;
 	}
-	
-	public Item(int id, String name, Timestamp createTime,
-			Timestamp updateTime, User user, Task task, int isDelete,
-			int status, String remarks) {
+
+	public Groups(int id, String name, String code, int isDelete,
+			Timestamp createTime, Timestamp updateTime, User user,
+			String remarks) {
 		super();
 		this.id = id;
 		this.name = name;
+		this.code = code;
+		this.isDelete = isDelete;
 		this.createTime = createTime;
 		this.updateTime = updateTime;
 		this.user = user;
-		this.task = task;
-		this.isDelete = isDelete;
-		this.status = status;
 		this.remarks = remarks;
 	}
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "i_id", unique = true, nullable = false)
+	@Column(name = "g_id", unique = true, nullable = false)
 	public int getId() {
 		return id;
 	}
@@ -72,7 +68,7 @@ public class Item {
 		this.id = id;
 	}
 
-	@Column(name="i_name")
+	@Column(name = "g_name")
 	public String getName() {
 		return name;
 	}
@@ -81,7 +77,25 @@ public class Item {
 		this.name = name;
 	}
 
-	@Column(name="i_createTime")
+	@Column(name = "g_code")
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	@Column(name = "g_isDelete")
+	public int getIsDelete() {
+		return isDelete;
+	}
+
+	public void setIsDelete(int isDelete) {
+		this.isDelete = isDelete;
+	}
+
+	@Column(name = "g_createTime")
 	public Timestamp getCreateTime() {
 		return createTime;
 	}
@@ -90,7 +104,7 @@ public class Item {
 		this.createTime = createTime;
 	}
 
-	@Column(name="i_updateTime")
+	@Column(name = "g_updateTime")
 	public Timestamp getUpdateTime() {
 		return updateTime;
 	}
@@ -100,7 +114,7 @@ public class Item {
 	}
 
 	@OneToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "i_uid",referencedColumnName="u_id")
+	@JoinColumn(name = "g_uid", referencedColumnName = "u_id")
 	public User getUser() {
 		return user;
 	}
@@ -109,35 +123,7 @@ public class Item {
 		this.user = user;
 	}
 
-	@ManyToOne(cascade = CascadeType.ALL, optional = false, fetch = FetchType.EAGER)
-	@JoinColumn(name = "i_tid",referencedColumnName="t_id")
-	public Task getTask() {
-		return task;
-	}
-
-	public void setTask(Task task) {
-		this.task = task;
-	}
-
-	@Column(name="i_isDelete")
-	public int getIsDelete() {
-		return isDelete;
-	}
-
-	public void setIsDelete(int isDelete) {
-		this.isDelete = isDelete;
-	}
-
-	@Column(name="i_status")
-	public int getStatus() {
-		return status;
-	}
-
-	public void setStatus(int status) {
-		this.status = status;
-	}
-
-	@Column(name="i_remarks")
+	@Column(name = "g_remarks")
 	public String getRemarks() {
 		return remarks;
 	}
@@ -145,5 +131,4 @@ public class Item {
 	public void setRemarks(String remarks) {
 		this.remarks = remarks;
 	}
-	
 }

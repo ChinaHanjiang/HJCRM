@@ -13,6 +13,8 @@ import org.apache.struts2.convention.annotation.Result;
 import org.apache.struts2.convention.annotation.Results;
 import org.springframework.stereotype.Controller;
 
+import com.chinahanjiang.crm.dto.CustomerDto;
+import com.chinahanjiang.crm.dto.MessageDto;
 import com.chinahanjiang.crm.dto.SearchResultDto;
 import com.chinahanjiang.crm.service.CustomerService;
 
@@ -20,13 +22,13 @@ import com.chinahanjiang.crm.service.CustomerService;
 @ParentPackage("json-default")
 @Namespace("/customer")
 @Results({ @Result(name = "error", location = "/error.jsp"),
-	@Result(name="list",type="json")})
+	@Result(name="list",type="json"),
+	@Result(name="add",type="json"),
+	@Result(name="modify",type="json"),
+	@Result(name="del",type="json")})
 @ExceptionMappings({ @ExceptionMapping(exception = "java.lange.RuntimeException", result = "error") })
 public class CustomerAction extends BaseAction {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
 	@Resource
@@ -45,6 +47,26 @@ public class CustomerAction extends BaseAction {
 	//区域id
 	private int locId;
 	
+	private CustomerDto cd;
+	
+	private MessageDto md;
+	
+	public MessageDto getMd() {
+		return md;
+	}
+
+	public void setMd(MessageDto md) {
+		this.md = md;
+	}
+
+	public CustomerDto getCd() {
+		return cd;
+	}
+
+	public void setCd(CustomerDto cd) {
+		this.cd = cd;
+	}
+
 	public List<Object> getRows() {
 		return rows;
 	}
@@ -110,5 +132,29 @@ public class CustomerAction extends BaseAction {
 		this.total = srd.getTotal();
 		
 		return "list";
+	}
+	
+	@Action("add")
+	public String add(){
+		
+		md = customerService.update(cd);
+		
+		return "add";
+	}
+	
+	@Action("modify")
+	public String modify(){
+		
+		md = customerService.update(cd);
+		
+		return "modify";
+	}
+	
+	@Action("del")
+	public String del(){
+		
+		md = customerService.delete(cd);
+		
+		return "del";
 	}
 }

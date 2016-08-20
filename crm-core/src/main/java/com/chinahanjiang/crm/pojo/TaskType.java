@@ -2,11 +2,16 @@ package com.chinahanjiang.crm.pojo;
 
 import java.sql.Timestamp;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 /**
@@ -22,7 +27,7 @@ public class TaskType {
 	
 	private String name;
 	
-	private int isDelete;
+	private int isDelete; /*0-删除,1-没删除*/
 	
 	private Timestamp createTime;
 	
@@ -30,12 +35,15 @@ public class TaskType {
 	
 	private String remarks;
 	
+	private User user;
+	
 	public TaskType(){
 		
+		this.isDelete = 1;
 	}
 
 	public TaskType(int id, String name, int isDelete, Timestamp createTime,
-			Timestamp updateTime, String remarks) {
+			Timestamp updateTime, String remarks,User user) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -43,6 +51,7 @@ public class TaskType {
 		this.createTime = createTime;
 		this.updateTime = updateTime;
 		this.remarks = remarks;
+		this.user = user;
 	}
 
 	@Id
@@ -100,5 +109,14 @@ public class TaskType {
 	public void setRemarks(String remarks) {
 		this.remarks = remarks;
 	}
-	
+
+	@OneToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "tt_uid",referencedColumnName="u_id")
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
 }

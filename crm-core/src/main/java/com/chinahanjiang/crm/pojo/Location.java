@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Fetch;
@@ -31,6 +32,8 @@ public class Location {
 	
 	private String name;
 	
+	private String code;//区域编码
+	
 	private int order;
 	
 	private Location parentLoc;
@@ -45,17 +48,21 @@ public class Location {
 	
 	private String remarks;
 	
-	private int isDelete;
+	private int isDelete; /*0-删除,1-不删*/
+	
+	private User user;
 	
 	public Location(){
 		
+		this.isDelete = 1;
 	}
-	public Location(int id, String name, int order, Location parentLoc,
+	public Location(int id, String name, String code, int order, Location parentLoc,
 			String state, List<Location> childLocs, Timestamp createTime,
-			Timestamp updateTime, String remarks, int isDelete) {
+			Timestamp updateTime, String remarks, int isDelete, User user) {
 		super();
 		this.id = id;
 		this.name = name;
+		this.code = code;
 		this.order = order;
 		this.parentLoc = parentLoc;
 		this.state = state;
@@ -64,6 +71,7 @@ public class Location {
 		this.updateTime = updateTime;
 		this.remarks = remarks;
 		this.isDelete = isDelete;
+		this.user = user;
 	}
 
 	@Id
@@ -85,7 +93,16 @@ public class Location {
 	public void setName(String name) {
 		this.name = name;
 	}
-
+	
+	@Column(name="l_code")
+	public String getCode() {
+		return code;
+	}
+	
+	public void setCode(String code) {
+		this.code = code;
+	}
+	
 	@Column(name="l_order")
 	public int getOrder() {
 		return order;
@@ -159,5 +176,41 @@ public class Location {
 	public void setIsDelete(int isDelete) {
 		this.isDelete = isDelete;
 	}
+	
+	@OneToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "l_uid",referencedColumnName="u_id")
+	public User getUser() {
+		return user;
+	}
+	
+	public void setUser(User user) {
+		this.user = user;
+	}
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		return result;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Location other = (Location) obj;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		return true;
+	}
+	
 	
 }

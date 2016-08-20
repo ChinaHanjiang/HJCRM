@@ -1,5 +1,7 @@
 package com.chinahanjiang.crm.service.impl;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
@@ -43,6 +45,51 @@ public class LocationServiceImpl implements LocationService {
 		Location loc = locDao.find(1);
 		String locTree = DataUtil.locationToJson(loc);
 		return locTree;
+	}
+
+	@Override
+	public List<Location> loadLocationsByPid(int i) {
+		// TODO Auto-generated method stub
+		
+		Location pLocation = locDao.find(i);
+		
+		Search search = new Search();
+		search.addFilterEqual("parentLoc", pLocation);
+		List<Location> locations = locDao.search(search);
+		
+		return locations;
+	}
+
+	@Override
+	public String getLocationsByFid(int pid) {
+		// TODO Auto-generated method stub
+		
+		Location pLocation = locDao.find(pid);
+		String comboStr = DataUtil.locationCrdToJson(pLocation);
+		return comboStr;
+	}
+
+	@Override
+	public String getParentLocById(int id) {
+		// TODO Auto-generated method stub
+		
+		String result = "";
+		
+		Location location = locDao.find(id);
+		Location fLoc = location.getParentLoc();
+		Location gfLoc = fLoc.getParentLoc();
+		
+		if(fLoc!=null && gfLoc!=null)
+			result += gfLoc.getId() + "-" + fLoc.getId();
+		
+		return result;
+	}
+
+	@Override
+	public Location findById(int locationId) {
+		// TODO Auto-generated method stub
+		
+		return locDao.find(locationId);
 	}
 	
 	

@@ -14,7 +14,9 @@ public class CustomerDto {
 	
 	private String address;
 	
-	private String group;
+	private int groupsId;
+	
+	private String groups;
 	
 	private String telephone;
 	
@@ -25,6 +27,8 @@ public class CustomerDto {
 	private String updateTime;
 	
 	private String remarks;
+	
+	private String user;
 
 	public int getId() {
 		return id;
@@ -114,11 +118,27 @@ public class CustomerDto {
 		this.locId = locId;
 	}
 
-	public String getGroup() {
-		return group;
+	public int getGroupsId() {
+		return groupsId;
 	}
 
-	public void setGroup(String group) {
-		this.group = group;
+	public void setGroupsId(int groupsId) {
+		this.groupsId = groupsId;
+	}
+
+	public String getGroups() {
+		return groups;
+	}
+
+	public void setGroups(String groups) {
+		this.groups = groups;
+	}
+
+	public String getUser() {
+		return user;
+	}
+
+	public void setUser(String user) {
+		this.user = user;
 	}
 }

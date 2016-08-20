@@ -11,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 /**
@@ -44,13 +45,16 @@ public class Contact {
 	
 	private String remarks;
 	
+	private User user;
+	
 	public Contact(){
 		
+		this.isDelete = 1;
 	}
 
 	public Contact(int id, String name, int sex, String mobilePhone,
 			String email, String duty, int isDelete, Customer customer,
-			Timestamp createTime, Timestamp updateTime, String remarks) {
+			Timestamp createTime, Timestamp updateTime, String remarks, User user) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -63,6 +67,7 @@ public class Contact {
 		this.createTime = createTime;
 		this.updateTime = updateTime;
 		this.remarks = remarks;
+		this.user = user;
 	}
 
 	@Id
@@ -165,5 +170,15 @@ public class Contact {
 
 	public void setCustomer(Customer customer) {
 		this.customer = customer;
+	}
+
+	@OneToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "ct_uid",referencedColumnName="u_id")
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 }

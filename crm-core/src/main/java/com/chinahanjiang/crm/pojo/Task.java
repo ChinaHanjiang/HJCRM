@@ -53,6 +53,7 @@ public class Task {
 	
 	public Task(){
 		
+		this.isDelete = 1;
 	}
 
 	public Task(int id, String name, User createUser, int status, int isDelete,
@@ -141,7 +142,7 @@ public class Task {
 	}
 
 	@OneToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "t_uuid",referencedColumnName="u_id")
+	@JoinColumn(name = "t_uid",referencedColumnName="u_id")
 	public User getUpdateUser() {
 		return updateUser;
 	}

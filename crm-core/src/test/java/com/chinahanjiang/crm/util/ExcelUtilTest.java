@@ -17,10 +17,13 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.chinahanjiang.crm.dto.LocationDto;
 import com.chinahanjiang.crm.pojo.Customer;
+import com.chinahanjiang.crm.pojo.Groups;
 import com.chinahanjiang.crm.pojo.Location;
 import com.chinahanjiang.crm.service.CustomerService;
+import com.chinahanjiang.crm.service.GroupsService;
 import com.chinahanjiang.crm.service.LocationService;
 import com.chinahanjiang.crm.service.impl.CustomerServiceImpl;
+import com.chinahanjiang.crm.service.impl.GroupsServiceImpl;
 import com.chinahanjiang.crm.service.impl.LocationServiceImpl;
 
 public class ExcelUtilTest {
@@ -41,8 +44,10 @@ public class ExcelUtilTest {
 				.getBean("customerService");
 		LocationService ls = (LocationServiceImpl) context
 				.getBean("locationService");
+		GroupsService gs = (GroupsServiceImpl) context
+				.getBean("groupsService");
 		
-		File f = new File("C:\\Users\\tree\\Desktop\\客户关系管理\\40基础资料\\customer.xls");
+		File f = new File("C:\\Users\\tree\\Desktop\\客户关系管理\\41基础资料\\2-customer.xls");
 		List<Customer> customers = ExcelUtil.readCustomerInfo(f);
 		
 		Iterator<Customer> it = customers.iterator();
@@ -51,19 +56,49 @@ public class ExcelUtilTest {
 			Customer c = it.next();
 			
 			Location l = c.getLocation();
+			Groups g = c.getGroups();
+			
 			if(l!=null){
 				
 				String area = l.getName();
 				Location loc = ls.findByName(area);
+				
+				String gName = g.getName();
+				Groups group = gs.findByName(gName);
+				
 				if(loc!=null){
 					c.setLocation(loc);
 				}
+				if(group!=null){
+					c.setGroups(group);
+				}
 			}
-			
 			cs.save(c);
-			
 		}
+	}
+	
+	@Test
+	public void testImportGroups() throws IOException{
 		
+		GroupsService gs = (GroupsServiceImpl) context.getBean("groupsService");
+		
+		Timestamp now = new Timestamp(System.currentTimeMillis());
+		File f = new File("C:\\Users\\tree\\Desktop\\客户关系管理\\41基础资料\\2-customer.xls");
+		Map<String,String> maps = ExcelUtil.roadGroupInfo(f);
+		Set<String> s = maps.keySet();
+		Iterator<String> it = s.iterator();
+		while(it.hasNext()){
+			
+			String name = it.next();
+			String code = maps.get(name);
+			
+			Groups g = new Groups();
+			g.setName(name);
+			g.setCode(code);
+			g.setCreateTime(now);
+			
+			gs.save(g);
+		}
 	}
 	
 	@Test
@@ -74,83 +109,92 @@ public class ExcelUtilTest {
 		
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		
-		File f = new File("C:\\Users\\tree\\Desktop\\客户关系管理\\40基础资料\\customer.xls");
-		List<LocationDto> lds = ExcelUtil.readLocationInfo(f);
+		File f = new File("C:\\Users\\tree\\Desktop\\客户关系管理\\41基础资料\\2-customer.xls");
+		List<LocationDto> eds = ExcelUtil.readLocationInfo(f);
 		
 		Location fl = new Location();
 		fl.setName("区域分类");
 		fl.setCreateTime(now);
-		fl.setIsDelete(0);
+		fl.setIsDelete(1);
 		List<Location> flls = new ArrayList<Location>();
 		
-		Map<String,Map<String,List<String>>> maps = new HashMap<String,Map<String,List<String>>>();
-		Map<String,List<String>> m = null;
-		List<String> t = null;
+		Map<Location,Map<Location,List<Location>>> locfMaps = new HashMap<Location,Map<Location,List<Location>>>();
+		Map<Location,List<Location>> locsMaps = null;
+		List<Location> lds = null;
 		
-		for(LocationDto d : lds){
+		for(LocationDto d : eds){
 			
 			String farea = d.getfArea();
+			String fCode = d.getfCode();
 			String sarea = d.getsArea();
+			String sCode = d.getsCode();
 			String tarea = d.gettArea();
+			String tCode = d.gettCode();
 			
-			boolean i = maps.containsKey(farea);
+			Location fLoc = new Location();
+			fLoc.setName(farea);
+			fLoc.setCode(fCode);
+			
+			boolean i = locfMaps.containsKey(fLoc);
 			if(i){
-				m = maps.get(farea);
+				locsMaps = locfMaps.get(fLoc);
 			} else {
-				m = new HashMap<String,List<String>>();
+				locsMaps = new HashMap<Location,List<Location>>();
 			}
 			
-			boolean j = m.containsKey(sarea);
+			Location sLoc = new Location();
+			sLoc.setName(sarea);
+			sLoc.setCode(sCode);
+			
+			boolean j = locsMaps.containsKey(sLoc);
 			if(j){
-				t = m.get(sarea);
+				lds = locsMaps.get(sLoc);
 			} else {
-				t = new ArrayList<String>();
+				lds = new ArrayList<Location>();
 			}
 			
-			t.add(tarea);
-			m.put(sarea, t);
-			maps.put(farea, m);
+			Location tLoc = new Location();
+			tLoc.setName(tarea);
+			tLoc.setCode(tCode);
+			
+			lds.add(tLoc);
+			locsMaps.put(sLoc, lds);
+			locfMaps.put(fLoc, locsMaps);
 		}
 		
-		Set<String> s = maps.keySet();
-		Iterator<String> it = s.iterator();
+		Set<Location> s = locfMaps.keySet();
+		Iterator<Location> it = s.iterator();
 		while(it.hasNext()){
 			
-			Location floc = new Location();
-			String fs = it.next();
-			floc.setName(fs);
+			Location floc = it.next();
 			floc.setCreateTime(now);
-			floc.setIsDelete(0);
+			floc.setIsDelete(1);
 			floc.setParentLoc(fl);
 			flls.add(floc);
 			
 			List<Location> fcls = new ArrayList<Location>();
 			
-			Map<String,List<String>> map = maps.get(fs);
-			Set<String> fset = map.keySet();
-			Iterator<String> fit = fset.iterator();
+			Map<Location,List<Location>> map = locfMaps.get(floc);
+			Set<Location> fset = map.keySet();
+			Iterator<Location> fit = fset.iterator();
 			while(fit.hasNext()){
 				
-				String ss = fit.next();
-				Location sloc = new Location();
-				sloc.setName(ss);
+				Location sloc = fit.next();
 				sloc.setParentLoc(floc);
 				sloc.setCreateTime(now);
-				sloc.setIsDelete(0);
+				sloc.setIsDelete(1);
 				
 				fcls.add(sloc);
 				List<Location> scls = new ArrayList<Location>();
 				
-				List<String> slist = map.get(ss);
-				Iterator<String> sit = slist.iterator();
+				List<Location> slist = map.get(sloc);
+				Iterator<Location> sit = slist.iterator();
 				while(sit.hasNext()){
 					
-					String ts = sit.next();
-					Location tloc = new Location();
-					tloc.setName(ts);
+					Location tloc = sit.next();
 					tloc.setParentLoc(sloc);
 					tloc.setCreateTime(now);
-					tloc.setIsDelete(0);
+					tloc.setIsDelete(1);
 					
 					scls.add(tloc);
 					
@@ -164,5 +208,16 @@ public class ExcelUtilTest {
 		
 		fl.setChildLocs(flls);
 		ls.save(fl);
+	}
+	
+	@Test
+	public void testHashCode(){
+		
+		Location l1 = new Location();
+		l1.setName("中国");
+		Location l2 = new Location();
+		l2.setName("中国");
+		
+		System.out.println(l1.equals(l2));
 	}
 }

@@ -19,6 +19,8 @@ public class ContactDto {
 	private String updateTime;
 	
 	private String remarks;
+	
+	private String user;
 
 	public int getId() {
 		return id;
@@ -91,5 +93,12 @@ public class ContactDto {
 	public void setRemarks(String remarks) {
 		this.remarks = remarks;
 	}
-	
+
+	public String getUser() {
+		return user;
+	}
+
+	public void setUser(String user) {
+		this.user = user;
+	}
 }

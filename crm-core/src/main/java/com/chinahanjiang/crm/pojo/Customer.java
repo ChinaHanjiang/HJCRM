@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Fetch;
@@ -32,8 +33,6 @@ public class Customer {
 	
 	private String code;
 	
-	private String group;
-	
 	private Location location;
 	
 	private List<Contact> contacts;
@@ -51,19 +50,24 @@ public class Customer {
 	private int isDelete; /*0-删除,1-不删*/
 	
 	private String remarks;
+	
+	private Groups groups;
+	
+	private User user;
 
 	public Customer(){
 		
+		this.isDelete = 1;
 	}
 	
-	public Customer(int id, String name, String code, String group, Location location,
+	public Customer(int id, String name, String code, Groups groups, Location location,
 			List<Contact> contacts, String address, Timestamp createTime,
 			Timestamp updateTime, String telephone, String fax, int isDelete, String remarks) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.code = code;
-		this.group = group;
+		this.groups = groups;
 		this.location = location;
 		this.contacts = contacts;
 		this.address = address;
@@ -104,13 +108,14 @@ public class Customer {
 		this.code = code;
 	}
 
-	@Column(name="c_group")
-	public String getGroup() {
-		return group;
+	@ManyToOne(cascade = CascadeType.ALL, optional = false, fetch = FetchType.LAZY)
+	@JoinColumn(name = "g_uid",referencedColumnName="g_id")
+	public Groups getGroups() {
+		return groups;
 	}
 
-	public void setGroup(String group) {
-		this.group = group;
+	public void setGroups(Groups groups) {
+		this.groups = groups;
 	}
 
 	@ManyToOne(cascade = CascadeType.ALL, optional = false, fetch = FetchType.LAZY)
@@ -195,5 +200,14 @@ public class Customer {
 	public void setRemarks(String remarks) {
 		this.remarks = remarks;
 	}
-	
+
+	@OneToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "c_uid",referencedColumnName="u_id")
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
 }

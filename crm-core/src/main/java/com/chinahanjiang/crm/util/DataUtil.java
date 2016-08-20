@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.chinahanjiang.crm.dto.ComboResultDto;
 import com.chinahanjiang.crm.dto.ContactDto;
 import com.chinahanjiang.crm.dto.CustomerDto;
 import com.chinahanjiang.crm.dto.EyTreeDto;
@@ -23,50 +24,55 @@ public class DataUtil {
 
 	public static List<CustomerDto> convertCustomerToDto(List<Customer> cls) {
 		// TODO Auto-generated method stub
-		
+
 		List<CustomerDto> cds = new ArrayList<CustomerDto>();
 		Iterator<Customer> it = cls.iterator();
-		while(it.hasNext()){
-			
+		while (it.hasNext()) {
+
 			Customer c = it.next();
 			CustomerDto cd = new CustomerDto();
-			
+
 			cd.setId(c.getId());
 			cd.setName(c.getName());
 			cd.setCode(c.getCode());
 			cd.setAddress(c.getAddress());
-			cd.setGroup(c.getGroup());
-			cd.setLocId(c.getLocation()==null?0:c.getLocation().getId());
-			cd.setLocation(c.getLocation()==null?"":c.getLocation().getName());
+			cd.setGroupsId(c.getGroups()==null ? 0 : c.getGroups().getId());
+			cd.setGroups(c.getGroups()==null ? "" : c.getGroups().getName());
+			cd.setLocId(c.getLocation() == null ? 0 : c.getLocation().getId());
+			cd.setLocation(c.getLocation() == null ? "" : c.getLocation()
+					.getName());
 			cd.setTelephone(c.getTelephone());
 			cd.setFax(c.getFax());
 			cd.setRemarks(c.getRemarks());
-			
-			cd.setCreateTime(c.getCreateTime()==null?"":sdf_dt.format(c.getCreateTime()));
-			cd.setUpdateTime(c.getUpdateTime()==null?"":sdf_dt.format(c.getUpdateTime()));
-			
+
+			cd.setCreateTime(c.getCreateTime() == null ? "" : sdf_dt.format(c
+					.getCreateTime()));
+			cd.setUpdateTime(c.getUpdateTime() == null ? "" : sdf_dt.format(c
+					.getUpdateTime()));
+
+			cd.setUser(c.getUser()==null ? "" : c.getUser().getName());
 			cds.add(cd);
 		}
 		return cds;
 	}
-	
+
 	public static String locationToJson(Location loc) {
 
 		Gson gson = new Gson();
-    	EyTreeDto btd = convertLocationToDto(loc);
-    	String str = null;
-    	if(btd != null){
-    		str = gson.toJson(btd);
-    	}
+		EyTreeDto btd = convertLocationToDto(loc);
+		String str = null;
+		if (btd != null) {
+			str = gson.toJson(btd);
+		}
 		return str;
 	}
 
 	private static EyTreeDto convertLocationToDto(Location loc) {
 		// TODO Auto-generated method stub
-		
+
 		EyTreeDto btd = null;
 		int isDelete = loc.getIsDelete();
-		if (loc != null && isDelete != 1) {
+		if (loc != null && isDelete != 0) {
 			btd = new EyTreeDto();
 			btd.setId(loc.getId());
 			btd.setText(loc.getName());
@@ -87,23 +93,23 @@ public class DataUtil {
 
 				btd.setChildren(btdchild);
 			} else {
-				
+
 				btd.setIsF(0);
 			}
 		}
 
 		return btd;
-		
+
 	}
 
 	public static List<ContactDto> convertContactToDto(List<Contact> cls) {
 		// TODO Auto-generated method stub
-		
+
 		List<ContactDto> ctds = new ArrayList<ContactDto>();
-		if(cls!=null){
+		if (cls != null) {
 			Iterator<Contact> it = cls.iterator();
-			while(it.hasNext()){
-				
+			while (it.hasNext()) {
+
 				Contact c = it.next();
 				ContactDto cd = new ContactDto();
 				cd.setId(c.getId());
@@ -111,16 +117,60 @@ public class DataUtil {
 				cd.setPhone(c.getMobilePhone());
 				cd.setEmail(c.getEmail());
 				cd.setDuty(c.getDuty());
-				cd.setSex(c.getSex()==1?"男":"女");
+				cd.setSex(c.getSex() == 1 ? "男" : "女");
 				cd.setRemarks(c.getRemarks());
-				cd.setCreateTime(c.getCreateTime()==null?"":sdf_dt.format(c.getCreateTime()));
-				cd.setUpdateTime(c.getUpdateTime()==null?"":sdf_dt.format(c.getUpdateTime()));
-				
+				cd.setCreateTime(c.getCreateTime() == null ? "" : sdf_dt
+						.format(c.getCreateTime()));
+				cd.setUpdateTime(c.getUpdateTime() == null ? "" : sdf_dt
+						.format(c.getUpdateTime()));
+
+				cd.setUser(c.getUser()==null ? "" : c.getUser().getName());
 				ctds.add(cd);
 			}
 		}
-		
+
 		return ctds;
 	}
 
+	public static String locationCrdToJson(Location location) {
+
+		Gson gson = new Gson();
+		List<ComboResultDto> crds = convertLocationToCRD(location);
+		String str = null;
+		if (crds != null) {
+			str = gson.toJson(crds);
+		}
+		return str;
+	}
+
+	private static List<ComboResultDto> convertLocationToCRD(Location location) {
+		// TODO Auto-generated method stub
+		
+		List<ComboResultDto> crds = new ArrayList<ComboResultDto>();
+		ComboResultDto crd = null;
+		int i = 1;
+		
+		if(location!=null){
+			
+			List<Location> childLocs = location.getChildLocs();
+			Iterator<Location> it = childLocs.iterator();
+			while(it.hasNext()){
+				
+				Location loc = it.next();
+				int isDelete = loc.getIsDelete();
+				if(isDelete!=0){
+					
+					crd = new ComboResultDto();
+					crd.setId(loc.getId());
+					crd.setText(loc.getName());
+					if(i==1){
+						crd.setSelected(true);
+						i++;
+					}
+					crds.add(crd);
+				}
+			}
+		}
+		return crds;
+	}
 }

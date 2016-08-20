@@ -4,9 +4,15 @@ public class LocationDto {
 
 	private String fArea;
 	
+	private String fCode;
+	
 	private String sArea;
 	
+	private String sCode;
+	
 	private String tArea;
+	
+	private String tCode;
 
 	public String getfArea() {
 		return fArea;
@@ -30,5 +36,29 @@ public class LocationDto {
 
 	public void settArea(String tArea) {
 		this.tArea = tArea;
+	}
+
+	public String getfCode() {
+		return fCode;
+	}
+
+	public void setfCode(String fCode) {
+		this.fCode = fCode;
+	}
+
+	public String getsCode() {
+		return sCode;
+	}
+
+	public void setsCode(String sCode) {
+		this.sCode = sCode;
+	}
+
+	public String gettCode() {
+		return tCode;
+	}
+
+	public void settCode(String tCode) {
+		this.tCode = tCode;
 	}
 }
