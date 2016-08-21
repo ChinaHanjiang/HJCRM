@@ -6,6 +6,8 @@ public class ContactDto {
 	
 	private String name;
 	
+	private int sexId;
+	
 	private String sex;
 	
 	private String phone;
@@ -20,7 +22,13 @@ public class ContactDto {
 	
 	private String remarks;
 	
+	private int userId;
+	
 	private String user;
+	
+	private int customerId;
+	
+	private String customerName;
 
 	public int getId() {
 		return id;
@@ -100,5 +108,37 @@ public class ContactDto {
 
 	public void setUser(String user) {
 		this.user = user;
+	}
+
+	public int getUserId() {
+		return userId;
+	}
+
+	public void setUserId(int userId) {
+		this.userId = userId;
+	}
+
+	public int getSexId() {
+		return sexId;
+	}
+
+	public void setSexId(int sexId) {
+		this.sexId = sexId;
+	}
+
+	public int getCustomerId() {
+		return customerId;
+	}
+
+	public void setCustomerId(int customerId) {
+		this.customerId = customerId;
+	}
+
+	public String getCustomerName() {
+		return customerName;
+	}
+
+	public void setCustomerName(String customerName) {
+		this.customerName = customerName;
 	}
 }

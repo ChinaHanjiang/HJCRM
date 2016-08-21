@@ -2,6 +2,14 @@ package com.chinahanjiang.crm.dto;
 
 public class LocationDto {
 
+	private int id;
+	
+	private String name;
+	
+	private String code;
+	
+	private int parentId;
+	
 	private String fArea;
 	
 	private String fCode;
@@ -13,6 +21,38 @@ public class LocationDto {
 	private String tArea;
 	
 	private String tCode;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public int getParentId() {
+		return parentId;
+	}
+
+	public void setParentId(int parentId) {
+		this.parentId = parentId;
+	}
 
 	public String getfArea() {
 		return fArea;

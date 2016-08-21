@@ -28,6 +28,8 @@ public class CustomerDto {
 	
 	private String remarks;
 	
+	private int userId;
+	
 	private String user;
 
 	public int getId() {
@@ -140,5 +142,13 @@ public class CustomerDto {
 
 	public void setUser(String user) {
 		this.user = user;
+	}
+
+	public int getUserId() {
+		return userId;
+	}
+
+	public void setUserId(int userId) {
+		this.userId = userId;
 	}
 }

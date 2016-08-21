@@ -2,6 +2,8 @@ package com.chinahanjiang.crm.service;
 
 import java.util.List;
 
+import com.chinahanjiang.crm.dto.LocationDto;
+import com.chinahanjiang.crm.dto.MessageDto;
 import com.chinahanjiang.crm.pojo.Location;
 
 public interface LocationService {
@@ -19,4 +21,10 @@ public interface LocationService {
 	public String getParentLocById(int id);
 
 	public Location findById(int locationId);
+
+	public MessageDto update(LocationDto ld);
+
+	public MessageDto delete(LocationDto ld);
+
+	public MessageDto check(LocationDto ld);
 }

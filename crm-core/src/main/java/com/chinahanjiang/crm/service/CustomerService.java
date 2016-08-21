@@ -9,12 +9,13 @@ public interface CustomerService {
 
 	boolean save(Customer c);
 
-	SearchResultDto searchAndCount(String order, String sort, int page, int row);
-	
 	Customer findById(int id);
 
 	MessageDto update(CustomerDto cd);
 
 	MessageDto delete(CustomerDto cd);
+
+	SearchResultDto searchAndCount(int locId, String order, String sort,
+			int page, int row);
 
 }

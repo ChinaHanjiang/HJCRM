@@ -13,6 +13,8 @@ import org.apache.struts2.convention.annotation.Result;
 import org.apache.struts2.convention.annotation.Results;
 import org.springframework.stereotype.Controller;
 
+import com.chinahanjiang.crm.dto.ContactDto;
+import com.chinahanjiang.crm.dto.MessageDto;
 import com.chinahanjiang.crm.dto.SearchResultDto;
 import com.chinahanjiang.crm.service.ContactService;
 
@@ -20,13 +22,13 @@ import com.chinahanjiang.crm.service.ContactService;
 @ParentPackage("json-default")
 @Namespace("/contact")
 @Results({ @Result(name = "error", location = "/error.jsp"),
-		@Result(name = "list", type = "json") })
+		@Result(name = "list", type = "json"),
+		@Result(name = "add", type = "json"),
+		@Result(name = "modify", type = "json"),
+		@Result(name = "del", type = "json")})
 @ExceptionMappings({ @ExceptionMapping(exception = "java.lange.RuntimeException", result = "error") })
 public class ContactAction extends BaseAction {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	@Resource
@@ -43,6 +45,10 @@ public class ContactAction extends BaseAction {
 	private String order;
 	
 	private int customerId;
+	
+	private ContactDto cd;
+	
+	private MessageDto md;
 	
 	public List<Object> getRows() {
 		return rows;
@@ -91,6 +97,22 @@ public class ContactAction extends BaseAction {
 	public void setCustomerId(int customerId) {
 		this.customerId = customerId;
 	}
+	
+	public MessageDto getMd() {
+		return md;
+	}
+
+	public void setMd(MessageDto md) {
+		this.md = md;
+	}
+	
+	public ContactDto getCd() {
+		return cd;
+	}
+
+	public void setCd(ContactDto cd) {
+		this.cd = cd;
+	}
 
 	@Action("list")
 	public String list(){
@@ -110,5 +132,29 @@ public class ContactAction extends BaseAction {
 		this.total = srd.getTotal();
 		
 		return "list";
+	}
+	
+	@Action("add")
+	public String add(){
+		
+		md = contactService.update(cd);
+		
+		return "add";
+	}
+	
+	@Action("modify")
+	public String modify(){
+		
+		md = contactService.update(cd);
+		
+		return "modify";
+	}
+	
+	@Action("del")
+	public String del(){
+		
+		md = contactService.delete(cd);
+		
+		return "del";
 	}
 }

@@ -75,7 +75,7 @@ public class DataUtil {
 		if (loc != null && isDelete != 0) {
 			btd = new EyTreeDto();
 			btd.setId(loc.getId());
-			btd.setText(loc.getName());
+			btd.setText(loc.getName() + "-" + loc.getCode());
 			btd.setState(loc.getState());
 
 			List<Location> children = loc.getChildLocs();
@@ -117,14 +117,17 @@ public class DataUtil {
 				cd.setPhone(c.getMobilePhone());
 				cd.setEmail(c.getEmail());
 				cd.setDuty(c.getDuty());
+				cd.setSexId(c.getSex());
 				cd.setSex(c.getSex() == 1 ? "男" : "女");
 				cd.setRemarks(c.getRemarks());
 				cd.setCreateTime(c.getCreateTime() == null ? "" : sdf_dt
 						.format(c.getCreateTime()));
 				cd.setUpdateTime(c.getUpdateTime() == null ? "" : sdf_dt
 						.format(c.getUpdateTime()));
-
+				cd.setUserId(c.getUser()==null ? 0 : c.getUser().getId());
 				cd.setUser(c.getUser()==null ? "" : c.getUser().getName());
+				cd.setCustomerId(c.getCustomer()==null ? 0 : c.getCustomer().getId());
+				cd.setCustomerName(c.getCustomer()==null ? "" : c.getCustomer().getName());
 				ctds.add(cd);
 			}
 		}
@@ -172,5 +175,27 @@ public class DataUtil {
 			}
 		}
 		return crds;
+	}
+	
+	public static List<Location> getAllLocChildren(Location loc){
+		
+		List<Location> locs = new ArrayList<Location>();
+		
+		List<Location> childLocs = loc.getChildLocs();
+		if(childLocs!=null && childLocs.size()!=0){
+			
+			Iterator<Location> it = childLocs.iterator();
+			while(it.hasNext()){
+				
+				Location next = it.next();
+				List<Location> nextLocs = getAllLocChildren(next);
+				locs.addAll(nextLocs);
+			}
+		} else {
+			
+			locs.add(loc);
+		}
+		
+		return locs;
 	}
 }

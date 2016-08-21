@@ -44,29 +44,6 @@ public class CustomerServiceImpl implements CustomerService {
 		return customerDao.save(c);
 	}
 
-	@Override
-	public SearchResultDto searchAndCount(String order, String sort, int page,
-			int row) {
-		// TODO Auto-generated method stub
-		
-		Search search = new Search();
-		search.addFilterEqual("isDelete", 1);
-		search.setMaxResults(row);
-		search.setPage(page - 1 < 0 ? 0 : page - 1);
-		SearchResult<Customer> result = searchAndCount(search);
-		List<Customer> cls = result.getResult();
-
-		List<CustomerDto> blds = DataUtil.convertCustomerToDto(cls);
-		int records = result.getTotalCount();
-
-		SearchResultDto srd = new SearchResultDto();
-		srd.getRows().clear();
-		srd.getRows().addAll(blds);
-		srd.setTotal(records);
-		
-		return srd;
-	}
-
 	private SearchResult<Customer> searchAndCount(Search search) {
 
 		return customerDao.searchAndCount(search);
@@ -98,9 +75,14 @@ public class CustomerServiceImpl implements CustomerService {
 		if(cId==0){
 			
 			c = new Customer();
+			c.setCreateTime(now);
 		} else {
 			
 			c = findById(cId);
+			
+			if(c!=null)
+				
+				c.setUpdateTime(now);
 		}
 		
 		if(c!=null){
@@ -111,7 +93,6 @@ public class CustomerServiceImpl implements CustomerService {
 			c.setFax(cd.getFax());
 			c.setAddress(cd.getAddress());
 			c.setRemarks(cd.getRemarks());
-			c.setCreateTime(now);
 			c.setGroups(groups);
 			c.setLocation(loc);
 			
@@ -141,6 +122,7 @@ public class CustomerServiceImpl implements CustomerService {
 	public MessageDto delete(CustomerDto cd) {
 		// TODO Auto-generated method stub
 		
+		Timestamp now = new Timestamp(System.currentTimeMillis());
 		MessageDto md = new MessageDto();
 		int id = cd.getId();
 		
@@ -148,6 +130,7 @@ public class CustomerServiceImpl implements CustomerService {
 		if(c!=null){
 			
 			c.setIsDelete(0);
+			c.setUpdateTime(now);
 			
 			save(c);
 			md.setT(true);
@@ -162,4 +145,36 @@ public class CustomerServiceImpl implements CustomerService {
 		
 		return md;
 	}
+
+	@Override
+	public SearchResultDto searchAndCount(int locId, String order, String sort,
+			int page, int row) {
+		// TODO Auto-generated method stub
+		
+		Search search = new Search();
+		search.addFilterEqual("isDelete", 1);
+		
+		Location c = locService.findById(locId);
+		if(c!=null){
+			
+			List<Location> childLocs = DataUtil.getAllLocChildren(c);
+			search.addFilterIn("location", childLocs);
+		}
+		
+		search.setMaxResults(row);
+		search.setPage(page - 1 < 0 ? 0 : page - 1);
+		SearchResult<Customer> result = searchAndCount(search);
+		List<Customer> cls = result.getResult();
+
+		List<CustomerDto> blds = DataUtil.convertCustomerToDto(cls);
+		int records = result.getTotalCount();
+
+		SearchResultDto srd = new SearchResultDto();
+		srd.getRows().clear();
+		srd.getRows().addAll(blds);
+		srd.setTotal(records);
+		
+		return srd;
+	}
+	
 }

@@ -122,9 +122,10 @@ public class CustomerAction extends BaseAction {
 				.parseInt(this.httpServletRequest.getParameter("rows") == null ? "10"
 						: this.httpServletRequest.getParameter("rows"));
 		
+		
 		SearchResultDto srd = new SearchResultDto();
 		
-		srd = customerService.searchAndCount(this.order, this.sort,
+		srd = customerService.searchAndCount(this.locId, this.order, this.sort,
 				this.page, row);
 		
 		this.rows.clear();

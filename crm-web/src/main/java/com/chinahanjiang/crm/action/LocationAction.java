@@ -11,6 +11,8 @@ import org.apache.struts2.convention.annotation.Result;
 import org.apache.struts2.convention.annotation.Results;
 import org.springframework.stereotype.Controller;
 
+import com.chinahanjiang.crm.dto.LocationDto;
+import com.chinahanjiang.crm.dto.MessageDto;
 import com.chinahanjiang.crm.service.LocationService;
 
 @Controller
@@ -19,7 +21,11 @@ import com.chinahanjiang.crm.service.LocationService;
 @Results({ @Result(name = "error", location = "/error.jsp"),
 	@Result(name="list",type="json"),
 	@Result(name="subloc",type="json"),
-	@Result(name="parloc",type="json")})
+	@Result(name="parloc",type="json"),
+	@Result(name="add",type="json"),
+	@Result(name="modify",type="json"),
+	@Result(name="delete",type="json"),
+	@Result(name="check",type="json")})
 @ExceptionMappings({ @ExceptionMapping(exception = "java.lange.RuntimeException", result = "error") })
 public class LocationAction extends BaseAction {
 
@@ -40,6 +46,10 @@ public class LocationAction extends BaseAction {
 	private String subLocs;
 	
 	private String parentLocs;
+	
+	private MessageDto md;
+	
+	private LocationDto ld;
 	
 	public String getLocTree() {
 		return locTree;
@@ -80,6 +90,22 @@ public class LocationAction extends BaseAction {
 	public void setParentLocs(String parentLocs) {
 		this.parentLocs = parentLocs;
 	}
+	
+	public MessageDto getMd() {
+		return md;
+	}
+
+	public void setMd(MessageDto md) {
+		this.md = md;
+	}
+
+	public LocationDto getLd() {
+		return ld;
+	}
+
+	public void setLd(LocationDto ld) {
+		this.ld = ld;
+	}
 
 	@Action("list")
 	public String list(){
@@ -101,5 +127,34 @@ public class LocationAction extends BaseAction {
 		
 		parentLocs = locService.getParentLocById(locId);
 		return "parloc";
+	}
+	
+	@Action("add")
+	public String add(){
+		
+		md = locService.update(ld);
+		
+		return "add";
+	}
+	
+	@Action("modify")
+	public String modify(){
+		
+		md = locService.update(ld);
+		return "modify";
+	}
+	
+	@Action("del")
+	public String delete(){
+		
+		md = locService.delete(ld);
+		return "delete";
+	}
+	
+	@Action("check")
+	public String check(){
+		
+		md = locService.check(ld);
+		return "check";
 	}
 }

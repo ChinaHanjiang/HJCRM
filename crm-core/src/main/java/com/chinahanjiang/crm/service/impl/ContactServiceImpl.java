@@ -1,5 +1,6 @@
 package com.chinahanjiang.crm.service.impl;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -10,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.chinahanjiang.crm.dao.ContactDao;
 import com.chinahanjiang.crm.dto.ContactDto;
+import com.chinahanjiang.crm.dto.MessageDto;
 import com.chinahanjiang.crm.dto.SearchResultDto;
 import com.chinahanjiang.crm.pojo.Contact;
 import com.chinahanjiang.crm.pojo.Customer;
@@ -57,5 +59,98 @@ public class ContactServiceImpl implements ContactService {
 	private SearchResult<Contact> searchAndCount(Search search) {
 
 		return contactDao.searchAndCount(search);
+	}
+
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+	public MessageDto update(ContactDto cd) {
+		// TODO Auto-generated method stub
+		
+		Timestamp now = new Timestamp(System.currentTimeMillis());
+		
+		MessageDto md = new MessageDto();
+		int c_id = cd.getId();
+		Contact c = null;
+		
+		int customerId = cd.getCustomerId();
+		Customer customer = customerService.findById(customerId);
+		
+		if(c_id == 0){
+			
+			c = new Contact();
+			c.setCreateTime(now);
+			if(customer!=null){
+				
+				c.setCustomer(customer);
+			} else {
+				
+				md.setT(false);
+				md.setMessage("联系人对应的公司不存在！");
+				
+				return md;
+			}
+		} else {
+			
+			c = contactDao.find(c_id);
+			
+			if(c!=null){
+				c.setUpdateTime(now);
+			}
+		}
+		
+		if(c != null){
+			
+			c.setName(cd.getName());
+			c.setMobilePhone(cd.getPhone());
+			c.setEmail(cd.getEmail());
+			c.setDuty(cd.getDuty());
+			c.setRemarks(cd.getRemarks());
+			c.setSex(cd.getSexId());
+			
+			boolean isR = contactDao.save(c);
+			if(isR){
+				
+				md.setT(true);
+				md.setMessage("联系人添加成功！");
+			} else {
+				
+				md.setT(true);
+				md.setMessage("联系人修改成功！");
+			}
+		}else {
+			
+			md.setT(false);
+			md.setMessage("联系人不存在！");
+		}
+		
+		return md;
+	}
+
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+	public MessageDto delete(ContactDto cd) {
+		// TODO Auto-generated method stub
+		
+		Timestamp now = new Timestamp(System.currentTimeMillis());
+		MessageDto md = new MessageDto();
+		int id = cd.getId();
+		
+		Contact c = contactDao.find(id);
+		if(c!=null){
+			
+			c.setIsDelete(0);
+			c.setUpdateTime(now);
+			
+			contactDao.save(c);
+			md.setT(true);
+			md.setMessage("联系人删除成功！");
+			
+		} else {
+			
+			md.setT(false);
+			md.setMessage("联系人找不到！");
+		}
+		
+		return md;
 	}
 }

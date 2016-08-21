@@ -6,6 +6,10 @@ public class MessageDto {
 	
 	private String message;
 	
+	private int intF;
+	
+	private String StringF;
+	
 	public MessageDto(){
 		
 	}
@@ -31,6 +35,20 @@ public class MessageDto {
 	public void setMessage(String message) {
 		this.message = message;
 	}
-	
-	
+
+	public int getIntF() {
+		return intF;
+	}
+
+	public void setIntF(int intF) {
+		this.intF = intF;
+	}
+
+	public String getStringF() {
+		return StringF;
+	}
+
+	public void setStringF(String stringF) {
+		StringF = stringF;
+	}
 }
