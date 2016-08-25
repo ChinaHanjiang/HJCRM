@@ -13,23 +13,27 @@ import org.apache.struts2.convention.annotation.Results;
 import org.apache.struts2.convention.annotation.Result;
 import org.springframework.stereotype.Controller;
 
+import com.chinahanjiang.crm.pojo.Customer;
 import com.chinahanjiang.crm.pojo.Groups;
 import com.chinahanjiang.crm.pojo.Location;
+import com.chinahanjiang.crm.pojo.TaskType;
+import com.chinahanjiang.crm.service.CustomerService;
 import com.chinahanjiang.crm.service.GroupsService;
 import com.chinahanjiang.crm.service.LocationService;
+import com.chinahanjiang.crm.service.TaskTypeService;
 
 @Controller
 @ParentPackage("struts-default")
 @Namespace("/win")
 @Results({ @Result(name = "error", location = "/error.jsp"),
 	@Result(name = "success", location = "/WEB-INF/content/main.jsp"),
-	@Result(name = "customerlist", location = "/WEB-INF/content/customer/customerlist.jsp")})
+	@Result(name = "customerlist", location = "/WEB-INF/content/customer/customerlist.jsp"),
+	@Result(name = "groupslist", location = "/WEB-INF/content/setting/groupslist.jsp"),
+	@Result(name = "tasktypelist", location = "/WEB-INF/content/setting/tasktypelist.jsp"),
+	@Result(name = "tasklist", location = "/WEB-INF/content/task/tasklist.jsp")})
 @ExceptionMappings({ @ExceptionMapping(exception = "java.lange.RuntimeException", result = "error") })
 public class WinAction extends BaseAction {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
 	@Resource
@@ -38,9 +42,19 @@ public class WinAction extends BaseAction {
 	@Resource
 	private GroupsService groupsService;
 	
+	@Resource
+	private TaskTypeService taskTypeService;
+	
+	@Resource
+	private CustomerService customerService;
+	
 	private List<Location> locations;
 	
 	private List<Groups> groups;
+	
+	private List<TaskType> taskTypes;
+	
+	private List<Customer> customers;
 	
 	public List<Location> getLocations() {
 		return locations;
@@ -57,6 +71,22 @@ public class WinAction extends BaseAction {
 	public void setGroups(List<Groups> groups) {
 		this.groups = groups;
 	}
+	
+	public List<TaskType> getTaskTypes() {
+		return taskTypes;
+	}
+
+	public void setTaskTypes(List<TaskType> taskTypes) {
+		this.taskTypes = taskTypes;
+	}
+
+	public List<Customer> getCustomers() {
+		return customers;
+	}
+
+	public void setCustomers(List<Customer> customers) {
+		this.customers = customers;
+	}
 
 	@Action("customerlist")
 	public String customerListWin(){
@@ -68,6 +98,27 @@ public class WinAction extends BaseAction {
 		groups = groupsService.loadGroups();
 		
 		return "customerlist";
+	}
+	
+	@Action("groupslist")
+	public String groupsListWin(){
+		
+		return "groupslist";
+	}
+	
+	@Action("tasktypelist")
+	public String taskTypeListWin(){
+		
+		return "tasktypelist";
+	}
+	
+	@Action("tasklist")
+	public String taskListWin(){
+		
+		taskTypes = taskTypeService.findAll();
+		//customers = customerService.loadCustomers(20);
+		
+		return "tasklist";
 	}
 
 }

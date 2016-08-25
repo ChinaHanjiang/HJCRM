@@ -35,6 +35,11 @@ public class Item {
 	
 	private Task task;
 	
+	private Customer customer;
+	
+	//联系人
+	private Contact contact;
+	
 	private int isDelete;
 	
 	private int status;/*0-进行中，1-完成*/
@@ -47,7 +52,8 @@ public class Item {
 	}
 	
 	public Item(int id, String name, Timestamp createTime,
-			Timestamp updateTime, User user, Task task, int isDelete,
+			Timestamp updateTime, User user, Task task, Customer customer,
+			Contact contact, int isDelete,
 			int status, String remarks) {
 		super();
 		this.id = id;
@@ -56,6 +62,8 @@ public class Item {
 		this.updateTime = updateTime;
 		this.user = user;
 		this.task = task;
+		this.customer = customer;
+		this.contact = contact;
 		this.isDelete = isDelete;
 		this.status = status;
 		this.remarks = remarks;
@@ -105,8 +113,19 @@ public class Item {
 		return user;
 	}
 
+	
 	public void setUser(User user) {
 		this.user = user;
+	}
+	
+	@OneToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "i_cid",referencedColumnName="c_id")
+	public Customer getCustomer() {
+		return customer;
+	}
+
+	public void setCustomer(Customer customer) {
+		this.customer = customer;
 	}
 
 	@ManyToOne(cascade = CascadeType.ALL, optional = false, fetch = FetchType.EAGER)
@@ -117,6 +136,16 @@ public class Item {
 
 	public void setTask(Task task) {
 		this.task = task;
+	}
+	
+	@OneToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "i_ctid",referencedColumnName="ct_id")
+	public Contact getContact() {
+		return contact;
+	}
+
+	public void setContact(Contact contact) {
+		this.contact = contact;
 	}
 
 	@Column(name="i_isDelete")

@@ -70,30 +70,42 @@ public class ExcelUtil {
 					c.setName(_name);
 					
 					HSSFCell code = hssfRow.getCell(2);
-					String _code = getValue(code);
+					String _code = "";
+					if(code==null){
+						_code = "";
+					} else {
+						_code=getValue(code);
+					}
+					 
 					c.setCode(_code);
 					
 					//隶属集团
 					HSSFCell group = hssfRow.getCell(3);
-					String _group = getValue(group);
+					String _group = "";
+					if(group != null){
+						_group = getValue(group);
+					} else {
+						_group = "其他";
+					}
+					
 					Groups g = new Groups();
 					g.setName(_group);
 					c.setGroups(g);
 					
 					HSSFCell address = hssfRow.getCell(5);
-					String _address = getValue(address);
+					String _address = address==null ? "" : getValue(address);
 					c.setAddress(_address);
 					
 					HSSFCell telephone = hssfRow.getCell(6);
-					String _telephone = getValue(telephone);
+					String _telephone = telephone==null ? "" : getValue(telephone);
 					c.setTelephone(_telephone);
 					
 					HSSFCell fax = hssfRow.getCell(7);
-					String _fax = getValue(fax);
+					String _fax = fax==null ? "" : getValue(fax);
 					c.setFax(_fax);
 					
 					HSSFCell remarks = hssfRow.getCell(8);
-					String _remarks = getValue(remarks);
+					String _remarks = remarks==null ? "" : getValue(remarks);
 					c.setRemarks(_remarks);
 					
 					c.setCreateTime(createTime);
@@ -106,18 +118,26 @@ public class ExcelUtil {
 					
 					cts = new ArrayList<Contact>();
 					ct = getContact(hssfRow);
-					ct.setCustomer(c);
-					cts.add(ct);
-					c.setContacts(cts);
+					if(ct!=null){
+						
+						ct.setCustomer(c);
+						cts.add(ct);
+						c.setContacts(cts);
+						
+						customers.add(c);
+					}
 					
-					customers.add(c);
 					
 				} else {
 					
 					cts = c.getContacts();
-					ct = getContact(hssfRow);
-					ct.setCustomer(c);
-					cts.add(ct);
+					if(ct!=null){
+						
+						ct = getContact(hssfRow);
+						ct.setCustomer(c);
+						cts.add(ct);
+					}
+					
 				}
 			}
 		}
@@ -130,27 +150,31 @@ public class ExcelUtil {
 		Timestamp createTime = new Timestamp(System.currentTimeMillis());
 		
 		HSSFCell name = hssfRow.getCell(15);
+		if(name == null){
+			
+			return null;
+		}
 		String _name = getValue(name);
 		ct.setName(_name);
 		
 		HSSFCell mobilephone = hssfRow.getCell(16);
-		String _mobilephone = getValue(mobilephone);
+		String _mobilephone = mobilephone==null ? "" :getValue(mobilephone);
 		ct.setMobilePhone(_mobilephone);
 		
 		HSSFCell email = hssfRow.getCell(17);
-		String _email = getValue(email);
+		String _email = email==null ? "" : getValue(email);
 		ct.setEmail(_email);
 		
 		HSSFCell sex = hssfRow.getCell(18);
-		String _sex = getValue(sex);
+		String _sex = sex==null ? "男" : getValue(sex);
 		ct.setSex(_sex.equals("男") ? 1 : 0);
 		
 		HSSFCell duty = hssfRow.getCell(19);
-		String _duty = getValue(duty);
+		String _duty = duty==null ? "" : getValue(duty);
 		ct.setDuty(_duty);
 		
 		HSSFCell remarks = hssfRow.getCell(20);
-		String _remarks = getValue(remarks);
+		String _remarks = remarks==null ? "" : getValue(remarks);
 		ct.setRemarks(_remarks);
 		
 		ct.setCreateTime(createTime);
@@ -187,9 +211,24 @@ public class ExcelUtil {
 				}
 				
 				HSSFCell gName = hssfRow.getCell(3);
-				String _gName = getValue(gName);
+				String _gName = "";
+				if(gName==null){
+					
+					_gName = "其他";
+				} else {
+					
+					_gName = getValue(gName);
+				}
 				HSSFCell gCode = hssfRow.getCell(4);
-				String _gCode = getValue(gCode);
+				
+				String _gCode = "";
+				if(gCode == null){
+					
+					_gCode = "OT";
+				} else {
+					
+					_gCode = getValue(gCode);
+				}
 				
 				boolean isR = groups.containsKey(_gName);
 				if(!isR){

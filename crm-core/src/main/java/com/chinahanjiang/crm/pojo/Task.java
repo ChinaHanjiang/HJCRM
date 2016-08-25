@@ -31,6 +31,8 @@ public class Task {
 	
 	private String name;
 	
+	private String code;
+	
 	private User createUser;
 	
 	private int status;/*0-进行中,1-关闭*/
@@ -56,13 +58,14 @@ public class Task {
 		this.isDelete = 1;
 	}
 
-	public Task(int id, String name, User createUser, int status, int isDelete,
+	public Task(int id, String name, String code, User createUser, int status, int isDelete,
 			Timestamp createTime, Timestamp updateTime, User updateUser,
 			Customer customer, List<Item> items, TaskType taskType,
 			String remarks) {
 		super();
 		this.id = id;
 		this.name = name;
+		this.code = code;
 		this.createUser = createUser;
 		this.status = status;
 		this.isDelete = isDelete;
@@ -93,6 +96,15 @@ public class Task {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	@Column(name="t_code")
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
 	}
 
 	@OneToOne(fetch = FetchType.EAGER)

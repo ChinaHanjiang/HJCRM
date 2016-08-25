@@ -47,7 +47,7 @@ public class ExcelUtilTest {
 		GroupsService gs = (GroupsServiceImpl) context
 				.getBean("groupsService");
 		
-		File f = new File("C:\\Users\\tree\\Desktop\\客户关系管理\\41基础资料\\2-customer.xls");
+		File f = new File("C:\\Users\\tree\\Desktop\\客户关系管理\\40基础资料\\2-0 customer-国内客户资料.xls");
 		List<Customer> customers = ExcelUtil.readCustomerInfo(f);
 		
 		Iterator<Customer> it = customers.iterator();
@@ -83,7 +83,7 @@ public class ExcelUtilTest {
 		GroupsService gs = (GroupsServiceImpl) context.getBean("groupsService");
 		
 		Timestamp now = new Timestamp(System.currentTimeMillis());
-		File f = new File("C:\\Users\\tree\\Desktop\\客户关系管理\\41基础资料\\2-customer.xls");
+		File f = new File("C:\\Users\\tree\\Desktop\\客户关系管理\\40基础资料\\2-0 customer-国内客户资料.xls");
 		Map<String,String> maps = ExcelUtil.roadGroupInfo(f);
 		Set<String> s = maps.keySet();
 		Iterator<String> it = s.iterator();
@@ -109,11 +109,12 @@ public class ExcelUtilTest {
 		
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		
-		File f = new File("C:\\Users\\tree\\Desktop\\客户关系管理\\41基础资料\\2-customer.xls");
+		File f = new File("C:\\Users\\tree\\Desktop\\客户关系管理\\40基础资料\\2-0 customer-国内客户资料.xls");
 		List<LocationDto> eds = ExcelUtil.readLocationInfo(f);
 		
 		Location fl = new Location();
 		fl.setName("区域分类");
+		fl.setCode("All");
 		fl.setCreateTime(now);
 		fl.setIsDelete(1);
 		List<Location> flls = new ArrayList<Location>();
@@ -134,6 +135,7 @@ public class ExcelUtilTest {
 			Location fLoc = new Location();
 			fLoc.setName(farea);
 			fLoc.setCode(fCode);
+			fLoc.setState("closed");
 			
 			boolean i = locfMaps.containsKey(fLoc);
 			if(i){
@@ -145,6 +147,7 @@ public class ExcelUtilTest {
 			Location sLoc = new Location();
 			sLoc.setName(sarea);
 			sLoc.setCode(sCode);
+			sLoc.setState("closed");
 			
 			boolean j = locsMaps.containsKey(sLoc);
 			if(j){
@@ -157,7 +160,11 @@ public class ExcelUtilTest {
 			tLoc.setName(tarea);
 			tLoc.setCode(tCode);
 			
-			lds.add(tLoc);
+			boolean k = lds.contains(tLoc);
+			if(!k){
+				lds.add(tLoc);
+			}
+			
 			locsMaps.put(sLoc, lds);
 			locfMaps.put(fLoc, locsMaps);
 		}

@@ -1,6 +1,7 @@
 package com.chinahanjiang.crm.service.impl;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -34,7 +35,6 @@ public class ContactServiceImpl implements ContactService {
 	@Override
 	public SearchResultDto searchAndCount(int customerId, String order,
 			String sort, int page, int row) {
-		// TODO Auto-generated method stub
 		
 		Customer c = customerService.findById(customerId);
 		Search search = new Search();
@@ -64,7 +64,6 @@ public class ContactServiceImpl implements ContactService {
 	@Override
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 	public MessageDto update(ContactDto cd) {
-		// TODO Auto-generated method stub
 		
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		
@@ -129,7 +128,6 @@ public class ContactServiceImpl implements ContactService {
 	@Override
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 	public MessageDto delete(ContactDto cd) {
-		// TODO Auto-generated method stub
 		
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		MessageDto md = new MessageDto();
@@ -152,5 +150,27 @@ public class ContactServiceImpl implements ContactService {
 		}
 		
 		return md;
+	}
+
+	@Override
+	public List<ContactDto> search(ContactDto cd) {
+		
+		List<ContactDto> cds = new ArrayList<ContactDto>();
+		
+		int id = cd.getId();
+		if(id!=0){
+			
+			Customer c = customerService.findById(id);
+			if(c!=null){
+				
+				Search search = new Search();
+				search.addFilterEqual("customer", c);
+				List<Contact> cts = contactDao.search(search);
+				
+				cds = DataUtil.convertContactToDto(cts);
+			}
+		}
+		
+		return cds;
 	}
 }

@@ -2,7 +2,6 @@ package com.chinahanjiang.crm.pojo;
 
 import java.sql.Timestamp;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -10,7 +9,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -27,6 +25,8 @@ public class TaskType {
 	
 	private String name;
 	
+	private String code;
+	
 	private int isDelete; /*0-删除,1-没删除*/
 	
 	private Timestamp createTime;
@@ -42,10 +42,11 @@ public class TaskType {
 		this.isDelete = 1;
 	}
 
-	public TaskType(int id, String name, int isDelete, Timestamp createTime,
+	public TaskType(int id, String name, String code, int isDelete, Timestamp createTime,
 			Timestamp updateTime, String remarks,User user) {
 		super();
 		this.id = id;
+		this.code = code;
 		this.name = name;
 		this.isDelete = isDelete;
 		this.createTime = createTime;
@@ -72,6 +73,15 @@ public class TaskType {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	@Column(name="tt_code")
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
 	}
 
 	@Column(name="tt_isDelete")

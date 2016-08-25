@@ -178,7 +178,8 @@ public class LocationServiceImpl implements LocationService {
 			
 		} else if(parentId != 0){
 			
-			l = findById(id);
+			l = findById(parentId);
+			
 			if(l!=null){
 				
 				l.setIsDelete(0);

@@ -16,6 +16,7 @@ public class EyTreeDto {
 
 	public EyTreeDto(){
 		
+		state = "closed";
 	}
 	
 	public EyTreeDto(int id, int isF,String text, String status) {

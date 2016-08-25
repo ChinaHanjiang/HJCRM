@@ -12,7 +12,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <link rel="stylesheet" type="text/css"
-	href="<%=basePath%>themes/default/easyui.css">
+	href="<%=basePath%>themes/metro/easyui.css">
 <link rel="stylesheet" type="text/css"
 	href="<%=basePath%>themes/icon.css">
 <link rel="stylesheet" type="text/css" href="<%=basePath%>demo.css">
@@ -374,6 +374,7 @@
 		        			_loc_lc_right = true;
 		        			$('#lc_wrong').hide();
 		        			$('#lc_ok').show();
+		        			
 		        		}else{
 		        			
 		        			_loc_lc_right = false;
@@ -663,7 +664,6 @@
 			var c_remarks;
 			var c_groupsId;
 			var c_locationId;
-			
 			
 			c_name = $('#cu_name').textbox('getText').trim();
 			c_code = $('#cu_code').textbox('getText').trim();
@@ -1123,7 +1123,7 @@
 		<!-- 添加客户窗口 -->
 		<div id="c_addWin" class="easyui-window" title="公司客户编辑窗口"
 			data-options="modal:true,closed:true,iconCls:'icon-save',minimizable:false,collapsible:false,maximizable:false"
-			style="width: 450px; height: 500px; padding: 10px;">
+			style="width: 450px; height: 480px; padding: 10px;">
 			<div style="padding: 10px 60px 20px 60px">
 				<form id="c_addWinForm" method="post">
 					<table cellpadding="5">
@@ -1166,8 +1166,8 @@
 						<tr id="c_address">
 							<td>邮寄地址:</td>
 							<td><input id="cu_address" class="easyui-textbox"
-								style="width: 200px" type="text" name="f_c_address"
-								data-options="editable:true"></input></td>
+								style="width: 200px;height:60px;" type="text" name="f_c_address"
+								data-options="editable:true,multiline:true"></input></td>
 						</tr>
 						<tr id="c_group">
 							<td>隶属集团:</td>
@@ -1189,7 +1189,7 @@
 						</tr>
 						<tr id="c_remarks">
 							<td>备注:</td>
-							<td><textarea id="cu_remarks" rows=5 style="width: 200px"
+							<td><textarea id="cu_remarks" rows=5 style="width: 200px;height:60px;"
 									name="f_c_remarks" class="textarea easyui-validatebox"}></textarea></td>
 						</tr>
 

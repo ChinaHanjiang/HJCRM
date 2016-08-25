@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.chinahanjiang.crm.dao.CustomerDao;
 import com.chinahanjiang.crm.dto.CustomerDto;
+import com.chinahanjiang.crm.dto.DataListDto;
 import com.chinahanjiang.crm.dto.MessageDto;
 import com.chinahanjiang.crm.dto.SearchResultDto;
 import com.chinahanjiang.crm.pojo.Customer;
@@ -39,7 +40,6 @@ public class CustomerServiceImpl implements CustomerService {
 	@Override
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 	public boolean save(Customer c) {
-		// TODO Auto-generated method stub
 		
 		return customerDao.save(c);
 	}
@@ -51,7 +51,6 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Override
 	public Customer findById(int id) {
-		// TODO Auto-generated method stub
 		
 		Customer c = customerDao.find(id);
 		return c;
@@ -60,7 +59,6 @@ public class CustomerServiceImpl implements CustomerService {
 	@Override
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 	public MessageDto update(CustomerDto cd) {
-		// TODO Auto-generated method stub
 		
 		MessageDto md = new MessageDto();
 		
@@ -120,7 +118,6 @@ public class CustomerServiceImpl implements CustomerService {
 	@Override
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 	public MessageDto delete(CustomerDto cd) {
-		// TODO Auto-generated method stub
 		
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		MessageDto md = new MessageDto();
@@ -149,7 +146,6 @@ public class CustomerServiceImpl implements CustomerService {
 	@Override
 	public SearchResultDto searchAndCount(int locId, String order, String sort,
 			int page, int row) {
-		// TODO Auto-generated method stub
 		
 		Search search = new Search();
 		search.addFilterEqual("isDelete", 1);
@@ -175,6 +171,33 @@ public class CustomerServiceImpl implements CustomerService {
 		srd.setTotal(records);
 		
 		return srd;
+	}
+
+	@Override
+	public List<Customer> loadCustomers(int i) {
+		
+		Search search = new Search();
+		search.addFilterEqual("isDelete", 1);
+		search.setMaxResults(i);
+		search.setPage(0);
+		SearchResult<Customer> result = searchAndCount(search);
+		List<Customer> cls = result.getResult();
+		return cls;
+	}
+
+	@Override
+	public List<DataListDto> search(CustomerDto cd) {
+		
+		String name = cd.getName();
+		
+		Search search = new Search();
+		search.addFilterEqual("isDelete", 1);
+		search.addFilterLike("name", "%" + name + "%");
+		SearchResult<Customer> result = searchAndCount(search);
+		List<Customer> cls = result.getResult();
+		List<DataListDto> dlds = DataUtil.convertCustomerToDld(cls);
+		
+		return dlds;
 	}
 	
 }

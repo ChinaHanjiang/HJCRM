@@ -20,6 +20,8 @@ public class User {
 
 	private int id;
 	
+	private String cardName;
+	
 	private String name;
 	
 	private String password;
@@ -29,6 +31,8 @@ public class User {
 	private String mobilephone;
 	
 	private String email;
+	
+	private int sex;
 	
 	private int isDelete; /*0-删除,1-没删除*/
 	
@@ -43,16 +47,18 @@ public class User {
 		this.isDelete = 1;
 	}
 
-	public User(int id, String name, String password, String duty,
-			String mobilephone, String email, int isDelete, String remarks,
+	public User(int id, String cardName, String name, String password, String duty,
+			String mobilephone, String email, int sex, int isDelete, String remarks,
 			Timestamp createTime, Timestamp updateTime) {
 		super();
 		this.id = id;
+		this.cardName = cardName;
 		this.name = name;
 		this.password = password;
 		this.duty = duty;
 		this.mobilephone = mobilephone;
 		this.email = email;
+		this.sex = sex;
 		this.isDelete = isDelete;
 		this.remarks = remarks;
 		this.createTime = createTime;
@@ -68,6 +74,15 @@ public class User {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+	
+	@Column(name="u_cardName")
+	public String getCardName() {
+		return cardName;
+	}
+
+	public void setCardName(String cardName) {
+		this.cardName = cardName;
 	}
 
 	@Column(name="u_name")
@@ -113,6 +128,15 @@ public class User {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+	
+	@Column(name="u_sex")
+	public int getSex() {
+		return sex;
+	}
+
+	public void setSex(int sex) {
+		this.sex = sex;
 	}
 
 	@Column(name="u_isDelete")

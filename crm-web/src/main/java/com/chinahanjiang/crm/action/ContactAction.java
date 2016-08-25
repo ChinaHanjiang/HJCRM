@@ -1,5 +1,6 @@
 package com.chinahanjiang.crm.action;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -14,6 +15,7 @@ import org.apache.struts2.convention.annotation.Results;
 import org.springframework.stereotype.Controller;
 
 import com.chinahanjiang.crm.dto.ContactDto;
+import com.chinahanjiang.crm.dto.DataListDto;
 import com.chinahanjiang.crm.dto.MessageDto;
 import com.chinahanjiang.crm.dto.SearchResultDto;
 import com.chinahanjiang.crm.service.ContactService;
@@ -25,7 +27,8 @@ import com.chinahanjiang.crm.service.ContactService;
 		@Result(name = "list", type = "json"),
 		@Result(name = "add", type = "json"),
 		@Result(name = "modify", type = "json"),
-		@Result(name = "del", type = "json")})
+		@Result(name = "del", type = "json"),
+		@Result(name = "find", type = "json")})
 @ExceptionMappings({ @ExceptionMapping(exception = "java.lange.RuntimeException", result = "error") })
 public class ContactAction extends BaseAction {
 
@@ -156,5 +159,19 @@ public class ContactAction extends BaseAction {
 		md = contactService.delete(cd);
 		
 		return "del";
+	}
+	
+	@Action("find")
+	public String find(){
+		
+		List<ContactDto> cds = contactService.search(cd);
+		
+		this.rows = new ArrayList<Object>();
+		
+		this.rows.clear();
+		this.rows.addAll(cds);
+		this.total = cds.size();
+		
+		return "find";
 	}
 }

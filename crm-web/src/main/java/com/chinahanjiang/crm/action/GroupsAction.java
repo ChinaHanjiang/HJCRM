@@ -1,6 +1,5 @@
 package com.chinahanjiang.crm.action;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -14,28 +13,27 @@ import org.apache.struts2.convention.annotation.Result;
 import org.apache.struts2.convention.annotation.Results;
 import org.springframework.stereotype.Controller;
 
-import com.chinahanjiang.crm.dto.CustomerDto;
-import com.chinahanjiang.crm.dto.DataListDto;
+import com.chinahanjiang.crm.dto.GroupsDto;
 import com.chinahanjiang.crm.dto.MessageDto;
 import com.chinahanjiang.crm.dto.SearchResultDto;
-import com.chinahanjiang.crm.service.CustomerService;
+import com.chinahanjiang.crm.service.GroupsService;
 
 @Controller
 @ParentPackage("json-default")
-@Namespace("/customer")
+@Namespace("/groups")
 @Results({ @Result(name = "error", location = "/error.jsp"),
 	@Result(name="list",type="json"),
 	@Result(name="add",type="json"),
 	@Result(name="modify",type="json"),
-	@Result(name="del",type="json"),
-	@Result(name="search",type="json")})
+	@Result(name="delete",type="json"),
+	@Result(name="check",type="json")})
 @ExceptionMappings({ @ExceptionMapping(exception = "java.lange.RuntimeException", result = "error") })
-public class CustomerAction extends BaseAction {
+public class GroupsAction extends BaseAction {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	@Resource
-	private CustomerService customerService;
+	private GroupsService groupsService;
 	
 	private List<Object> rows;
 	
@@ -47,29 +45,10 @@ public class CustomerAction extends BaseAction {
 
 	private String order;
 	
-	//区域id
-	private int locId;
-	
-	private CustomerDto cd;
+	private GroupsDto gd;
 	
 	private MessageDto md;
 	
-	public MessageDto getMd() {
-		return md;
-	}
-
-	public void setMd(MessageDto md) {
-		this.md = md;
-	}
-
-	public CustomerDto getCd() {
-		return cd;
-	}
-
-	public void setCd(CustomerDto cd) {
-		this.cd = cd;
-	}
-
 	public List<Object> getRows() {
 		return rows;
 	}
@@ -110,12 +89,21 @@ public class CustomerAction extends BaseAction {
 		this.order = order;
 	}
 
-	public int getLocId() {
-		return locId;
+	
+	public GroupsDto getGd() {
+		return gd;
 	}
 
-	public void setLocId(int locId) {
-		this.locId = locId;
+	public void setGd(GroupsDto gd) {
+		this.gd = gd;
+	}
+
+	public MessageDto getMd() {
+		return md;
+	}
+
+	public void setMd(MessageDto md) {
+		this.md = md;
 	}
 
 	@Action("list")
@@ -128,7 +116,7 @@ public class CustomerAction extends BaseAction {
 		
 		SearchResultDto srd = new SearchResultDto();
 		
-		srd = customerService.searchAndCount(this.locId, this.order, this.sort,
+		srd = groupsService.searchAndCount(this.order, this.sort,
 				this.page, row);
 		
 		this.rows.clear();
@@ -141,38 +129,31 @@ public class CustomerAction extends BaseAction {
 	@Action("add")
 	public String add(){
 		
-		md = customerService.update(cd);
-		
+		md = groupsService.update(gd);
 		return "add";
 	}
 	
 	@Action("modify")
 	public String modify(){
 		
-		md = customerService.update(cd);
+		md = groupsService.update(gd);
 		
 		return "modify";
 	}
 	
 	@Action("del")
-	public String del(){
+	public String delete(){
 		
-		md = customerService.delete(cd);
+		md = groupsService.delete(gd);
 		
-		return "del";
+		return "delete";
 	}
 	
-	@Action("search")
-	public String search(){
+	@Action("check")
+	public String check(){
 		
-		List<DataListDto> dld = customerService.search(cd);
+		md = groupsService.check(gd);
 		
-		this.rows = new ArrayList<Object>();
-		
-		this.rows.clear();
-		this.rows.addAll(dld);
-		this.total = dld.size();
-		
-		return "search";
+		return "check";
 	}
 }
