@@ -20,7 +20,6 @@
 	<!-- Struts Annotation -->
 	<constant name="actionPackages" value="com.chinahanjiang.crm" />
 	
-	<!-- 
 	<package name="default" extends="struts-default">
 		 
 		<interceptors>
@@ -58,5 +57,4 @@
 		</global-results>
 		
 	</package>
-	 -->
 </struts>    

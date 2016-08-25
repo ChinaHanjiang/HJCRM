@@ -288,7 +288,7 @@
 			}
 		});
 		
-		$('#b_cancel').click(function(){
+		$('#u_bcancel').click(function(){
 			
 			$('#addUserWin').window('close');
 		});
@@ -316,15 +316,15 @@
 				">
 		<thead>
 			<tr>
-				<th data-options="field:'id',width:30,hidden:true">序号</th>
+				<th data-options="field:'id',hidden:true">序号</th>
 				<th data-options="field:'cardName',width:120,align:'center'">工号</th>
 				<th data-options="field:'name',width:120,align:'center'">名字</th>
-				<th data-options="field:'sexId',width:30,hidden:true"></th>
+				<th data-options="field:'sexId',hidden:true"></th>
 				<th data-options="field:'sex',width:30,align:'center'">性别</th>
 				<th data-options="field:'duty',width:130,align:'center'">职务</th>
-				<th data-options="field:'phone',width:130,align:'center'">电话</th>
+				<th data-options="field:'mobilephone',width:130,align:'center'">电话</th>
 				<th data-options="field:'email',width:130,align:'center'">邮箱</th>
-				<th data-options="field:'userId',width:130,hidden:true'"></th>
+				<th data-options="field:'userId',hidden:true"></th>
 				<th data-options="field:'user',width:130,align:'center'">职务</th>
 				<th data-options="field:'createTime',width:140">创建时间</th>
 				<th data-options="field:'updateTime',width:140">修改时间</th>
@@ -359,7 +359,7 @@
 	<!-- 添加员工窗口 -->
 	<div id="addUserWin" class="easyui-window" title="员工编辑窗口"
 		data-options="modal:true,closed:true,iconCls:'icon-save',minimizable:false,collapsible:false,maximizable:false"
-		style="width: 480px; height: 600px; padding: 10px;">
+		style="width: 420px; height: 440px; padding: 10px;">
 		<div style="padding: 10px 60px 20px 60px">
 			<form id="addUserForm" method="post">
 				<table cellpadding="5">
@@ -387,17 +387,22 @@
 						</tr>
 					<tr>
 						<td>职称:</td>
-						<td><input id="u_duty" class="easyui-textbox" required
+						<td><input id="u_duty" class="easyui-textbox"
 							style="width: 200px" type="text" name="f_u_duty" data-options=""></input></td>
 					</tr>
 					<tr>
 						<td>手机号:</td>
-						<td><input id="u_phone" class="easyui-textbox" required
+						<td><input id="u_phone" class="easyui-textbox"
+							style="width: 200px" type="text" name="f_u_phone" data-options=""></input></td>
+					</tr>
+					<tr>
+						<td>邮箱:</td>
+						<td><input id="u_phone" class="easyui-textbox"
 							style="width: 200px" type="text" name="f_u_phone" data-options=""></input></td>
 					</tr>
 					<tr>
 						<td>备注:</td>
-						<td><textarea id="u_remark" rows=5 style="width: 200px"
+						<td><textarea id="u_remark" rows=5 style="width: 200px;height:60px;"
 								name="f_u_remark" class="textarea easyui-validatebox"}></textarea></td>
 					</tr>
 				</table>

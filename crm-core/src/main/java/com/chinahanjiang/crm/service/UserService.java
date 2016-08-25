@@ -16,4 +16,6 @@ public interface UserService {
 	MessageDto delete(UserDto ud);
 	
 	User findById(int id);
+
+	UserDto getUserDto(UserDto _UserDto);
 }

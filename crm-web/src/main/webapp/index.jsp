@@ -7,5 +7,6 @@
 <a href ="win/groupslist.do">集团信息</a><br />
 <a href ="win/tasktypelist.do">任务类别信息</a><br />
 <a href ="win/tasklist.do">任务信息</a><br />
+<a href ="win/userlist.do">用户信息</a><br />
 </body>
 </html>
