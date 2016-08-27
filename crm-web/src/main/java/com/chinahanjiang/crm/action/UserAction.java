@@ -19,7 +19,7 @@ import com.chinahanjiang.crm.dto.UserDto;
 import com.chinahanjiang.crm.service.UserService;
 
 @Controller
-@ParentPackage("json-default")
+@ParentPackage("ajaxdefault")
 @Namespace("/user")
 @Results({ @Result(name = "error", location = "/error.jsp"),
 	@Result(name="list",type="json"),
@@ -128,18 +128,21 @@ public class UserAction extends BaseAction {
 	@Action("add")
 	public String add(){
 		
+		md = userService.update(ud);
 		return "add";
 	}
 	
 	@Action("modify")
 	public String modify(){
 		
+		md = userService.update(ud);
 		return "modify";
 	}
 	
 	@Action("del")
 	public String delete(){
 		
+		md = userService.delete(ud);
 		return "delete";
 	}
 }

@@ -1,4 +1,4 @@
-package com.hj.jf.dto;
+package com.chinahanjiang.crm.util;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -7,13 +7,13 @@ import org.apache.log4j.Logger;
 /**
  * 
  */
-public class UserSessionDto{
+public class UserSession{
 	
-	private static Logger logger = Logger.getLogger(UserSessionDto.class);
+	private static Logger logger = Logger.getLogger(UserSession.class);
 	
 	protected final static ThreadLocal<Map<String,Object>> threadContext = new MapThreadLocal();
 	
-	private UserSessionDto(){};
+	private UserSession(){};
 	
 	public static void put(String key,Object value){
 		getContextMap().put(key,value);

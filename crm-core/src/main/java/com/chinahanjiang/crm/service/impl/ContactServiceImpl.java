@@ -173,4 +173,10 @@ public class ContactServiceImpl implements ContactService {
 		
 		return cds;
 	}
+
+	@Override
+	public Contact findById(int cid) {
+		
+		return contactDao.find(cid);
+	}
 }

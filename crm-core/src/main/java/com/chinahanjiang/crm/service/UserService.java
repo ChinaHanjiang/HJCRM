@@ -17,5 +17,9 @@ public interface UserService {
 	
 	User findById(int id);
 
-	UserDto getUserDto(UserDto _UserDto);
+	UserDto loadUserDto(UserDto _UserDto);
+
+	User findUserByName(String trim, String md5);
+
+	User findUserByCardName(String name);
 }

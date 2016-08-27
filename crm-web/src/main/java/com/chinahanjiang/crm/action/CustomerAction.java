@@ -21,7 +21,7 @@ import com.chinahanjiang.crm.dto.SearchResultDto;
 import com.chinahanjiang.crm.service.CustomerService;
 
 @Controller
-@ParentPackage("json-default")
+@ParentPackage("ajaxdefault")
 @Namespace("/customer")
 @Results({ @Result(name = "error", location = "/error.jsp"),
 	@Result(name="list",type="json"),

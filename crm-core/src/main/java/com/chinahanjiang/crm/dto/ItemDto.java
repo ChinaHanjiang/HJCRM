@@ -7,6 +7,8 @@ public class ItemDto {
 	
 	private String name;
 	
+	private String code;
+	
 	private String createTime;
 	
 	private String updateTime;
@@ -18,6 +20,10 @@ public class ItemDto {
 	private int taskId;
 	
 	private String task;
+	
+	private int tasktypeId;
+	
+	private String tasktype;
 	
 	private int customerId;
 	
@@ -141,5 +147,29 @@ public class ItemDto {
 
 	public void setCustomer(String customer) {
 		this.customer = customer;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public int getTasktypeId() {
+		return tasktypeId;
+	}
+
+	public void setTasktypeId(int tasktypeId) {
+		this.tasktypeId = tasktypeId;
+	}
+
+	public String getTasktype() {
+		return tasktype;
+	}
+
+	public void setTasktype(String tasktype) {
+		this.tasktype = tasktype;
 	}
 }

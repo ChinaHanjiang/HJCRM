@@ -201,7 +201,7 @@
 			var u_remarks;
 			
 			u_name = $('#u_name').textbox('getValue');
-			u_cardName = $('#u_cardName').textbox('getValue',_u_cardName);
+			u_cardName = $('#u_cardName').textbox('getValue');
 			u_remarks = $('#u_remarks').val(_u_remarks);
 			u_phone = $('#u_phone').textbox('getValue');
 			u_email = $('#u_email').textbox('getValue');

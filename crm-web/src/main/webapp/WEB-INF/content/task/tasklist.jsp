@@ -12,10 +12,9 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <link rel="stylesheet" type="text/css"
-	href="<%=basePath%>themes/default/easyui.css">
+	href="<%=basePath%>themes/metro/easyui.css">
 <link rel="stylesheet" type="text/css"
 	href="<%=basePath%>themes/icon.css">
-<link rel="stylesheet" type="text/css" href="<%=basePath%>demo.css">
 <script type="text/javascript" src="<%=basePath%>js/jquery.min.js"></script>
 <script type="text/javascript"
 	src="<%=basePath%>js/jquery.easyui.min.js"></script>
@@ -23,15 +22,35 @@
 	$(document).ready(function(){
 		
 		/*定义全局变量*/
-		var _c_id;
-		var _c_name;
+		var _t_id;
+		var _t_name;
+		var _t_code;
+		var _t_customer;
+		var _t_customerId;
+		var _t_tasktype;
+		var _t_tasktypeId;
+		var _t_user;
+		var _t_userId;
+		var _t_updateuser;
+		var _t_updateuserId;
+		var _t_itemNum;
+		var _t_remarks;
+		var _t_status;
+		var _i_id;
+		var _i_name;
+		var _i_code;
+		var _i_contact;
+		var _i_contactId;
+		var _i_remarks;
 		
 		$('#t_addTask').click(function(){
 			
 			$('#t_bsubmit').show();
 			$('#t_bmodify').hide();
 			
-			$('#addEmpWin').window('open');;
+			$('#t_tasktype').combobox('setValue',0);
+			
+			$('#addTaskWin').window('open');
 		});
 		
 		
@@ -40,26 +59,258 @@
 			$('#t_bsubmit').show();
 			$('#t_bmodify').hide();
 			
+			var row = $('#"taskgrid"').datagrid("getSelected");
+			if(row!=null){
+				
+				_t_id = row.id;
+				_t_name = row.name;
+				_t_code = row.code;
+				_t_customer = row.customer;
+				_t_customerId = row.customerId;
+				_t_tasktype = row.tasktype;
+				_t_tasktypeId = row.tasktypeId;
+				_t_user = row.user;
+				_t_userId = row.userId;
+				_t_updateuser = row.updateuser;
+				_t_updateuserId = row.updateuserId;
+				_t_itemNum = row.itemNum;
+				_t_remarks = row.remarks;
+				_t_status = row.status;
+				
+				
+				$('#t_name').textbox('setValue',_t_name);
+				$('#t_code').textbox('setValue',_t_code);
+				$('#t_customerId').val(_t_customerId);
+				$('#t_search').textbox('setValue',_t_customer);
+				$('#t_remarks').val(_t_remarks);
+				$('#t_tasktype').combobox('setValue',_t_tasktypeId);
+				
+				$('#addTaskWin').window('open');;
+				
+			} else {
+				
+				$.messager.alert('注意', '请选择行数据!',
+				'info');
+			}
+			
 		});
 		
 		$('#t_removeTask').click(function(){
 			
-			
+			var row = $('#taskgrid').datagrid("getSelected");
+			if(row){
+				
+				 $.messager.confirm('Confirm','您确定删除:"'+ row.name+'"的信息吗?',function(r){
+					 
+					    if (r){
+					    	
+					    	 var rowIndex = $('#taskgrid').datagrid('getRowIndex', row);
+							 $('#taskgrid').datagrid('deleteRow',rowIndex);
+							 
+							 var id = row.id;
+							 
+							 $.ajax({
+								 
+								type: "POST",
+								url: "<%=basePath%>task/del.do?td.id=" + id,
+								cache: false,
+					        	dataType : "json",
+					        	success:function(data){
+					        		
+					        		var _data =  data.md ;
+					        		if(_data.t){
+					        			$.messager.alert('成功',_data.message,
+										'info');
+					        		}else{
+					        			$.messager.alert('失败', _data.message,
+										'info');
+					        		}
+					        	}
+							 });
+							 
+					    }
+				 });
+			} else {
+				
+				$.messager.alert('注意', '请选择行数据!',
+				'info');
+			}
 		});
 		
 		$('#t_bsubmit').click(function(){
 			
+			var t_name;
+			var t_code;
+			var t_customerId;
+			var t_tasktypeId;
+			var t_remarks;
+			var i_name;
+			var i_code;
+			var i_contactId;
+			var i_remarks;
 			
+			t_name = $('#t_name').textbox('getValue');
+			t_code = $('#t_code').textbox('getValue');
+			t_customerId = $('#t_customerId').val();
+			t_reamrks = $('#t_remarks').val();
+			t_tasktypeId = $('#t_tasktype').combobox('getValue');
+			
+			i_name = $('#i_name').textbox('getValue');
+			i_code = $('#i_code').textbox('getValue');
+			i_remarks = $('#i_remarks').val('');
+			i_contactId = $('#i_contact').combogrid('getValue');
+			
+			var tl = $('#addTaskForm').form('enableValidation').form('validate');
+			var il = $('#addItemForm').form('enableValidation').form('validate');
+			if(tl&&il){
+				
+				var str = '';
+				str += "td.name=" + t_name;
+				str += "&td.code=" + t_code;
+				str += "&td.customerId=" + t_remarks;
+				str += "&td.tasktypeId=" + t_tasktypeId;
+				str += "&td.remarks=" + t_remarks; 
+				str += "&id.name=" + i_name;
+				str += "&id.code=" + i_code;
+				str += "&id.remarks=" + i_remarks;
+				str += "&id.contactId=" + i_contactId;
+				
+				$.ajax({
+					 type:"POST",
+		    		 url:"<%=basePath%>task/add.do?" + str,
+		    		 cache:false,
+		    		 dataType:'json',
+		    		 success:function(data){
+		    			 
+		    			 var _data = data.md;
+		    			 if(_data.t){
+		    				 
+		    				 $.messager.alert('成功', _data.message,
+								'info');
+		    				 $("#usergrid").datagrid('reload');
+		    				 
+		    			 } else {
+		    				 
+		    				 $.messager.alert('失败', _data.message,
+								'info');
+		    			 }
+		    		 }
+				});
+				
+			} else {
+				
+				$.messager.alert('注意', '请填完整的表单！',
+				'info');
+			}
 		});
 		
 		$('#t_bmodify').click(function(){
 			
+			var t_name;
+			var t_code;
+			var t_customerId;
+			var t_tasktypeId;
+			var t_remarks;
+			
+			t_name = $('#t_name').textbox('getValue');
+			t_code = $('#t_code').textbox('getValue');
+			t_customerId = $('#t_customerId').val();
+			t_reamrks = $('#t_remarks').val();
+			t_tasktypeId = $('#t_tasktype').combobox('getValue');
+			
+			var str = '';
+			var isChanged = false;
+			
+			var tl = $('#addTaskForm').form('enableValidation').form('validate');
+			if(tl&&il){
+				
+				str += "td.name=" + t_name;
+				str += "&td.code=" + t_code;
+				str += "&td.customerId=" + t_remarks;
+				str += "&td.tasktypeId=" + t_tasktypeId;
+				str += "&td.remarks=" + t_remarks; 
+				
+				if(_t_name != t_name){
+					
+					isChanged = true;
+				}
+				if(_t_code != t_code){
+					
+					isChanged = true;
+				}
+				if(_t_customerId != t_customerId){
+					
+					isChanged = true;
+				}
+				if(_t_remarks != t_remarks){
+					
+					isChanged = true;
+				}
+				if(_t_tasktype != t_tasktype){
+					
+					isChanged = true;
+				}
+				
+				if(isChange){
+					
+					$.ajax({
+						 type:"POST",
+			    		 url:"<%=basePath%>task/modify.do?" + str,
+			    		 cache:false,
+			    		 dataType:'json',
+			    		 success:function(data){
+			    			 
+			    			 var _data = data.md;
+			    			 if(_data.t){
+			    				 
+			    				 $.messager.alert('成功', _data.message,
+									'info');
+			    				 $("#taskgrid").datagrid('reload');
+			    				 
+			    			 } else {
+			    				 
+			    				 $.messager.alert('失败', _data.message,
+									'info');
+			    			 }
+			    		 }
+					});
+					
+				} else {
+					
+					$.messager.alert('注意', '任务信息没有改变！',
+					'info');
+				}
+				
+			} else {
+				
+				$.messager.alert('注意', '请填完整的表单！',
+				'info');
+			}
 			
 		});
 		
-		$('#t_bcancle').click(function(){
+		$('#t_bcancel').click(function(){
 			
+			$('#addTaskWin').window('close');
 			
+		});
+		
+		$('#addTaskWin').window({
+			
+			onClose:function(){
+				
+				$('#t_name').textbox('setValue','');
+				$('#t_code').textbox('setValue','');
+				$('#t_customerId').val('');
+				$('#t_search').searchbox('setValue','');
+				$('#t_remarks').val('');
+				$('#t_tasktype').combobox('setValue',0);
+				
+				$('#i_name').textbox('setValue','');
+				$('#i_code').textbox('setValue','');
+				$('#i_remarks').val('');
+				$('#i_contact').combogrid('setValue','');
+			}
 		});
 		
 		$('#t_search').searchbox({
@@ -118,7 +369,7 @@
 <title>任务列表</title>
 </head>
 <body>
-	<table id="employeeinfo" cellspacing="0" cellpadding="0"
+	<table id="taskgrid" cellspacing="0" cellpadding="0"
 		class="easyui-datagrid"
 		data-options="
 					url:'<%=basePath%>task/list.do',
@@ -182,21 +433,21 @@
 		style="width: 480px; height: 600px; padding: 10px;">
 		<div class="easyui-panel" data-options="border:false" style="width:450px;height:550px;">
 	        <div class="easyui-layout" data-options="fit:true">
-	            <div data-options="region:'north',collapsible:false" title="任务" style="width:450px;height:280px;padding:10px">
-	                <div style="padding: 0px 20px 20px 50px">
+	            <div id="f_task" data-options="region:'north',collapsible:false,border:false" title="任务" style="width:450px;height:270px;padding:10px">
+	                <div style="padding: 0px 20px 0px 50px">
 						<form id="addTaskForm" method="post">
 							<table cellpadding="5">
 								<tr>
 									<td>内容:</td>
 									<td><input id="t_name" class="easyui-textbox"
-										style="width: 200px" type="text" name="f_t_name" required
-										data-options=""></input></td>
+										style="width: 200px; height:40px;" type="text" name="f_t_name" required
+										data-options="multiline:true"></input></td>
 								</tr>
 								<tr>
 									<td>任务类别:</td>
 									<td>
-										<select id="t_tasktype" class="easyui-combobox" 
-											data-options="panelHeight: 'auto',editable:true"
+										<select id="t_tasktype" class="easyui-combobox"  required
+											data-options="panelHeight: 'auto',editable:false"
 											style="width: 200px" name="f_t_tasktype">
 											<option value=0 selected="selected">请选择</option>
 												<s:if test="taskTypes!=null">
@@ -210,41 +461,48 @@
 								<tr>
 									<td>编码:</td>
 									<td><input id="t_code" class="easyui-textbox"
-										style="width: 200px" type="text" name="f_t_name" required
+										style="width: 200px; height:20px;" type="text" name="f_t_code" required
 										data-options=""></input></td>
 								</tr>
 								<tr>
 									<td>客户:</td>
 									<td>
-										<input id="t_customerId" style="width: 200px;display:none;"
+										<input id="t_customerId" style="width: 200px; display:none;"
 										 type="text" name="f_t_customerId"></input>
-										<input id="t_search" class="easyui-searchbox"
+										<input id="t_search" class="easyui-searchbox" required
 											data-options="prompt:'请输入查询客户名称'" style="width: 200px;"></input>
 									</td>
 								</tr>
 								<tr>
 									<td>备注:</td>
-									<td><textarea id="t_remarks" rows=5 style="width: 200px;height:60px;"
+									<td><textarea id="t_remarks" rows=5 style="width: 200px;height:40px;"
 											name="f_t_remarks" class="textarea easyui-validatebox"}></textarea></td>
 								</tr>
 							</table>
 						</form>
 					</div>
 	            </div>
-	            <div data-options="region:'center'"  title="事件" style="width:450px;height:250px;padding:10px;">
-		            <div style="padding: 0px 20px 20px 50px">
+	            <div id="f_item" data-options="region:'center',border:false" title="事件" style="width:450px; height:250px; padding:10px;">
+		            <div style="padding: 0px 20px 0px 50px">
 		            	<form id="addItemForm" method="post">
 		            		<table cellpadding="5">
 								<tr>
 									<td>内容:</td>
 									<td><input id="i_name" class="easyui-textbox"
-										style="width: 200px" type="text" name="f_i_name" required
+										style="width: 200px; height:40px;" type="text" name="f_i_name" required
+										data-options="multiline:true"></input></td>
+								</tr>
+								<tr>
+									<td>编码:</td>
+									<td><input id="i_code" class="easyui-textbox"
+										style="width: 200px; height:20px;" type="text" name="f_i_code" required
 										data-options=""></input></td>
 								</tr>
 								<tr>
 									<td>联系人:</td>
 									<td>
-							            <select id="i_contact" class="easyui-combogrid" style="width:200px;" data-options="
+							            <select id="i_contact" class="easyui-combogrid" style="width:200px;" required 
+							            data-options=" 
 							                    panelWidth: 500,
 							                    idField: 'id',
 							                    textField: 'name',
@@ -260,11 +518,10 @@
 								</tr>
 								<tr>
 									<td>备注:</td>
-									<td><textarea id="i_remarks" rows=5 style="width: 200px;height:60px;"
+									<td><textarea id="i_remarks" rows=5 style="width: 200px;height:40px;"
 											name="f_i_remarks" class="textarea easyui-validatebox"}></textarea></td>
 								</tr>
 							</table>
-		            	
 		            	</form>
 		            </div>
 	            </div>

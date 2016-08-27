@@ -2,11 +2,11 @@
 	pageEncoding="utf-8"%>
 <html>
 <body>
-<h2>Hello World!</h2>
-<a href="win/customerlist.do">客户信息</a><br />
-<a href ="win/groupslist.do">集团信息</a><br />
-<a href ="win/tasktypelist.do">任务类别信息</a><br />
-<a href ="win/tasklist.do">任务信息</a><br />
-<a href ="win/userlist.do">用户信息</a><br />
+	<script type="text/javascript">
+	function doReload() {
+		location.href = "win/goLogin.do";
+	}
+	setTimeout("doReload()", 100);
+</script>
 </body>
 </html>

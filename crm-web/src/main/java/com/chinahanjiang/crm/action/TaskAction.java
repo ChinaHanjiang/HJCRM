@@ -1,5 +1,6 @@
 package com.chinahanjiang.crm.action;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -13,20 +14,26 @@ import org.apache.struts2.convention.annotation.Result;
 import org.apache.struts2.convention.annotation.Results;
 import org.springframework.stereotype.Controller;
 
+import com.chinahanjiang.crm.dto.ItemDto;
 import com.chinahanjiang.crm.dto.MessageDto;
 import com.chinahanjiang.crm.dto.SearchResultDto;
 import com.chinahanjiang.crm.dto.TaskDto;
+import com.chinahanjiang.crm.dto.UserDto;
 import com.chinahanjiang.crm.service.TaskService;
+import com.chinahanjiang.crm.util.Constant;
+import com.chinahanjiang.crm.util.DateUtil;
 
 @Controller
-@ParentPackage("json-default")
+@ParentPackage("ajaxdefault")
 @Namespace("/task")
 @Results({ @Result(name = "error", location = "/error.jsp"),
 	@Result(name="list",type="json"),
 	@Result(name="add",type="json"),
 	@Result(name="modify",type="json"),
 	@Result(name="delete",type="json"),
-	@Result(name="check",type="json")})
+	@Result(name="check",type="json"),
+	@Result(name="dalytask",type="json"),
+	@Result(name="undotask",type="json")})
 @ExceptionMappings({ @ExceptionMapping(exception = "java.lange.RuntimeException", result = "error") })
 public class TaskAction extends BaseAction {
 
@@ -36,6 +43,8 @@ public class TaskAction extends BaseAction {
 	private TaskService taskService;
 	
 	private TaskDto td;
+	
+	private ItemDto id;
 	
 	private MessageDto md;
 	
@@ -49,6 +58,14 @@ public class TaskAction extends BaseAction {
 
 	private String order;
 	
+	public ItemDto getId() {
+		return id;
+	}
+
+	public void setId(ItemDto id) {
+		this.id = id;
+	}
+
 	public TaskDto getTd() {
 		return td;
 	}
@@ -125,20 +142,71 @@ public class TaskAction extends BaseAction {
 		return "list";
 	}
 	
+	@Action("dalytask")
+	public String dalyTask(){
+		
+		int row = Integer
+				.parseInt(this.httpServletRequest.getParameter("rows") == null ? "10"
+						: this.httpServletRequest.getParameter("rows"));
+		
+		
+		SearchResultDto srd = new SearchResultDto();
+		
+		Timestamp todayBegin = DateUtil.getCurrentDayStartTime();
+		Timestamp todayEnd = DateUtil.getCurrentDayEndTime();
+		
+		srd = taskService.searchAndCount(this.order, this.sort,
+				this.page, row, todayBegin, todayEnd , 0);
+		
+		this.rows.clear();
+		this.rows.addAll(srd.getRows());
+		this.total = srd.getTotal();
+		
+		return "dalytask";
+	}
+	
+	@Action("undotask")
+	public String undoTask(){
+		
+		int row = Integer
+				.parseInt(this.httpServletRequest.getParameter("rows") == null ? "10"
+						: this.httpServletRequest.getParameter("rows"));
+		
+		
+		SearchResultDto srd = new SearchResultDto();
+		
+		srd = taskService.searchAndCount(this.order, this.sort,
+				this.page, row, null, null,1);
+		
+		this.rows.clear();
+		this.rows.addAll(srd.getRows());
+		this.total = srd.getTotal();
+		
+		
+		return "undotask";
+	}
+	
 	@Action("add")
 	public String add(){
 	
+		UserDto u = (UserDto) this.session.get(Constant.USERKEY);
+		md = taskService.update(td,id,u);
+				
 		return "add";
 	}
 	
 	@Action("modify")
 	public String modify(){
 		
+		md = taskService.update(td, null, null);
+		
 		return "modify";
 	}
 	
 	@Action("del")
 	public String delete(){
+		
+		md = taskService.delete(td);
 		
 		return "delete";
 	}

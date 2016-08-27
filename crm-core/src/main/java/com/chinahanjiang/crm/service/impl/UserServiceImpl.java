@@ -12,9 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.chinahanjiang.crm.dao.UserDao;
 import com.chinahanjiang.crm.dto.MessageDto;
 import com.chinahanjiang.crm.dto.SearchResultDto;
-import com.chinahanjiang.crm.dto.TaskTypeDto;
 import com.chinahanjiang.crm.dto.UserDto;
-import com.chinahanjiang.crm.pojo.TaskType;
 import com.chinahanjiang.crm.pojo.User;
 import com.chinahanjiang.crm.service.UserService;
 import com.chinahanjiang.crm.util.DataUtil;
@@ -38,7 +36,6 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public SearchResultDto searchAndCount(String order, String sort, int page,
 			int row) {
-		// TODO Auto-generated method stub
 		
 		Search search = new Search();
 		search.addFilterEqual("isDelete", 1);
@@ -66,7 +63,6 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public MessageDto update(UserDto ud) {
-		// TODO Auto-generated method stub
 		
 		MessageDto md = new MessageDto();
 		Timestamp now = new Timestamp(System.currentTimeMillis());
@@ -118,14 +114,12 @@ public class UserServiceImpl implements UserService {
 	}
 
 	public User findById(int id) {
-		// TODO Auto-generated method stub
 		
 		return userDao.find(id);
 	}
 
 	@Override
 	public MessageDto delete(UserDto ud) {
-		// TODO Auto-generated method stub
 
 		MessageDto md = new MessageDto();
 		User u = null;
@@ -158,6 +152,62 @@ public class UserServiceImpl implements UserService {
 		}
 		
 		return md;
+	}
+
+	@Override
+	public UserDto loadUserDto(UserDto ud) {
+
+		User user = null;
+		if (ud.getCardName() != null) {
+			
+			user = findUserByName(ud.getCardName(), null);
+		}
+
+		if (user != null) {
+
+			ud = DataUtil.convertUserTouDto(user);
+			
+		} else {
+
+			return null;
+		}
+		
+		return ud;
+	}
+
+	@Override
+	public User findUserByName(String cardName, String md5) {
+		
+		Search search = new Search();
+		search.addFilterEqual("isDelete", 1);
+		search.addFilterEqual("cardName", cardName);
+		User u = null;
+		try{
+			
+			u = userDao.searchUnique(search);
+		}catch(Exception e){
+			
+			System.out.println("'" + cardName + "'的在数据库中存在多个，请重新确定!" );
+		}
+		
+		return u;
+	}
+
+	@Override
+	public User findUserByCardName(String name) {
+		
+		User user = null;
+		Search search = new Search();
+		search.addFilterEqual("cardName", name);
+		
+		try{
+			user = userDao.searchUnique(search);
+		}catch(Exception e) {
+			
+			return null;
+			
+		}
+		return user;
 	}
 
 	

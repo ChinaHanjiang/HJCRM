@@ -19,7 +19,7 @@ import com.chinahanjiang.crm.dto.SearchResultDto;
 import com.chinahanjiang.crm.service.GroupsService;
 
 @Controller
-@ParentPackage("json-default")
+@ParentPackage("ajaxdefault")
 @Namespace("/groups")
 @Results({ @Result(name = "error", location = "/error.jsp"),
 	@Result(name="list",type="json"),

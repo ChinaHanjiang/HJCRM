@@ -5,9 +5,10 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import com.chinahanjiang.crm.dto.UserDto;
-import com.chinahanjiang.crm.dto.UserSessionDto;
 import com.chinahanjiang.crm.service.SessionService;
 import com.chinahanjiang.crm.service.UserService;
+import com.chinahanjiang.crm.util.MD5Util;
+import com.chinahanjiang.crm.util.UserSession;
 
 @Service("sessionService")
 public class SessionServiceImpl implements SessionService {
@@ -18,19 +19,22 @@ public class SessionServiceImpl implements SessionService {
 	@Override
 	public UserDto logon(UserDto _UserDto) {
 
-		UserDto userDto = userService.getUserDto(_UserDto);
+		UserDto userDto = userService.loadUserDto(_UserDto);
+		
 		if (userDto != null
-				&& _UserDto.getPassword().equals(userDto.getPassword())) {
+				&& MD5Util.MD5(_UserDto.getPassword()).equals(userDto.getPassword())) {
+			
 			return userDto;
 		}
+		
 		return null;
-
 	}
 
 	@Override
-	public boolean logoff(UserDto _UserDto) {
+	public boolean logoff(UserDto ud) {
 
-		if (UserSessionDto.get("user") != null) {
+		if (UserSession.get(ud.getCardName()) != null) {
+			
 			return true;
 		}
 		return false;

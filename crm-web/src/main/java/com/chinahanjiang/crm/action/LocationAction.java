@@ -16,7 +16,7 @@ import com.chinahanjiang.crm.dto.MessageDto;
 import com.chinahanjiang.crm.service.LocationService;
 
 @Controller
-@ParentPackage("json-default")
+@ParentPackage("ajaxdefault")
 @Namespace("/loc")
 @Results({ @Result(name = "error", location = "/error.jsp"),
 	@Result(name="list",type="json"),

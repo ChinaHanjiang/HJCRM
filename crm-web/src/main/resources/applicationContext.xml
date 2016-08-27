@@ -29,8 +29,8 @@
 	<tx:annotation-driven transaction-manager="transactionManager"
 		proxy-target-class="true" />
 	
-	<!-- 
+	
 	<import resource="applicationContext-action.xml"/>
-	 -->
+	 
 	 
 </beans>

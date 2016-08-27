@@ -27,6 +27,8 @@ public class Item {
 	
 	private String name;
 	
+	private String code;
+	
 	private Timestamp createTime;
 	
 	private Timestamp updateTime;
@@ -51,13 +53,14 @@ public class Item {
 		this.isDelete = 1;
 	}
 	
-	public Item(int id, String name, Timestamp createTime,
+	public Item(int id, String name, String code, Timestamp createTime,
 			Timestamp updateTime, User user, Task task, Customer customer,
 			Contact contact, int isDelete,
 			int status, String remarks) {
 		super();
 		this.id = id;
 		this.name = name;
+		this.code = code;
 		this.createTime = createTime;
 		this.updateTime = updateTime;
 		this.user = user;
@@ -87,6 +90,15 @@ public class Item {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	@Column(name="i_code")
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
 	}
 
 	@Column(name="i_createTime")

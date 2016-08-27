@@ -23,7 +23,7 @@ import com.chinahanjiang.crm.service.LocationService;
 import com.chinahanjiang.crm.service.TaskTypeService;
 
 @Controller
-@ParentPackage("struts-default")
+@ParentPackage("default")
 @Namespace("/win")
 @Results({ @Result(name = "error", location = "/error.jsp"),
 	@Result(name = "success", location = "/WEB-INF/content/main.jsp"),

@@ -5,6 +5,7 @@ import java.util.List;
 import com.chinahanjiang.crm.dto.ContactDto;
 import com.chinahanjiang.crm.dto.MessageDto;
 import com.chinahanjiang.crm.dto.SearchResultDto;
+import com.chinahanjiang.crm.pojo.Contact;
 
 public interface ContactService {
 
@@ -16,4 +17,6 @@ public interface ContactService {
 	MessageDto delete(ContactDto cd);
 
 	List<ContactDto> search(ContactDto cd);
+
+	Contact findById(int cid);
 }

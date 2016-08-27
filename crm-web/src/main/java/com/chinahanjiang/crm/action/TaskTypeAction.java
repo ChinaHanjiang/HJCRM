@@ -19,7 +19,7 @@ import com.chinahanjiang.crm.dto.TaskTypeDto;
 import com.chinahanjiang.crm.service.TaskTypeService;
 
 @Controller
-@ParentPackage("json-default")
+@ParentPackage("ajaxdefault")
 @Namespace("/tasktype")
 @Results({ @Result(name = "error", location = "/error.jsp"),
 	@Result(name="list",type="json"),
