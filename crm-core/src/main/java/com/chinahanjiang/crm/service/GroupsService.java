@@ -2,6 +2,7 @@ package com.chinahanjiang.crm.service;
 
 import java.util.List;
 
+import com.chinahanjiang.crm.dto.DataListDto;
 import com.chinahanjiang.crm.dto.GroupsDto;
 import com.chinahanjiang.crm.dto.MessageDto;
 import com.chinahanjiang.crm.dto.SearchResultDto;
@@ -25,4 +26,6 @@ public interface GroupsService {
 	public MessageDto delete(GroupsDto gd);
 
 	public MessageDto check(GroupsDto gd);
+
+	public List<DataListDto> search(GroupsDto gd);
 }

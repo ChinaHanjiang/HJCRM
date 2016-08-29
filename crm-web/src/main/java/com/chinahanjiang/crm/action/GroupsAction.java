@@ -1,5 +1,6 @@
 package com.chinahanjiang.crm.action;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -13,6 +14,7 @@ import org.apache.struts2.convention.annotation.Result;
 import org.apache.struts2.convention.annotation.Results;
 import org.springframework.stereotype.Controller;
 
+import com.chinahanjiang.crm.dto.DataListDto;
 import com.chinahanjiang.crm.dto.GroupsDto;
 import com.chinahanjiang.crm.dto.MessageDto;
 import com.chinahanjiang.crm.dto.SearchResultDto;
@@ -26,7 +28,9 @@ import com.chinahanjiang.crm.service.GroupsService;
 	@Result(name="add",type="json"),
 	@Result(name="modify",type="json"),
 	@Result(name="delete",type="json"),
-	@Result(name="check",type="json")})
+	@Result(name="check",type="json"),
+	@Result(name="search",type="json"),
+	})
 @ExceptionMappings({ @ExceptionMapping(exception = "java.lange.RuntimeException", result = "error") })
 public class GroupsAction extends BaseAction {
 
@@ -155,5 +159,19 @@ public class GroupsAction extends BaseAction {
 		md = groupsService.check(gd);
 		
 		return "check";
+	}
+	
+	@Action("search")
+	public String search(){
+		
+		List<DataListDto> dld = groupsService.search(gd);
+		
+		this.rows = new ArrayList<Object>();
+		
+		this.rows.clear();
+		this.rows.addAll(dld);
+		this.total = dld.size();
+		
+		return "search";
 	}
 }

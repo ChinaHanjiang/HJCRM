@@ -12,12 +12,14 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <link rel="stylesheet" type="text/css"
-	href="<%=basePath%>themes/metro/easyui.css">
+	href="<%=basePath%>themes/material/easyui.css">
 <link rel="stylesheet" type="text/css"
 	href="<%=basePath%>themes/icon.css">
 <script type="text/javascript" src="<%=basePath%>js/jquery.min.js"></script>
 <script type="text/javascript"
 	src="<%=basePath%>js/jquery.easyui.min.js"></script>
+<script type="text/javascript"
+	src="<%=basePath%>locale/easyui-lang-zh_CN.js"></script>
 <script type="text/javascript">
 	$(document).ready(function(){
 		

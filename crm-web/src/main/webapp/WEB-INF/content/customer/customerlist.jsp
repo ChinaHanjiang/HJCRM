@@ -12,13 +12,14 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <link rel="stylesheet" type="text/css"
-	href="<%=basePath%>themes/metro/easyui.css">
+	href="<%=basePath%>themes/material/easyui.css">
 <link rel="stylesheet" type="text/css"
 	href="<%=basePath%>themes/icon.css">
-<link rel="stylesheet" type="text/css" href="<%=basePath%>demo.css">
 <script type="text/javascript" src="<%=basePath%>js/jquery.min.js"></script>
 <script type="text/javascript"
 	src="<%=basePath%>js/jquery.easyui.min.js"></script>
+<script type="text/javascript"
+	src="<%=basePath%>locale/easyui-lang-zh_CN.js"></script>
 <script type="text/javascript">
 	
 	/*定义全局变量-客户*/
@@ -456,14 +457,6 @@
 	    });
 		/*区域类型 end*/
 		
-		/*集团信息 begin*/
-		 $('#cu_groups').combobox({ 
-	      editable:false, //不可编辑状态
-	      cache: false,
-	      panelHeight: 'auto'//自动高度适合
-	    });
-		/*集团信息 end*/
-		
 		$('#c_addWin').window({
 			onClose:function(){
 				
@@ -477,6 +470,10 @@
 				$('#cu_farea').combobox('setValue',0);
 				$('#cu_sarea').combobox('clear');
 				$('#cu_tarea').combobox('clear');
+				
+				$('#cu_search').searchbox('setValue','');
+				$('#cu_groups').val('');
+				$('#cu_groups_code').val('');
 			}
 		});
 		
@@ -488,7 +485,6 @@
 			$('#c_bsubmit').show();
 			
 			$('#cu_farea').combobox('setValue',0);
-			$('#cu_groups').combobox('setValue',0);
 			$('#cu_sarea').combobox('select',0);
 			$('#cu_tarea').combobox('select',0);
 			
@@ -522,6 +518,9 @@
 				$('#cu_address').textbox('setValue',_c_address);
 				$('#cu_remarks').val(_c_remarks);
 				
+				$('#cu_search').searchbox('setValue',_c_groups);
+				$('#cu_groups').val(_c_groupsId);
+				
 				$.ajax({
 		    		  type:"POST",
 		    		  url:"<%=basePath%>loc/parloc.do?locId=" + _c_location,
@@ -538,8 +537,6 @@
 		    	  });
 				
 				setTimeout("setTareaId(" + _c_location + ")",900);
-				
-				$('#cu_groups').combobox('setValue',_c_groupsId);
 				
 				$('#c_addWin').window('open');
 				
@@ -610,8 +607,8 @@
 			c_fax = $('#cu_fax').textbox('getText').trim();
 			c_address = $('#cu_address').textbox('getText').trim();
 			c_remarks = $('#cu_remarks').val().trim();
-			c_groupsId = $('#cu_groups').combobox('getValue');
 			c_locationId = $('#cu_tarea').combobox('getValue');
+			c_groupsId = $('#cu_groups').val();
 			
 			var l = $('#c_addWinForm').form('enableValidation').form('validate');
 			if(l){
@@ -671,8 +668,8 @@
 			c_fax = $('#cu_fax').textbox('getText').trim();
 			c_address = $('#cu_address').textbox('getText').trim();
 			c_remarks = $('#cu_remarks').val().trim();
-			c_groupsId = $('#cu_groups').combobox('getValue');
 			c_locationId = $('#cu_tarea').combobox('getValue');
+			c_groupsId = $('#cu_groups').val();
 			
 			var str = '';
 			var isChanged = false;
@@ -1025,6 +1022,66 @@
 		
 		/*联系人信息操作 end*/
 		
+		$('#cu_search').searchbox({
+			
+			searcher:function(value,name){
+				
+				var _tarea = $('#tarea').combobox('getValue');
+				if(_tarea==0){
+					
+					$.messager.alert('注意','请选择区域!',
+					'info');
+					return;
+				}
+				
+				if(value==""){
+					
+					$.messager.alert('注意','请输入需要检索的名字!',
+					'info');
+					return;
+				}
+				
+				var str = '';
+				str +="gd.name=" + value;
+				
+			    $('#searchlist').datalist({
+			        url: '<%=basePath%>groups/search.do?' + str.trim()
+			    });
+			    
+			    $('#searchGroupsWin').window('open');
+			}
+		});
+		
+		$('#searchlist').datalist({
+			
+			onDblClickRow:function(index,row){
+				
+				var id = row.id;
+				var text = row.text;
+				var code = row.code;
+				
+				$('#cu_search').searchbox('setValue',text);
+				$('#cu_groups').val(id);
+				$('#cu_groups_code').val(code);
+				
+				var _tarea = $('#tarea').combobox('getValue');
+				
+				String str = "ld.id=" + _tarea;
+				
+				$.ajax({
+					 type:"POST",
+		    		 url:"<%=basePath%>customer/generatecode.do?" + str,
+		    		 cache:false,
+		    		 dataType:'json',
+		    		 success:function(data){
+		    			 
+		    			 
+		    		 }
+				});
+				
+				$('#searchGroupsWin').window('close');
+			}
+		});
 	});
 </script>
 <title>类型列表</title>
@@ -1032,7 +1089,7 @@
 </head>
 <body>
 	<div class="easyui-layout" data-options="fit:true">
-		<div data-options="region:'west'" title="类型列表" style="width: 240px">
+		<div data-options="region:'west'" title="类型列表" style="width: 180px">
 			<ul id="location"></ul>
 		</div>
 		<div id="l_menu" class="easyui-menu" style="width: 120px;">
@@ -1058,7 +1115,10 @@
 						onDblClickRow:function(index,row){
 						
 							_ct_customerId = row.id;
-							
+							var _ctname = row.name;
+							$('#contactWin').window({
+								title:_ctname + ' -- 联系人列表'
+							});
 							$('#contactWin').window('open');
 							var c_id = row.id;
 							$('#contactgrid').datagrid('options').url = '<%=basePath%>contact/list.do?customerId = ' + c_id;
@@ -1075,12 +1135,12 @@
 						<th data-options="field:'groups',width:80">隶属集团</th>
 						<th data-options="field:'locId',hidden:true"></th>
 						<th data-options="field:'location',width:80">区域</th>
-						<th data-options="field:'address',width:250">地址</th>
-						<th data-options="field:'telephone',width:80">电话</th>
-						<th data-options="field:'fax',width:80">传真</th>
-						<th data-options="field:'createTime',width:140">创建时间</th>
-						<th data-options="field:'updateTime',width:140">修改时间</th>
-						<th data-options="field:'remarks',width:150">备注</th>
+						<th data-options="field:'address',width:280">地址</th>
+						<th data-options="field:'telephone',width:150">电话</th>
+						<th data-options="field:'fax',width:100">传真</th>
+						<th data-options="field:'createTime',hidden:true,width:140">创建时间</th>
+						<th data-options="field:'updateTime',hidden:true,width:140">修改时间</th>
+						<th data-options="field:'remarks',width:120">备注</th>
 					</tr>
 				</thead>
 			</table>
@@ -1123,7 +1183,7 @@
 		<!-- 添加客户窗口 -->
 		<div id="c_addWin" class="easyui-window" title="公司客户编辑窗口"
 			data-options="modal:true,closed:true,iconCls:'icon-save',minimizable:false,collapsible:false,maximizable:false"
-			style="width: 450px; height: 480px; padding: 10px;">
+			style="width: 450px; height: 500px; padding: 10px;">
 			<div style="padding: 10px 60px 20px 60px">
 				<form id="c_addWinForm" method="post">
 					<table cellpadding="5">
@@ -1169,17 +1229,16 @@
 								style="width: 200px;height:60px;" type="text" name="f_c_address"
 								data-options="editable:true,multiline:true"></input></td>
 						</tr>
-						<tr id="c_group">
+						<tr  id="c_groups">
 							<td>隶属集团:</td>
-							<td><select id="cu_groups" class="easyui-combobox"
-								style="width: 200px" name="f_c_groups">
-								<option value=0 selected="selected">请选择</option>
-									<s:if test="groups!=null">
-										<s:iterator value="groups" var="g">
-											<option value=${g.id }>${g.name }</option>
-										</s:iterator>
-									</s:if>
-							</select></td>
+							<td>
+								<input id="cu_groups" style="width: 200px; display:none;"
+								 type="text" name="f_c_groups"></input>
+								 <input id="cu_groups_code" style="width: 200px; display:none;"
+								 type="text" name="f_c_groups_code"></input>
+								<input id="cu_search" class="easyui-searchbox" required
+									data-options="prompt:'请输入查询集团名称'" style="width: 200px;"></input>
+							</td>
 						</tr>
 						<tr id="c_code">
 							<td>客户编码:</td>
@@ -1360,6 +1419,17 @@
 						class="easyui-linkbutton">取消</a>
 				</div>
 			</div>
+		</div>
+		
+		<!-- 弹出客户查询窗口 -->
+		<div id="searchGroupsWin" class="easyui-window"  title="集团查询结果"
+			data-options="modal:true,closed:true,border:false,
+			minimizable:false,collapsible:false,maximizable:false"
+			style="width: 350px; height: 300px; padding-left:15px;padding-top:10px;">
+			 <ul id="searchlist" class="easyui-datalist" lines="true"
+			 style="width:300px;height:250px">
+			 	
+			 </ul>
 		</div>
 	</div>
 	<script type="text/javascript">

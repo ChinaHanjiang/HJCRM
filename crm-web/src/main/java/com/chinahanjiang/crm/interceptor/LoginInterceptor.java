@@ -20,7 +20,6 @@ public class LoginInterceptor extends AbstractInterceptor {
 	
 	@Override
 	public String intercept(ActionInvocation invocation) throws Exception {
-		
 
 		ActionContext actionContext = invocation.getInvocationContext();
 		Map<String,Object> session = actionContext.getSession();

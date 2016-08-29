@@ -189,7 +189,6 @@ public class CustomerServiceImpl implements CustomerService {
 	public List<DataListDto> search(CustomerDto cd) {
 		
 		String name = cd.getName();
-		
 		Search search = new Search();
 		search.addFilterEqual("isDelete", 1);
 		search.addFilterLike("name", "%" + name + "%");

@@ -16,6 +16,7 @@ import org.springframework.stereotype.Controller;
 
 import com.chinahanjiang.crm.dto.CustomerDto;
 import com.chinahanjiang.crm.dto.DataListDto;
+import com.chinahanjiang.crm.dto.LocationDto;
 import com.chinahanjiang.crm.dto.MessageDto;
 import com.chinahanjiang.crm.dto.SearchResultDto;
 import com.chinahanjiang.crm.service.CustomerService;
@@ -28,7 +29,8 @@ import com.chinahanjiang.crm.service.CustomerService;
 	@Result(name="add",type="json"),
 	@Result(name="modify",type="json"),
 	@Result(name="del",type="json"),
-	@Result(name="search",type="json")})
+	@Result(name="search",type="json"),
+	@Result(name="generatecode",type="json")})
 @ExceptionMappings({ @ExceptionMapping(exception = "java.lange.RuntimeException", result = "error") })
 public class CustomerAction extends BaseAction {
 
@@ -47,10 +49,13 @@ public class CustomerAction extends BaseAction {
 
 	private String order;
 	
-	//区域id
+	private String code;
+	 
 	private int locId;
 	
 	private CustomerDto cd;
+	
+	private LocationDto ld;
 	
 	private MessageDto md;
 	
@@ -117,6 +122,22 @@ public class CustomerAction extends BaseAction {
 	public void setLocId(int locId) {
 		this.locId = locId;
 	}
+	
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public LocationDto getLd() {
+		return ld;
+	}
+
+	public void setLd(LocationDto ld) {
+		this.ld = ld;
+	}
 
 	@Action("list")
 	public String list(){
@@ -174,5 +195,12 @@ public class CustomerAction extends BaseAction {
 		this.total = dld.size();
 		
 		return "search";
+	}
+	
+	@Action("generatecode")
+	public String generateCode(){
+		
+		code = customerService.generateCode(ld);
+		return "generatecode";
 	}
 }

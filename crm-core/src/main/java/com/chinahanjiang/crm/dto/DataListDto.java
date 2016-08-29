@@ -5,6 +5,8 @@ public class DataListDto {
 	private int id;
 	
 	private String text;
+	
+	private String code;
 
 	public int getId() {
 		return id;
@@ -21,6 +23,13 @@ public class DataListDto {
 	public void setText(String text) {
 		this.text = text;
 	}
-	
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
 	
 }

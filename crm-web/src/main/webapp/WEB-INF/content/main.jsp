@@ -1,43 +1,71 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
+<%@ page import="com.chinahanjiang.crm.dto.UserDto;" %> 
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme() + "://"
 			+ request.getServerName() + ":" + request.getServerPort()
 			+ path + "/";
 %>
+
+<%
+	
+%>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <link rel="stylesheet" type="text/css"
-	href="<%=basePath%>themes/metro/easyui.css">
+	href="<%=basePath%>themes/material/easyui.css">
 <link rel="stylesheet" type="text/css"
 	href="<%=basePath%>themes/icon.css">
 <script type="text/javascript" src="<%=basePath%>js/jquery.min.js"></script>
 <script type="text/javascript"
 	src="<%=basePath%>js/jquery.easyui.min.js"></script>
-	
+<script type="text/javascript"
+	src="<%=basePath%>locale/easyui-lang-zh_CN.js"></script>
 <script type="text/javascript">
 	$(document).ready(function(){
 		
+		$('#r').click(function(){
+			
+			$('#dalytaskgrid').datagrid('reload');
+			$('#undotaskgrid').datagrid('reload');
+			$('#dalyitemgrid').datagrid('reload');
+			$('#undoitemgrid').datagrid('reload');
+		});
+		
+		$('#logout').click(function(){
+			
+			window.location.href= "<%=basePath%>login/out.do";
+		});
 	});
 </script>
 <title>任务管理信息系统</title>
 </head>
 <body class="easyui-layout">
 	<div data-options="region:'north',border:false"
-		style="height: 60px; background: #B3DFDA; padding-top: 5px; padding-left: 15px;">
-
-		<h2>韩江机械任务管理信息系统v1.0</h2>
+		style="height: 80px; padding-top: 10px; padding-left: 15px; background: #F8F8FF;">
+		<div>
+			<span style="font-family:微软雅黑,宋体; font-size:2em;">韩江机械任务管理信息系统v1.0</span>
+		</div>
+		<div style="float:right;padding-right:50px;">
+			
+			<span style="font-family:微软雅黑,宋体; font-size:14px;">你好,
+				<%=((UserDto)session.getAttribute("user")).getName() %>
+				<a id="logout" href="#" style="padding-left:5px;">退出</a>
+			</span>
+		</div>
 	</div>
+	
 	<div data-options="region:'west',title:'导航栏',border:true"
 		style="width: 150px;">
 		<div class="easyui-accordion" data-options="fit:true,border:false">
 			<div title="任务管理" style="padding: 10px;">
 				<div style="width: 100%; text-align: center">
 					<div style="padding-top: 10px; cursor: pointer;"
-						onclick="addPanel('tasklist','积分列表','<%=basePath%>win/tasklist.do')">
+						onclick="addPanel('tasklist','任务列表','<%=basePath%>win/tasklist.do')">
 						<img alt="任务列表" src="<%=basePath%>icon/document_new.png">
 						<div>任务列表</div>
 					</div>
@@ -88,12 +116,11 @@
 		</div>
 	</div>
 	<div data-options="region:'south',border:false"
-		style="height: 30px; background: #A9FACD; padding: 10px;">south
-		region</div>
+		style="height: 10px; background: #F0F0F0; padding: 10px;"></div>
 	<div data-options="region:'center'">
 		<div id="tabs" class="easyui-tabs" data-options="border:false"
 			style="width: auto; height: 660px;">
-			<div title="主页" style="padding: 10px">
+			<div title="主页" data-options="tools:'#p-tools'" style="padding: 10px">
 
 				<div style="padding-top: 15px;">
 
@@ -214,6 +241,9 @@
 			</div>
 		</div>
 	</div>
+	<div id="p-tools">
+        <a id="r" href="javascript:void(0)" class="icon-mini-refresh"></a>
+    </div>
 	<script type="text/javascript">
 
 	    function addPanel(id,title, href){  

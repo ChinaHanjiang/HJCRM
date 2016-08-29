@@ -10,9 +10,11 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.chinahanjiang.crm.dao.GroupsDao;
+import com.chinahanjiang.crm.dto.DataListDto;
 import com.chinahanjiang.crm.dto.GroupsDto;
 import com.chinahanjiang.crm.dto.MessageDto;
 import com.chinahanjiang.crm.dto.SearchResultDto;
+import com.chinahanjiang.crm.pojo.Customer;
 import com.chinahanjiang.crm.pojo.Groups;
 import com.chinahanjiang.crm.service.GroupsService;
 import com.chinahanjiang.crm.util.DataUtil;
@@ -217,5 +219,20 @@ public class GroupsServiceImpl implements GroupsService {
 		}
 		
 		return md;
+	}
+
+	@Override
+	public List<DataListDto> search(GroupsDto gd) {
+		
+		String name = gd.getName();
+		
+		Search search = new Search();
+		search.addFilterEqual("isDelete", 1);
+		search.addFilterLike("name", "%" + name + "%");
+		SearchResult<Groups> result = searchAndCount(search);
+		List<Groups> cls = result.getResult();
+		List<DataListDto> dlds = DataUtil.convertGroupsToDld(cls);
+		
+		return dlds;
 	}
 }

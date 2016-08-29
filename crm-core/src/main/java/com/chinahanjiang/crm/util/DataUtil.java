@@ -469,4 +469,25 @@ public class DataUtil {
 		return ids;
 	}
 
+	public static List<DataListDto> convertGroupsToDld(List<Groups> gls) {
+		
+		List<DataListDto> dlds = new ArrayList<DataListDto>();
+		if (gls != null) {
+
+			Iterator<Groups> it = gls.iterator();
+			while (it.hasNext()) {
+
+				Groups g = it.next();
+				DataListDto dld = new DataListDto();
+				dld.setId(g.getId());
+				dld.setText(g.getName());
+				dld.setCode(g.getCode());
+
+				dlds.add(dld);
+			}
+		}
+		
+		return dlds;
+	}
+
 }
