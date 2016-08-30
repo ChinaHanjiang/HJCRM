@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.chinahanjiang.crm.dto.CustomerDto;
 import com.chinahanjiang.crm.dto.DataListDto;
+import com.chinahanjiang.crm.dto.LocationDto;
 import com.chinahanjiang.crm.dto.MessageDto;
 import com.chinahanjiang.crm.dto.SearchResultDto;
 import com.chinahanjiang.crm.pojo.Customer;
@@ -24,5 +25,7 @@ public interface CustomerService {
 	List<Customer> loadCustomers(int i);
 
 	List<DataListDto> search(CustomerDto cd);
+
+	String generateCode(LocationDto ld);
 
 }
