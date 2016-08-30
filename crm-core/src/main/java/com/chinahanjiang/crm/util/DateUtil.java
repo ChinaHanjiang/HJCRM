@@ -8,6 +8,8 @@ public class DateUtil {
 
 	private static final SimpleDateFormat shortSdf = new SimpleDateFormat(
 			"yyyy-MM-dd");
+	private static final SimpleDateFormat shortSdf2= new SimpleDateFormat(
+			"yyyyMMdd");
 	private static final SimpleDateFormat longSdf = new SimpleDateFormat(
 			"yyyy-MM-dd HH:mm:ss");
 	
@@ -56,5 +58,13 @@ public class DateUtil {
 		t = Timestamp.valueOf(dateStr);
 
 		return t;
+	}
+	
+	public static String getCurrentDayString(){
+		
+		Date now = new Date();
+		String dateStr = "";
+		dateStr = shortSdf2.format(now);
+		return dateStr;
 	}
 }

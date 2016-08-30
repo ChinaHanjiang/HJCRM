@@ -69,11 +69,6 @@
 						<img alt="任务列表" src="<%=basePath%>icon/document_new.png">
 						<div>任务列表</div>
 					</div>
-					<div style="padding-top: 10px; cursor: pointer;"
-						onclick="addPanel('itemlist','事件列表','<%=basePath%>win/itemlist.do')">
-						<img alt="事件列表" src="<%=basePath%>icon/lists.png">
-						<div>任务列表</div>
-					</div>
 				</div>
 			</div>
 			<div title="客户管理" data-options="selected:true" style="padding: 10px;">
@@ -134,7 +129,7 @@
 											rownumbers:true,
 											height: 260, 
 											collapsible:false,
-											showHeader:false,
+											showHeader:true,
 											pagination:true,
 											border:false
 											">
@@ -161,7 +156,7 @@
 											rownumbers:true,
 											height: 260, 
 											collapsible:false,
-											showHeader:false,
+											showHeader:true,
 											pagination:true,
 											border:false
 											">
@@ -192,7 +187,7 @@
 											rownumbers:true,
 											height: 260, 
 											collapsible:false,
-											showHeader:false,
+											showHeader:true,
 											pagination:true,
 											border:false
 											">
@@ -220,7 +215,7 @@
 											rownumbers:true,
 											height: 260, 
 											collapsible:false,
-											showHeader:false,
+											showHeader:true,
 											pagination:true,
 											border:false
 											">

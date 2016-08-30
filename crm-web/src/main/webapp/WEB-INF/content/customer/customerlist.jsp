@@ -1026,7 +1026,7 @@
 			
 			searcher:function(value,name){
 				
-				var _tarea = $('#tarea').combobox('getValue');
+				var _tarea = $('#cu_tarea').combobox('getValue');
 				if(_tarea==0){
 					
 					$.messager.alert('注意','请选择区域!',
@@ -1064,9 +1064,9 @@
 				$('#cu_groups').val(id);
 				$('#cu_groups_code').val(code);
 				
-				var _tarea = $('#tarea').combobox('getValue');
+				var _tarea = $('#cu_tarea').combobox('getValue');
 				
-				String str = "ld.id=" + _tarea;
+				var str = "ld.id=" + _tarea;
 				
 				$.ajax({
 					 type:"POST",
@@ -1075,7 +1075,10 @@
 		    		 dataType:'json',
 		    		 success:function(data){
 		    			 
-		    			 
+		    			 var _result = data.code;
+		    			 var str = _result.split('-');
+		    			 var ccode = str[0] + "-" + code + "-" +str[1];
+		    			 $('#cu_code').textbox('setText',ccode);
 		    		 }
 				});
 				
@@ -1244,7 +1247,7 @@
 							<td>客户编码:</td>
 							<td><input id="cu_code" class="easyui-textbox"
 								style="width: 200px" type="text" name="f_c_code"
-								data-options="editable:true,required:true"></td>
+								data-options="editable:false,required:true"></td>
 						</tr>
 						<tr id="c_remarks">
 							<td>备注:</td>

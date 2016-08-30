@@ -489,5 +489,18 @@ public class DataUtil {
 		
 		return dlds;
 	}
-
+	
+	public static String converNumToStr(int num){
+		
+		String result = "";
+		String is = String.valueOf(num);
+		int n = 3-is.length();
+		for(int i=1;i<=n;i++){
+			
+			result += "0";
+		}
+		
+		result += is;
+		return result;
+	}
 }

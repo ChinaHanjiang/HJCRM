@@ -6,9 +6,9 @@ import com.chinahanjiang.crm.dto.ItemDto;
 import com.chinahanjiang.crm.dto.MessageDto;
 import com.chinahanjiang.crm.dto.SearchResultDto;
 import com.chinahanjiang.crm.dto.TaskDto;
+import com.chinahanjiang.crm.dto.TaskTypeDto;
 import com.chinahanjiang.crm.dto.UserDto;
 import com.chinahanjiang.crm.pojo.Task;
-import com.chinahanjiang.crm.pojo.User;
 
 public interface TaskService {
 
@@ -24,5 +24,7 @@ public interface TaskService {
 	MessageDto delete(TaskDto td);
 
 	Task findById(int id);
+
+	String generateCode(TaskTypeDto ttd);
 
 }

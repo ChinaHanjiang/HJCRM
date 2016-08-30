@@ -18,6 +18,7 @@ import com.chinahanjiang.crm.dto.ItemDto;
 import com.chinahanjiang.crm.dto.MessageDto;
 import com.chinahanjiang.crm.dto.SearchResultDto;
 import com.chinahanjiang.crm.dto.TaskDto;
+import com.chinahanjiang.crm.dto.TaskTypeDto;
 import com.chinahanjiang.crm.dto.UserDto;
 import com.chinahanjiang.crm.service.TaskService;
 import com.chinahanjiang.crm.util.Constant;
@@ -33,7 +34,8 @@ import com.chinahanjiang.crm.util.DateUtil;
 	@Result(name="delete",type="json"),
 	@Result(name="check",type="json"),
 	@Result(name="dalytask",type="json"),
-	@Result(name="undotask",type="json")})
+	@Result(name="undotask",type="json"),
+	@Result(name="generatecode",type="json")})
 @ExceptionMappings({ @ExceptionMapping(exception = "java.lange.RuntimeException", result = "error") })
 public class TaskAction extends BaseAction {
 
@@ -57,6 +59,10 @@ public class TaskAction extends BaseAction {
 	private String sort;
 
 	private String order;
+	
+	private String code;
+	
+	private TaskTypeDto ttd;
 	
 	public ItemDto getId() {
 		return id;
@@ -120,6 +126,22 @@ public class TaskAction extends BaseAction {
 
 	public void setOrder(String order) {
 		this.order = order;
+	}
+	
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public TaskTypeDto getTtd() {
+		return ttd;
+	}
+
+	public void setTtd(TaskTypeDto ttd) {
+		this.ttd = ttd;
 	}
 
 	@Action("list")
@@ -209,5 +231,12 @@ public class TaskAction extends BaseAction {
 		md = taskService.delete(td);
 		
 		return "delete";
+	}
+	
+	@Action("generatecode")
+	public String generateCode(){
+		
+		code = taskService.generateCode(ttd);
+		return "generatecode";
 	}
 }

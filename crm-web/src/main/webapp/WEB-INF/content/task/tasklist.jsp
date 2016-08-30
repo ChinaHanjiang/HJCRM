@@ -152,7 +152,7 @@
 			var i_remarks;
 			
 			t_name = $('#t_name').textbox('getValue');
-			t_code = $('#t_code').textbox('getValue');
+			t_code = $('#t_code').textbox('getText');
 			t_customerId = $('#t_customerId').val();
 			t_reamrks = $('#t_remarks').val();
 			t_tasktypeId = $('#t_tasktype').combobox('getValue');
@@ -164,18 +164,29 @@
 			
 			var tl = $('#addTaskForm').form('enableValidation').form('validate');
 			var il = $('#addItemForm').form('enableValidation').form('validate');
-			if(tl&&il){
+			if(tl){
 				
 				var str = '';
 				str += "td.name=" + t_name;
 				str += "&td.code=" + t_code;
-				str += "&td.customerId=" + t_remarks;
-				str += "&td.tasktypeId=" + t_tasktypeId;
+				str += "&td.customerId=" + t_customerId;
+				str += "&td.taskTypeId=" + t_tasktypeId;
 				str += "&td.remarks=" + t_remarks; 
-				str += "&id.name=" + i_name;
-				str += "&id.code=" + i_code;
-				str += "&id.remarks=" + i_remarks;
-				str += "&id.contactId=" + i_contactId;
+				
+				if(i_name!=""){
+					
+					if(il){
+						
+						str += "&id.name=" + i_name;
+						str += "&id.code=" + i_code;
+						str += "&id.remarks=" + i_remarks;
+						str += "&id.contactId=" + i_contactId;
+					} else {
+						
+						$.messager.alert('注意', '事件的表单请填写完整！',
+						'info');
+					}
+				}
 				
 				$.ajax({
 					 type:"POST",
@@ -189,7 +200,7 @@
 		    				 
 		    				 $.messager.alert('成功', _data.message,
 								'info');
-		    				 $("#usergrid").datagrid('reload');
+		    				 $("#taskgrid").datagrid('reload');
 		    				 
 		    			 } else {
 		    				 
@@ -224,7 +235,7 @@
 			var isChanged = false;
 			
 			var tl = $('#addTaskForm').form('enableValidation').form('validate');
-			if(tl&&il){
+			if(tl){
 				
 				str += "td.name=" + t_name;
 				str += "&td.code=" + t_code;
@@ -366,6 +377,31 @@
 				
 			}
 		});
+		
+		$('#t_tasktype').combobox({ 
+		      editable:false, //不可编辑状态
+		      required:true, 
+		      cache: false,
+		      panelHeight: 'auto',//自动高度适合
+		      onChange:function(){
+		    	  
+		    	  var _tasktypeId = $(this).combobox('getValue');
+		    	  var str = "ttd.id=" + _tasktypeId;
+		    	  $.ajax({
+		    		  type:"POST",
+			    		 url:"<%=basePath%>task/generatecode.do?" + str,
+			    		 cache:false,
+			    		 dataType:'json',
+			    		 success:function(data){
+			    			 
+			    			 var _result = data.code;
+			    			 var _icode = _result + "-" + "001";
+			    			 $('#t_code').textbox('setText',_result);
+			    			 $('#i_code').textbox('setText',_icode);
+			    		 }
+		    	  });
+		      }
+		});
 	});
 	</script>
 <title>任务列表</title>
@@ -391,21 +427,21 @@
 		<thead>
 			<tr>
 				<th data-options="field:'id',width:30,hidden:true">序号</th>
-				<th data-options="field:'code',width:120,align:'center'">编码</th>
+				<th data-options="field:'code',width:150,align:'center'">编码</th>
 				<th data-options="field:'taskTypeId',hidden:true"></th>
-				<th data-options="field:'taskType',width:120,align:'center'">任务类型</th>
-				<th data-options="field:'name',width:120,align:'center'">内容</th>
+				<th data-options="field:'taskType',width:80,align:'center'">任务类型</th>
+				<th data-options="field:'name',width:280,align:'center'">内容</th>
 				<th data-options="field:'customerId',hidden:true"></th>
-				<th data-options="field:'customer',width:60,align:'center'">客户</th>
+				<th data-options="field:'customer',width:200,align:'center'">客户</th>
 				<th data-options="field:'userId',hidden:true"></th>
-				<th data-options="field:'createUser',width:130,align:'center'">创建用户</th>
-				<th data-options="field:'createTime',width:120,align:'center'">创建时间</th>
+				<th data-options="field:'createUser',width:60,align:'center'">创建用户</th>
+				<th data-options="field:'createTime',width:100,align:'center'">创建时间</th>
 				<th data-options="field:'updateUserId',hidden:true"></th>
-				<th data-options="field:'updateUser',width:130,align:'center'">跟进者</th>
-				<th data-options="field:'updateTime',width:60,align:'center'">跟进时间</th>
-				<th data-options="field:'itemNum',width:60,align:'center'">子任务数</th>
-				<th data-options="field:'status',width:60,align:'center'">状态</th>
-				<th data-options="field:'remark',width:130,align:'center'">备注</th>
+				<th data-options="field:'updateUser',width:80,align:'center'">跟进者</th>
+				<th data-options="field:'updateTime',width:100,align:'center'">跟进时间</th>
+				<th data-options="field:'itemNum',width:50,align:'center'">事件数</th>
+				<th data-options="field:'status',width:50,align:'center'">状态</th>
+				<th data-options="field:'remark',width:80,align:'center'">备注</th>
 			</tr>
 		</thead>
 	</table>
@@ -464,7 +500,7 @@
 									<td>编码:</td>
 									<td><input id="t_code" class="easyui-textbox"
 										style="width: 200px; height:20px;" type="text" name="f_t_code" required
-										data-options=""></input></td>
+										data-options="editable:false"></input></td>
 								</tr>
 								<tr>
 									<td>客户:</td>
@@ -498,7 +534,7 @@
 									<td>编码:</td>
 									<td><input id="i_code" class="easyui-textbox"
 										style="width: 200px; height:20px;" type="text" name="f_i_code" required
-										data-options=""></input></td>
+										data-options="editable:false"></input></td>
 								</tr>
 								<tr>
 									<td>联系人:</td>

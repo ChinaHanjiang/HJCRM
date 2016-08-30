@@ -15,6 +15,7 @@ import com.chinahanjiang.crm.dto.ItemDto;
 import com.chinahanjiang.crm.dto.MessageDto;
 import com.chinahanjiang.crm.dto.SearchResultDto;
 import com.chinahanjiang.crm.dto.TaskDto;
+import com.chinahanjiang.crm.dto.TaskTypeDto;
 import com.chinahanjiang.crm.dto.UserDto;
 import com.chinahanjiang.crm.pojo.Contact;
 import com.chinahanjiang.crm.pojo.Customer;
@@ -29,6 +30,7 @@ import com.chinahanjiang.crm.service.TaskService;
 import com.chinahanjiang.crm.service.TaskTypeService;
 import com.chinahanjiang.crm.service.UserService;
 import com.chinahanjiang.crm.util.DataUtil;
+import com.chinahanjiang.crm.util.DateUtil;
 import com.googlecode.genericdao.search.Search;
 import com.googlecode.genericdao.search.SearchResult;
 
@@ -112,6 +114,7 @@ public class TaskServiceImpl implements TaskService {
 	}
 
 	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 	public MessageDto update(TaskDto td, ItemDto id, UserDto u) {
 		
 		Timestamp now = new Timestamp(System.currentTimeMillis());
@@ -125,8 +128,8 @@ public class TaskServiceImpl implements TaskService {
 		
 		if(u!=null){
 			
-			 String name = u.getCardName();
-			 user = userService.findUserByCardName(name);
+			 int uid = u.getId();
+			 user = userService.findById(uid);
 		}
 		
 		int tid = td.getId();
@@ -153,6 +156,8 @@ public class TaskServiceImpl implements TaskService {
 				
 				t.setCreateUser(user);
 				t.setUpdateUser(user);
+				t.setCreateTime(now);
+				t.setUpdateTime(now);
 				t.setStatus(0);
 				
 				if(id!=null){
@@ -223,12 +228,15 @@ public class TaskServiceImpl implements TaskService {
 			t.setRemarks(td.getRemarks());
 		}
 		
+		
+		save(t);
 		md.setT(true);
 		md.setMessage(message);
 		return md;
 	}
 
 	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 	public MessageDto delete(TaskDto td) {
 		
 		MessageDto md = new MessageDto();
@@ -267,6 +275,37 @@ public class TaskServiceImpl implements TaskService {
 	public Task findById(int id) {
 		
 		return taskDao.find(id);
+	}
+
+	@Override
+	public String generateCode(TaskTypeDto ttd) {
+		
+		String result = "";
+		int id = ttd.getId();
+		if(id!=0){
+			
+			TaskType tt = taskTypeService.findById(id);
+			if(tt!=null){
+				
+				String code = tt.getCode();
+				String day = DateUtil.getCurrentDayString();
+				
+				Search search = new Search();
+				search.addFilterEqual("taskType", tt);
+				
+				Timestamp begin = DateUtil.getCurrentDayStartTime();
+				Timestamp end = DateUtil.getCurrentDayEndTime();
+				
+				search.addFilterGreaterOrEqual("createTime", begin);
+				search.addFilterLessOrEqual("createTime", end);
+				
+				int num = taskDao.count(search) + 1;
+				
+				result += code + "-" + day + "-" + DataUtil.converNumToStr(num);
+			}
+		}
+		
+		return result;
 	}
 
 }

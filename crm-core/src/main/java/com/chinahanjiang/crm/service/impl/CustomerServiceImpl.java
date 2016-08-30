@@ -202,8 +202,32 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Override
 	public String generateCode(LocationDto ld) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		int id = ld.getId();
+		String result = "";
+		
+		if(id!=0){
+			
+			Location l = locService.findById(id);
+			
+			if(l!=null){
+				
+				int num = countById(l) + 1;
+				Location pl = l.getParentLoc();
+				result += pl.getCode() + l.getCode() + "-" + num;
+				
+			}
+		}
+		
+		return result;
+	}
+
+	@Override
+	public int countById(Location l) {
+		
+		Search search = new Search();
+		search.addFilterEqual("location", l);
+		return customerDao.count(search);
 	}
 	
 }
