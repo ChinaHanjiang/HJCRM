@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.chinahanjiang.crm.dao.CustomerDao;
 import com.chinahanjiang.crm.dto.CustomerDto;
 import com.chinahanjiang.crm.dto.DataListDto;
+import com.chinahanjiang.crm.dto.LocationDto;
 import com.chinahanjiang.crm.dto.MessageDto;
 import com.chinahanjiang.crm.dto.SearchResultDto;
 import com.chinahanjiang.crm.pojo.Customer;
@@ -197,6 +198,12 @@ public class CustomerServiceImpl implements CustomerService {
 		List<DataListDto> dlds = DataUtil.convertCustomerToDld(cls);
 		
 		return dlds;
+	}
+
+	@Override
+	public String generateCode(LocationDto ld) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }

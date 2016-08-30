@@ -39,8 +39,11 @@
 		<struts2.version>2.2.3</struts2.version>
 		<jetty.version>6.1.24</jetty.version>
 		<slf4j.version>1.6.0</slf4j.version>
+		<org.springframework.security.version>
+			3.2.0.RELEASE
+		</org.springframework.security.version>
 
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+			<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	<dependencyManagement>
 		<dependencies>
@@ -299,7 +302,7 @@
 			<dependency>
 				<groupId>com.googlecode.genericdao</groupId>
 				<artifactId>dao-hibernate</artifactId>
-				<version>1.1.0</version>
+				<version>1.2.0</version>
 			</dependency>
 			<dependency>
 				<groupId>com.google.code.gson</groupId>
@@ -331,7 +334,61 @@
 				<artifactId>quartz-all</artifactId>
 				<version>1.6.3</version>
 			</dependency>
-
+			<dependency>
+				<groupId>org.springframework.security</groupId>
+				<artifactId>spring-security-web</artifactId>
+				<version>${org.springframework.security.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.security</groupId>
+				<artifactId>spring-security-config</artifactId>
+				<version>${org.springframework.security.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.security</groupId>
+				<artifactId>spring-security-core</artifactId>
+				<version>${org.springframework.security.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.security</groupId>
+				<artifactId>spring-security-acl</artifactId>
+				<version>${org.springframework.security.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.security</groupId>
+				<artifactId>spring-security-aspects</artifactId>
+				<version>${org.springframework.security.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.security</groupId>
+				<artifactId>spring-security-cas</artifactId>
+				<version>${org.springframework.security.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.security</groupId>
+				<artifactId>spring-security-crypto</artifactId>
+				<version>${org.springframework.security.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.security</groupId>
+				<artifactId>spring-security-ldap</artifactId>
+				<version>${org.springframework.security.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.security</groupId>
+				<artifactId>spring-security-openid</artifactId>
+				<version>${org.springframework.security.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.security</groupId>
+				<artifactId>spring-security-remoting</artifactId>
+				<version>${org.springframework.security.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.security</groupId>
+				<artifactId>spring-security-taglibs</artifactId>
+				<version>${org.springframework.security.version}</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 	<build>
