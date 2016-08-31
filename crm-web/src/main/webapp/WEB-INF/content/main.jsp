@@ -175,8 +175,8 @@
 					
 								<thead>
 									<tr>
-										<th data-options="field:'code',width:120,align:'center'">编号</th>
-										<th data-options="field:'tasktype',width:80,align:'center'">类型</th>
+										<th data-options="field:'code',width:125,align:'center'">编号</th>
+										<th data-options="field:'taskType',width:80,align:'center'">类型</th>
 										<th data-options="field:'name',width:140,align:'center'">内容</th>
 										<th data-options="field:'customer',width:180,align:'center'">客户</th>
 										<th data-options="field:'statusStr',width:40,align:'center'">状态</th>
@@ -202,12 +202,12 @@
 					
 								<thead>
 									<tr>
-										<th data-options="field:'code',width:120,align:'center'">编号</th>
-										<th data-options="field:'tasktype',width:80,align:'center'">类型</th>
-										<th data-options="field:'taskCode',width:120,align:'center'">任务号</th>
+										<th data-options="field:'code',width:140,align:'center'">编号</th>
+										<th data-options="field:'taskType',width:70,align:'center'">类型</th>
+										<th data-options="field:'task',width:120,align:'center'">任务号</th>
 										<th data-options="field:'name',width:100,align:'center'">内容</th>
 										<th data-options="field:'customer',width:100,align:'center'">客户</th>
-										<th data-options="field:'statusStr',width:40,align:'center'">状态</th>
+										<th data-options="field:'statusStr',width:30,align:'center'">状态</th>
 									</tr>
 								</thead>
 							</table>
@@ -232,7 +232,7 @@
 											">
 								<thead>
 									<tr>
-										<th data-options="field:'code',width:120,align:'center'">编号</th>
+										<th data-options="field:'code',width:125,align:'center'">编号</th>
 										<th data-options="field:'tasktype',width:80,align:'center'">类型</th>
 										<th data-options="field:'name',width:140,align:'center'">内容</th>
 										<th data-options="field:'customer',width:180,align:'center'">客户</th>
@@ -259,12 +259,12 @@
 											">
 								<thead>
 									<tr>
-										<th data-options="field:'code',width:120,align:'center'">编号</th>
-										<th data-options="field:'tasktype',width:80,align:'center'">类型</th>
-										<th data-options="field:'taskCode',width:120,align:'center'">任务号</th>
+										<th data-options="field:'code',width:140,align:'center'">编号</th>
+										<th data-options="field:'tasktype',width:70,align:'center'">类型</th>
+										<th data-options="field:'task',width:120,align:'center'">任务号</th>
 										<th data-options="field:'name',width:100,align:'center'">内容</th>
 										<th data-options="field:'customer',width:100,align:'center'">客户</th>
-										<th data-options="field:'statusStr',width:40,align:'center'">状态</th>
+										<th data-options="field:'statusStr',width:30,align:'center'">状态</th>
 									</tr>
 								</thead>
 							</table>

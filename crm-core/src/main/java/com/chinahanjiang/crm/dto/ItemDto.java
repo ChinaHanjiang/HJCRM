@@ -33,8 +33,6 @@ public class ItemDto {
 	
 	private String contact;
 	
-	private String statuss;
-	
 	private int status;/*0-进行中，1-完成*/
 	
 	private String remarks;
