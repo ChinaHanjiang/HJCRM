@@ -33,9 +33,13 @@ public class ItemDto {
 	
 	private String contact;
 	
+	private String statuss;
+	
 	private int status;/*0-进行中，1-完成*/
 	
 	private String remarks;
+
+	private String statusStr;
 
 	public int getId() {
 		return id;
@@ -171,5 +175,13 @@ public class ItemDto {
 
 	public void setTasktype(String tasktype) {
 		this.tasktype = tasktype;
+	}
+
+	public String getStatusStr() {
+		return statusStr;
+	}
+
+	public void setStatusStr(String statusStr) {
+		this.statusStr = statusStr;
 	}
 }

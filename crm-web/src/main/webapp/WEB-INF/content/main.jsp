@@ -40,6 +40,45 @@
 			
 			window.location.href= "<%=basePath%>login/out.do";
 		});
+		
+		var remarkFormater = function(value, row, index){   
+			alert("value="+value+"  index="+index);
+			var content = '';
+			var abValue = value +'';
+			if(value != undefined){
+				
+				if(value.length>=22) {    
+					abValue = value.substring(0,19) + "..."; 
+					content = '<a href="javascript:;"  title="' + value + '" class="easyui-tooltip">' + abValue + '</a>'; 
+					}else{     
+						content = '<a href="javascript:;"  title="' + abValue + '" class="easyui-tooltip">' + abValue + '</a>';  
+						} 
+				}  
+			return content;
+		};
+		
+		/*
+		$('#dalytaskgrid').datagrid('getPanel').find('.easyui-tooltip').each(function(){
+	        var index = parseInt($(this).attr('data-p1'));
+	        $(this).tooltip({
+	            content: $('<div></div>'),
+	            onUpdate: function(cc){
+	                var row = $('#dalytaskgrid').datagrid('getRows')[index];
+	                var content = '<div>content</div><ul>';
+	                content += '<li>name: '+row.A+'</li>';
+	                content += '<li>B: '+row.B+'</li>';
+	                content += '<li>C: '+row.C+'</li>';
+	                content += '<li>D: '+row.D+'</li>';
+	                content += '</ul>';
+	                cc.panel({
+	                    width:200,
+	                    content:content
+	                });
+	            },
+	            position:'right'
+	        });
+	    });
+		*/
 	});
 </script>
 <title>任务管理信息系统</title>
@@ -136,11 +175,11 @@
 					
 								<thead>
 									<tr>
-										<th data-options="field:'code',width:100">编号</th>
-										<th data-options="field:'tasktype',width:100">类型</th>
-										<th data-options="field:'name',width:100">内容</th>
-										<th data-options="field:'customer',width:100">客户</th>
-										<th data-options="field:'state',width:80">状态</th>
+										<th data-options="field:'code',width:120,align:'center'">编号</th>
+										<th data-options="field:'tasktype',width:80,align:'center'">类型</th>
+										<th data-options="field:'name',width:140,align:'center'">内容</th>
+										<th data-options="field:'customer',width:180,align:'center'">客户</th>
+										<th data-options="field:'statusStr',width:40,align:'center'">状态</th>
 									</tr>
 								</thead>
 							</table>
@@ -151,7 +190,7 @@
 							style="width: 600px; height: 290px;">
 							<table id="dalyitemgrid" class="easyui-datagrid"
 								data-options="
-											url:'<%=basePath %>task/dalytask.do',
+											url:'<%=basePath %>item/dalyitem.do',
 											loadMsg:'数据加载中请稍后……',  
 											rownumbers:true,
 											height: 260, 
@@ -163,12 +202,12 @@
 					
 								<thead>
 									<tr>
-										<th data-options="field:'code',width:100">编号</th>
-										<th data-options="field:'tasktype',width:100">类型</th>
-										<th data-options="field:'taskCode',width:100">任务号</th>
-										<th data-options="field:'name',width:100">内容</th>
-										<th data-options="field:'customer',width:100">客户</th>
-										<th data-options="field:'state',width:80">状态</th>
+										<th data-options="field:'code',width:120,align:'center'">编号</th>
+										<th data-options="field:'tasktype',width:80,align:'center'">类型</th>
+										<th data-options="field:'taskCode',width:120,align:'center'">任务号</th>
+										<th data-options="field:'name',width:100,align:'center'">内容</th>
+										<th data-options="field:'customer',width:100,align:'center'">客户</th>
+										<th data-options="field:'statusStr',width:40,align:'center'">状态</th>
 									</tr>
 								</thead>
 							</table>
@@ -191,14 +230,13 @@
 											pagination:true,
 											border:false
 											">
-					
 								<thead>
 									<tr>
-										<th data-options="field:'code',width:100">编号</th>
-										<th data-options="field:'tasktype',width:100">类型</th>
-										<th data-options="field:'name',width:100">内容</th>
-										<th data-options="field:'customer',width:100">客户</th>
-										<th data-options="field:'state',width:80">状态</th>
+										<th data-options="field:'code',width:120,align:'center'">编号</th>
+										<th data-options="field:'tasktype',width:80,align:'center'">类型</th>
+										<th data-options="field:'name',width:140,align:'center'">内容</th>
+										<th data-options="field:'customer',width:180,align:'center'">客户</th>
+										<th data-options="field:'statusStr',width:40,align:'center'">状态</th>
 									</tr>
 								</thead>
 							</table>
@@ -221,12 +259,12 @@
 											">
 								<thead>
 									<tr>
-										<th data-options="field:'code',width:100">编号</th>
-										<th data-options="field:'tasktype',width:100">类型</th>
-										<th data-options="field:'taskCode',width:100">任务号</th>
-										<th data-options="field:'name',width:100">内容</th>
-										<th data-options="field:'customer',width:100">客户</th>
-										<th data-options="field:'state',width:80">状态</th>
+										<th data-options="field:'code',width:120,align:'center'">编号</th>
+										<th data-options="field:'tasktype',width:80,align:'center'">类型</th>
+										<th data-options="field:'taskCode',width:120,align:'center'">任务号</th>
+										<th data-options="field:'name',width:100,align:'center'">内容</th>
+										<th data-options="field:'customer',width:100,align:'center'">客户</th>
+										<th data-options="field:'statusStr',width:40,align:'center'">状态</th>
 									</tr>
 								</thead>
 							</table>

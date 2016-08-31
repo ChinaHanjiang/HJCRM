@@ -198,7 +198,7 @@ public class TaskAction extends BaseAction {
 		SearchResultDto srd = new SearchResultDto();
 		
 		srd = taskService.searchAndCount(this.order, this.sort,
-				this.page, row, null, null,1);
+				this.page, row, null, null,0);
 		
 		this.rows.clear();
 		this.rows.addAll(srd.getRows());

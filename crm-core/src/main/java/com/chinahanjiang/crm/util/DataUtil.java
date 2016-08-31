@@ -308,6 +308,7 @@ public class DataUtil {
 						.format(t.getUpdateTime()));
 				td.setRemarks(t.getRemarks());
 				td.setStatus(t.getStatus());
+				td.setStatusStr(t.getStatus()==0?"N":"R");
 				td.setItemNum(t.getItems() == null ? 0 : t.getItems().size());
 
 				tds.add(td);
@@ -445,7 +446,8 @@ public class DataUtil {
 						.getId());
 				id.setRemarks(i.getRemarks());
 				id.setStatus(i.getStatus());
-				id.setTask(i.getTask() == null ? "" : i.getTask().getName());
+				id.setStatusStr(i.getStatus()==0?"N":"R");
+				id.setTask(i.getTask() == null ? "" : i.getTask().getCode());
 				id.setTaskId(i.getTask() == null ? 0 : i.getTask().getId());
 				id.setTasktype(i.getTask() == null ? "" : (i.getTask()
 						.getTaskType() == null ? "" : i.getTask().getTaskType()

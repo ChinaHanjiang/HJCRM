@@ -158,9 +158,11 @@
 			t_tasktypeId = $('#t_tasktype').combobox('getValue');
 			
 			i_name = $('#i_name').textbox('getValue');
-			i_code = $('#i_code').textbox('getValue');
+			i_code = $('#i_code').textbox('getText');
 			i_remarks = $('#i_remarks').val('');
 			i_contactId = $('#i_contact').combogrid('getValue');
+			
+			alert(i_contactId);
 			
 			var tl = $('#addTaskForm').form('enableValidation').form('validate');
 			var il = $('#addItemForm').form('enableValidation').form('validate');
@@ -226,7 +228,7 @@
 			var t_remarks;
 			
 			t_name = $('#t_name').textbox('getValue');
-			t_code = $('#t_code').textbox('getValue');
+			t_code = $('#t_code').textbox('getText');
 			t_customerId = $('#t_customerId').val();
 			t_reamrks = $('#t_remarks').val();
 			t_tasktypeId = $('#t_tasktype').combobox('getValue');
@@ -395,7 +397,7 @@
 			    		 success:function(data){
 			    			 
 			    			 var _result = data.code;
-			    			 var _icode = _result + "-" + "001";
+			    			 var _icode = _result + "." + "1";
 			    			 $('#t_code').textbox('setText',_result);
 			    			 $('#i_code').textbox('setText',_icode);
 			    		 }
@@ -407,62 +409,104 @@
 <title>任务列表</title>
 </head>
 <body>
-	<table id="taskgrid" cellspacing="0" cellpadding="0"
-		class="easyui-datagrid"
-		data-options="
-					url:'<%=basePath%>task/list.do',
-					loadMsg:'数据加载中请稍后……',  
-					title:'任务列表',
-					rownumbers:true,
-					singleSelect:true,
-					collapsible:false,
-					autoRowHeight:true,
-					autoRowWidth:true,
-					pagination:true,
-					pageNumber:1,
-					pageSize:20,
-					sortOrder:'desc',
-		    		toolbar: '#tb' 
-				">
-		<thead>
-			<tr>
-				<th data-options="field:'id',width:30,hidden:true">序号</th>
-				<th data-options="field:'code',width:150,align:'center'">编码</th>
-				<th data-options="field:'taskTypeId',hidden:true"></th>
-				<th data-options="field:'taskType',width:80,align:'center'">任务类型</th>
-				<th data-options="field:'name',width:280,align:'center'">内容</th>
-				<th data-options="field:'customerId',hidden:true"></th>
-				<th data-options="field:'customer',width:200,align:'center'">客户</th>
-				<th data-options="field:'userId',hidden:true"></th>
-				<th data-options="field:'createUser',width:60,align:'center'">创建用户</th>
-				<th data-options="field:'createTime',width:100,align:'center'">创建时间</th>
-				<th data-options="field:'updateUserId',hidden:true"></th>
-				<th data-options="field:'updateUser',width:80,align:'center'">跟进者</th>
-				<th data-options="field:'updateTime',width:100,align:'center'">跟进时间</th>
-				<th data-options="field:'itemNum',width:50,align:'center'">事件数</th>
-				<th data-options="field:'status',width:50,align:'center'">状态</th>
-				<th data-options="field:'remark',width:80,align:'center'">备注</th>
-			</tr>
-		</thead>
-	</table>
-
-	<div id="tb"
-		style="border-bottom: 1px solid #ddd; height: 30px; padding: 3px 10px 0px 5px; background: #fafafa;">
-		<div style="float: left;">
-			<a id="t_addTask" href="#" class="easyui-linkbutton" plain="true"
-				icon="icon-add">新增</a>
+	<div>
+		<table id="taskgrid" cellspacing="0" cellpadding="0"
+			class="easyui-datagrid"
+			data-options="
+						url:'<%=basePath%>task/list.do',
+						loadMsg:'数据加载中请稍后……',  
+						title:'任务列表',
+						height: 300, 
+						rownumbers:true,
+						singleSelect:true,
+						collapsible:false,
+						autoRowHeight:true,
+						autoRowWidth:true,
+						pagination:true,
+						pageNumber:1,
+						pageSize:10,
+						sortOrder:'desc',
+			    		toolbar: '#tb' 
+					">
+			<thead>
+				<tr>
+					<th data-options="field:'id',width:30,hidden:true">序号</th>
+					<th data-options="field:'code',width:150,align:'center'">编码</th>
+					<th data-options="field:'taskTypeId',hidden:true"></th>
+					<th data-options="field:'taskType',width:80,align:'center'">任务类型</th>
+					<th data-options="field:'name',width:280,align:'center'">内容</th>
+					<th data-options="field:'customerId',hidden:true"></th>
+					<th data-options="field:'customer',width:200,align:'center'">客户</th>
+					<th data-options="field:'userId',hidden:true"></th>
+					<th data-options="field:'createUser',width:60,align:'center'">创建用户</th>
+					<th data-options="field:'createTime',width:100,align:'center'">创建时间</th>
+					<th data-options="field:'updateUserId',hidden:true"></th>
+					<th data-options="field:'updateUser',width:80,align:'center'">跟进者</th>
+					<th data-options="field:'updateTime',width:100,align:'center'">跟进时间</th>
+					<th data-options="field:'itemNum',width:50,align:'center'">事件数</th>
+					<th data-options="field:'statusStr',width:50,align:'center'">状态</th>
+					<th data-options="field:'remark',width:80,align:'center'">备注</th>
+				</tr>
+			</thead>
+		</table>
+	
+		<div id="tb"
+			style="border-bottom: 1px solid #ddd; height: 30px; padding: 3px 10px 0px 5px; background: #fafafa;">
+			<div style="float: left;">
+				<a id="t_addTask" href="#" class="easyui-linkbutton" plain="true"
+					icon="icon-add">新增</a>
+			</div>
+	
+			<div style="float: left;">
+				<a id="t_editTask" href="#" class="easyui-linkbutton" plain="true"
+					icon="icon-save">编辑</a>
+			</div>
+	
+			<div style="float: left;">
+				<a id="t_deleteTask" href="#" class="easyui-linkbutton" plain="true"
+					icon="icon-remove">删除</a>
+			</div>
 		</div>
-
-		<div style="float: left;">
-			<a id="t_editTask" href="#" class="easyui-linkbutton" plain="true"
-				icon="icon-save">编辑</a>
-		</div>
-
-		<div style="float: left;">
-			<a id="t_deleteTask" href="#" class="easyui-linkbutton" plain="true"
-				icon="icon-remove">删除</a>
-		</div>
-
+	</div>
+	<!-- 事件列表 -->
+	
+	<div style="padding-top: 10px;">
+		<table id="itemgrid" cellspacing="0" cellpadding="0"
+			class="easyui-datagrid"
+			data-options="
+						url:'<%=basePath%>item/list.do',
+						loadMsg:'数据加载中请稍后……',  
+						title:'事件列表',
+						height: 300, 
+						rownumbers:true,
+						singleSelect:true,
+						collapsible:false,
+						autoRowHeight:true,
+						autoRowWidth:true,
+						pagination:true,
+						pageNumber:1,
+						pageSize:10,
+						sortOrder:'desc'
+					">
+			<thead>
+				<tr>
+					<th data-options="field:'id',width:30,hidden:true">序号</th>
+					<th data-options="field:'code',width:150,align:'center'">编码</th>
+					<th data-options="field:'task',width:150,align:'center'">任务编码</th>
+					<th data-options="field:'customerId',hidden:true"></th>
+					<th data-options="field:'customer',width:200,align:'center'">客户</th>
+					<th data-options="field:'name',width:250,align:'center'">内容</th>
+					<th data-options="field:'contactId',hidden:true"></th>
+					<th data-options="field:'contnact',width:100,align:'center'">联系人</th>
+					<th data-options="field:'userId',hidden:true"></th>
+					<th data-options="field:'user',width:80,align:'center'">跟进者</th>
+					<th data-options="field:'createTime',width:100,align:'center'">创建时间</th>
+					<th data-options="field:'updateTime',width:100,align:'center'">修改时间</th>
+					<th data-options="field:'statusStr',width:50,align:'center'">状态</th>
+					<th data-options="field:'remark',width:60,align:'center'">备注</th>
+				</tr>
+			</thead>
+		</table>
 	</div>
 
 	<!-- 添加任务窗口 -->

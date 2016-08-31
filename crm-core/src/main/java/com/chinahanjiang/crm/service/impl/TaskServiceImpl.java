@@ -126,6 +126,9 @@ public class TaskServiceImpl implements TaskService {
 		TaskType taskType = null;
 		Task t = null;
 		
+		int customerId = td.getCustomerId();
+		customer = customerService.findById(customerId);
+		
 		if(u!=null){
 			
 			 int uid = u.getId();
@@ -178,6 +181,9 @@ public class TaskServiceImpl implements TaskService {
 						item.setCode(id.getCode());
 						item.setCreateTime(now);
 						item.setContact(c);
+						if(customer!=null){
+							item.setCustomer(customer);
+						}
 						item.setRemarks(id.getRemarks());
 						item.setUser(user);
 						item.setStatus(0);
@@ -196,11 +202,8 @@ public class TaskServiceImpl implements TaskService {
 				md.setT(false);
 				md.setMessage("创建者不存在，请重新登陆！");
 				return md;
-				
 			}
 			
-			int customerId = td.getCustomerId();
-			customer = customerService.findById(customerId);
 			if(customer!=null){
 				
 				t.setCustomer(customer);
@@ -222,12 +225,10 @@ public class TaskServiceImpl implements TaskService {
 				md.setMessage("任务类型不存在，请重新确认！");
 				return md;
 			}
-			
 			t.setName(td.getName());
 			t.setCode(td.getCode());
 			t.setRemarks(td.getRemarks());
 		}
-		
 		
 		save(t);
 		md.setT(true);

@@ -31,6 +31,8 @@ public class ItemServiceImpl implements ItemService {
 		
 		Search search = new Search();
 		search.addFilterEqual("isDelete", 1);
+		search.addFilterEqual("status", i);
+		
 		
 		if(begin!=null){
 			search.addFilterGreaterOrEqual("createTime", begin);

@@ -13,6 +13,8 @@ public class TaskDto {
 	
 	private String createUser;
 	
+	private String statusStr;
+	
 	private int status;/*0-进行中,1-关闭*/
 	
 	private String createTime;
@@ -161,5 +163,13 @@ public class TaskDto {
 
 	public void setRemarks(String remarks) {
 		this.remarks = remarks;
+	}
+
+	public String getStatusStr() {
+		return statusStr;
+	}
+
+	public void setStatusStr(String statusStr) {
+		this.statusStr = statusStr;
 	}
 }
