@@ -4,9 +4,12 @@ import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 /**
@@ -42,6 +45,8 @@ public class User {
 	
 	private Timestamp updateTime;
 	
+	private Department department;
+	
 	public User(){
 		
 		this.isDelete = 1;
@@ -49,7 +54,7 @@ public class User {
 
 	public User(int id, String cardName, String name, String password, String duty,
 			String mobilephone, String email, int sex, int isDelete, String remarks,
-			Timestamp createTime, Timestamp updateTime) {
+			Timestamp createTime, Timestamp updateTime, Department department) {
 		super();
 		this.id = id;
 		this.cardName = cardName;
@@ -63,6 +68,7 @@ public class User {
 		this.remarks = remarks;
 		this.createTime = createTime;
 		this.updateTime = updateTime;
+		this.department = department;
 	}
 
 	@Id
@@ -174,5 +180,14 @@ public class User {
 	public void setUpdateTime(Timestamp updateTime) {
 		this.updateTime = updateTime;
 	}
-	
+
+	@OneToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "u_did",referencedColumnName="d_id")
+	public Department getDepartment() {
+		return department;
+	}
+
+	public void setDepartment(Department department) {
+		this.department = department;
+	}
 }

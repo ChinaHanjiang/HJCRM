@@ -25,6 +25,10 @@ public class ItemDto {
 	
 	private String tasktype;
 	
+	private int itemTypeId;
+	
+	private String itemType;
+	
 	private int customerId;
 	
 	private String customer;
@@ -182,4 +186,21 @@ public class ItemDto {
 	public void setStatusStr(String statusStr) {
 		this.statusStr = statusStr;
 	}
+
+	public int getItemTypeId() {
+		return itemTypeId;
+	}
+
+	public void setItemTypeId(int itemTypeId) {
+		this.itemTypeId = itemTypeId;
+	}
+
+	public String getItemType() {
+		return itemType;
+	}
+
+	public void setItemType(String itemType) {
+		this.itemType = itemType;
+	}
+	
 }

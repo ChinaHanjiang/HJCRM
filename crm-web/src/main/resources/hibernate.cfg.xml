@@ -44,6 +44,14 @@
 		<mapping class="com.chinahanjiang.crm.pojo.TaskType" />
 		<mapping class="com.chinahanjiang.crm.pojo.User" />
 		<mapping class="com.chinahanjiang.crm.pojo.Groups" />
+		<mapping class="com.chinahanjiang.crm.pojo.Department" />
+		<mapping class="com.chinahanjiang.crm.pojo.ItemAttachment" />
+		<mapping class="com.chinahanjiang.crm.pojo.ItemType" />
+		<mapping class="com.chinahanjiang.crm.pojo.Product" />
+		<mapping class="com.chinahanjiang.crm.pojo.ProductAndQuoteRelation" />
+		<mapping class="com.chinahanjiang.crm.pojo.ProductCatalog" />
+		<mapping class="com.chinahanjiang.crm.pojo.ProductQuote" />
+		<mapping class="com.chinahanjiang.crm.pojo.ProductQuoteDetails" />
 		
 	</session-factory>
 </hibernate-configuration>

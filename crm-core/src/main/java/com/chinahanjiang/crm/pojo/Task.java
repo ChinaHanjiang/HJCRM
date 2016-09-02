@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -49,6 +50,8 @@ public class Task {
 	
 	private List<Item> items;
 	
+	private List<Product> products;
+	
 	private TaskType taskType;
 	
 	private String remarks;
@@ -60,7 +63,7 @@ public class Task {
 
 	public Task(int id, String name, String code, User createUser, int status, int isDelete,
 			Timestamp createTime, Timestamp updateTime, User updateUser,
-			Customer customer, List<Item> items, TaskType taskType,
+			Customer customer, List<Item> items, TaskType taskType, List<Product> products,
 			String remarks) {
 		super();
 		this.id = id;
@@ -75,6 +78,7 @@ public class Task {
 		this.customer = customer;
 		this.items = items;
 		this.taskType = taskType;
+		this.products = products;
 		this.remarks = remarks;
 	}
 
@@ -201,5 +205,13 @@ public class Task {
 	public void setRemarks(String remarks) {
 		this.remarks = remarks;
 	}
-	
+
+	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "tasks")
+	public List<Product> getProducts() {
+		return products;
+	}
+
+	public void setProducts(List<Product> products) {
+		this.products = products;
+	}
 }

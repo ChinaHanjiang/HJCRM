@@ -1,6 +1,7 @@
 package com.chinahanjiang.crm.pojo;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -11,8 +12,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 /**
  * 具体事件  2016-8-15
@@ -35,6 +40,8 @@ public class Item {
 	
 	private User user;
 	
+	private ItemType itemType;
+	
 	private Task task;
 	
 	private Customer customer;
@@ -46,6 +53,8 @@ public class Item {
 	
 	private int status;/*0-进行中，1-完成*/
 	
+	private List<ItemAttachment> itemAttachements;
+	
 	private String remarks;
 	
 	public Item(){
@@ -55,8 +64,8 @@ public class Item {
 	
 	public Item(int id, String name, String code, Timestamp createTime,
 			Timestamp updateTime, User user, Task task, Customer customer,
-			Contact contact, int isDelete,
-			int status, String remarks) {
+			Contact contact, int isDelete, ItemType itemType,
+			int status, List<ItemAttachment> itemAttachements, String remarks) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -68,7 +77,9 @@ public class Item {
 		this.customer = customer;
 		this.contact = contact;
 		this.isDelete = isDelete;
+		this.itemType = itemType;
 		this.status = status;
+		this.itemAttachements = itemAttachements;
 		this.remarks = remarks;
 	}
 
@@ -186,5 +197,24 @@ public class Item {
 	public void setRemarks(String remarks) {
 		this.remarks = remarks;
 	}
-	
+
+	@OneToMany(targetEntity = ItemAttachment.class, cascade = { CascadeType.ALL }, fetch = FetchType.LAZY, mappedBy = "item")
+	@Fetch(FetchMode.SUBSELECT)
+	public List<ItemAttachment> getItemAttachements() {
+		return itemAttachements;
+	}
+
+	public void setItemAttachements(List<ItemAttachment> itemAttachements) {
+		this.itemAttachements = itemAttachements;
+	}
+
+	@OneToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "i_itid",referencedColumnName="it_id")
+	public ItemType getItemType() {
+		return itemType;
+	}
+
+	public void setItemType(ItemType itemType) {
+		this.itemType = itemType;
+	}
 }

@@ -108,6 +108,16 @@
 						<img alt="任务列表" src="<%=basePath%>icon/document_new.png">
 						<div>任务列表</div>
 					</div>
+					<div style="padding-top: 10px; cursor: pointer;"
+						onclick="addPanel('quotelist','报价列表','<%=basePath%>win/quotelist.do')">
+						<img alt="报价列表" src="<%=basePath%>icon/document_new.png">
+						<div>报价列表</div>
+					</div>
+					<div style="padding-top: 10px; cursor: pointer;"
+						onclick="addPanel('quotelist','报价窗口','<%=basePath%>win/quotewindow.do')">
+						<img alt="报价窗口" src="<%=basePath%>icon/document_new.png">
+						<div>报价窗口</div>
+					</div>
 				</div>
 			</div>
 			<div title="客户管理" data-options="selected:true" style="padding: 10px;">
