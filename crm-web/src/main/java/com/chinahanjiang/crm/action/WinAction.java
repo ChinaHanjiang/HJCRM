@@ -33,6 +33,7 @@ import com.chinahanjiang.crm.service.TaskTypeService;
 	@Result(name = "tasklist", location = "/WEB-INF/content/task/tasklist.jsp"),
 	@Result(name = "userlist", location = "/WEB-INF/content/setting/userlist.jsp"),
 	@Result(name = "quotelist", location = "/WEB-INF/content/quote/quotelist.jsp"),
+	@Result(name = "productlist", location = "/WEB-INF/content/product/productlist.jsp"),
 	@Result(name = "quotewindow", location = "/WEB-INF/content/quote/quotewindow.jsp")})
 @ExceptionMappings({ @ExceptionMapping(exception = "java.lange.RuntimeException", result = "error") })
 public class WinAction extends BaseAction {
@@ -140,5 +141,11 @@ public class WinAction extends BaseAction {
 	public String quoteWindow(){
 		
 		return "quotewindow";
+	}
+	
+	@Action("productlist")
+	public String productlistWin(){
+		
+		return "productlist";
 	}
 }

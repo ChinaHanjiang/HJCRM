@@ -304,7 +304,7 @@
 		data-options="
 					url:'<%=basePath%>user/list.do',
 					loadMsg:'数据加载中请稍后……',  
-					title:"用户列表",
+					title:'用户列表',
 					rownumbers:true,
 					singleSelect:true,
 					collapsible:false,

@@ -48,6 +48,7 @@
 		<mapping class="com.chinahanjiang.crm.pojo.ItemAttachment" />
 		<mapping class="com.chinahanjiang.crm.pojo.ItemType" />
 		<mapping class="com.chinahanjiang.crm.pojo.Product" />
+		<mapping class="com.chinahanjiang.crm.pojo.ProductConfiguration" />
 		<mapping class="com.chinahanjiang.crm.pojo.ProductAndQuoteRelation" />
 		<mapping class="com.chinahanjiang.crm.pojo.ProductCatalog" />
 		<mapping class="com.chinahanjiang.crm.pojo.ProductQuote" />

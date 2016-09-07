@@ -2,8 +2,10 @@ package com.chinahanjiang.crm.util;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import com.chinahanjiang.crm.dto.ComboResultDto;
 import com.chinahanjiang.crm.dto.ContactDto;
@@ -12,6 +14,8 @@ import com.chinahanjiang.crm.dto.DataListDto;
 import com.chinahanjiang.crm.dto.EyTreeDto;
 import com.chinahanjiang.crm.dto.GroupsDto;
 import com.chinahanjiang.crm.dto.ItemDto;
+import com.chinahanjiang.crm.dto.ProductConfigurationDto;
+import com.chinahanjiang.crm.dto.ProductDto;
 import com.chinahanjiang.crm.dto.TaskDto;
 import com.chinahanjiang.crm.dto.TaskTypeDto;
 import com.chinahanjiang.crm.dto.UserDto;
@@ -20,10 +24,14 @@ import com.chinahanjiang.crm.pojo.Customer;
 import com.chinahanjiang.crm.pojo.Groups;
 import com.chinahanjiang.crm.pojo.Item;
 import com.chinahanjiang.crm.pojo.Location;
+import com.chinahanjiang.crm.pojo.Product;
+import com.chinahanjiang.crm.pojo.ProductCatalog;
+import com.chinahanjiang.crm.pojo.ProductConfiguration;
 import com.chinahanjiang.crm.pojo.Task;
 import com.chinahanjiang.crm.pojo.TaskType;
 import com.chinahanjiang.crm.pojo.User;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 public class DataUtil {
 
@@ -74,6 +82,7 @@ public class DataUtil {
 	public static String locationToJson(Location loc) {
 
 		Gson gson = new Gson();
+		
 		EyTreeDto btd = convertLocationToDto(loc);
 		String str = null;
 		if (btd != null) {
@@ -89,9 +98,12 @@ public class DataUtil {
 		if (loc != null && isDelete != 0) {
 			btd = new EyTreeDto();
 			btd.setId(loc.getId());
-			btd.setText(loc.getName() + "-" + loc.getCode());
+			btd.setText(loc.getName());
 			btd.setState(loc.getState());
-
+			Map<String,String> attributes = new HashMap<String,String>();
+			attributes.put("code", loc.getCode());
+			btd.setAttributes(attributes);
+			
 			List<Location> children = loc.getChildLocs();
 			if (children != null && children.size() != 0) {
 				btd.setIsF(1);
@@ -374,7 +386,6 @@ public class DataUtil {
 	}
 
 	public static List<UserDto> convertUserToDto(List<User> uls) {
-		// TODO Auto-generated method stub
 
 		List<UserDto> uds = new ArrayList<UserDto>();
 
@@ -505,4 +516,261 @@ public class DataUtil {
 		result += is;
 		return result;
 	}
+
+	public static String productCatalogToJson(ProductCatalog pc) {
+		
+		Gson gson = new Gson();
+		EyTreeDto btd = convertProductCatalogToDto(pc);
+		String str = null;
+		if (btd != null) {
+			str = gson.toJson(btd);
+		}
+		return str;
+	}
+
+	private static EyTreeDto convertProductCatalogToDto(ProductCatalog pc) {
+		
+		EyTreeDto btd = null;
+		int isDelete = pc.getIsDelete();
+		if (pc != null && isDelete != 0) {
+			btd = new EyTreeDto();
+			btd.setId(pc.getId());
+			btd.setText(pc.getName());
+			Map<String,String> attributes = new HashMap<String,String>();
+			attributes.put("code", pc.getCode());
+			btd.setAttributes(attributes);
+			btd.setState(pc.getState());
+
+			List<ProductCatalog> children = pc.getChildPcs();
+			if (children != null && children.size() != 0) {
+				btd.setIsF(1);
+				List<EyTreeDto> btdchild = new ArrayList<EyTreeDto>();
+				EyTreeDto btdc = null;
+				for (ProductCatalog p : children) {
+
+					btdc = convertProductCatalogToDto(p);
+					if (btdc != null) {
+						btdchild.add(btdc);
+					}
+				}
+
+				btd.setChildren(btdchild);
+			} else {
+
+				btd.setIsF(0);
+			}
+		}
+
+		return btd;
+	}
+
+	public static List<ProductCatalog> getAllPcChildren(ProductCatalog pc) {
+
+		List<ProductCatalog> pcs = new ArrayList<ProductCatalog>();
+
+		List<ProductCatalog> pccs = pc.getChildPcs();
+		if (pccs != null && pccs.size() != 0) {
+
+			Iterator<ProductCatalog> it = pccs.iterator();
+			while (it.hasNext()) {
+
+				ProductCatalog next = it.next();
+				List<ProductCatalog> nextLocs = getAllPcChildren(next);
+				pcs.addAll(nextLocs);
+			}
+		} else {
+
+			pcs.add(pc);
+		}
+
+		return pcs;
+	}
+
+	public static List<ProductDto> convertProductToDto(List<Product> ps) {
+		
+		List<ProductDto> pds = new ArrayList<ProductDto>();
+		
+		if(ps!=null){
+			
+			Iterator<Product> it = ps.iterator();
+			while(it.hasNext()){
+				
+				Product p = it.next();
+				ProductDto pd = new ProductDto();
+				
+				pd.setId(p.getId());
+				pd.setName(p.getName());
+				pd.setCode(p.getCode());
+				pd.setShortCode(p.getShortCode());
+				pd.setProductCatalogId(p.getProductCatalog()==null?0:p.getProductCatalog().getId());
+				pd.setProductCatalog(p.getProductCatalog()==null?"":p.getProductCatalog().getName());
+				pd.setRemarks(p.getRemarks());
+				pd.setStandardPrice(p.getStandardPrice());
+				pd.setUserId(p.getUser()==null?0:p.getUser().getId());
+				pd.setUser(p.getUser()==null?"":p.getUser().getName());
+				pd.setMixNum(p.getProductMix()==null?0:p.getProductMix().size());
+				pd.setCreateTime(p.getCreateTime() == null ? "" : sdf_dt
+						.format(p.getCreateTime()));
+				pd.setUpdateTime(p.getUpdateTime() == null ? "" : sdf_dt
+						.format(p.getUpdateTime()));
+				
+				pds.add(pd);
+			}
+		}
+		return pds;
+	}
+
+	public static String productCatalogToJson(List<ProductCatalog> pcs) {
+		
+		Gson gson = new Gson();
+		List<EyTreeDto> etds = convertProductCatalogToDto(pcs);
+		String str = null;
+		if (etds != null) {
+			str = gson.toJson(etds);
+		}
+		return str;
+		
+	}
+
+	private static List<EyTreeDto> convertProductCatalogToDto(
+			List<ProductCatalog> pcs) {
+		
+		List<EyTreeDto> etds = new ArrayList<EyTreeDto>();
+		
+		if(pcs!=null){
+			
+			Iterator<ProductCatalog> it = pcs.iterator();
+			while(it.hasNext()){
+				
+				ProductCatalog pc = it.next();
+				EyTreeDto etd = new EyTreeDto();
+				etd.setId(pc.getId());
+				etd.setText(pc.getName());
+				etd.setState(pc.getState());
+				
+				etds.add(etd);
+			}
+		}
+		return etds;
+	}
+
+	public static String productToComboboxResult(List<Product> ps) {
+		
+		Gson gson = new Gson();
+		List<ComboResultDto> etds = convertProducToDto(ps);
+		String str = null;
+		if (etds != null) {
+			str = gson.toJson(etds);
+		}
+		return str;
+	}
+
+	private static List<ComboResultDto> convertProducToDto(List<Product> ps) {
+		
+		List<ComboResultDto> crds = new ArrayList<ComboResultDto>();
+		int i = 0;
+		if(ps!=null){
+			
+			Iterator<Product> it = ps.iterator();
+			while(it.hasNext()){
+				
+				Product p = it.next();
+				ComboResultDto crd = new ComboResultDto();
+				crd.setId(p.getId());
+				crd.setText(p.getName());
+				if(i==0){
+					
+					crd.setSelected(true);
+					i++;
+				} else {
+					
+					crd.setSelected(false);
+				}
+				
+				crds.add(crd);
+			}
+		}
+		
+		return crds;
+	}
+
+	public static ProductDto convertProductToDto(Product p) {
+		
+		ProductDto pd = new ProductDto();
+		
+		if(p!=null){
+			
+			pd.setId(p.getId());
+			pd.setName(p.getName());
+			pd.setShortCode(p.getShortCode());
+			pd.setCode(p.getCode());
+			pd.setStandardPrice(p.getStandardPrice());
+			pd.setRemarks(p.getRemarks());
+		}
+			
+		return pd;
+	}
+
+	public static List<Product> changeConfigurationToProducts(
+			List<ProductConfiguration> pcfgs) {
+		
+		List<Product> ps = new ArrayList<Product>();
+		if(pcfgs!=null){
+			
+			Iterator<ProductConfiguration> it = pcfgs.iterator();
+			while(it.hasNext()){
+				
+				ProductConfiguration pcf = it.next();
+				Product p = pcf.getSproduct();
+				
+				ps.add(p);
+			}
+		}
+		
+		return ps;
+	}
+	
+	public static List<ProductConfigurationDto> convertJsonToProductConfigurationDto(String json){
+		
+		Gson gs = new Gson();
+		List<ProductConfigurationDto> pds = gs.fromJson(json, 
+				new TypeToken<List<ProductConfigurationDto>>(){}.getType());
+		
+		return pds;
+	}
+
+	public static List<ProductConfigurationDto> convertProductConfigurationsToDto(
+			List<ProductConfiguration> pcfs) {
+		
+		List<ProductConfigurationDto> pcfds = new ArrayList<ProductConfigurationDto>();
+		if(pcfs!=null){
+			
+			Iterator<ProductConfiguration> it = pcfs.iterator();
+			while(it.hasNext()){
+				
+				ProductConfiguration pcf = it.next();
+				
+				ProductConfigurationDto pcfd = new ProductConfigurationDto();
+				pcfd.setId(pcf.getId());
+				pcfd.setFpid(pcf.getFproduct().getId());
+				pcfd.setFproduct(pcf.getFproduct().getName());
+				pcfd.setSpid(pcf.getSproduct().getId());
+				pcfd.setSproduct(pcf.getSproduct().getName());
+				pcfd.setCode(pcf.getSproduct().getCode());
+				pcfd.setProductCatalogId(pcf.getSproduct().getProductCatalog().getId());
+				pcfd.setProductCatalog(pcf.getSproduct().getProductCatalog().getName());
+				pcfd.setQuantity(pcf.getQuantity());
+				pcfd.setRemarks(pcf.getRemarks());
+				pcfd.setCreateTime(pcf.getCreateTime() == null ? "" : sdf_dt
+						.format(pcf.getCreateTime()));
+				pcfd.setUpdateTime(pcf.getUpdateTime() == null ? "" : sdf_dt
+						.format(pcf.getUpdateTime()));
+				
+				pcfds.add(pcfd);
+			}
+		}
+		
+		return pcfds;
+	}
+	
 }

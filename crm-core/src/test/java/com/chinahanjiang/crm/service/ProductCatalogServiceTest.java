@@ -7,10 +7,10 @@ import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.chinahanjiang.crm.dto.CustomerDto;
-import com.chinahanjiang.crm.service.impl.CustomerServiceImpl;
+import com.chinahanjiang.crm.pojo.ProductCatalog;
+import com.chinahanjiang.crm.service.impl.ProductCatalogServiceImpl;
 
-public class CustomerServiceTest {
+public class ProductCatalogServiceTest {
 
 	private ApplicationContext context;
 
@@ -24,10 +24,9 @@ public class CustomerServiceTest {
 	@Test
 	public void testSearch() throws IOException{
 		
-		CustomerService cs = (CustomerServiceImpl) context
-				.getBean("customerService");
+		ProductCatalogService cs = (ProductCatalogServiceImpl) context
+				.getBean("productCatalogService");
 		
-		CustomerDto cd = new CustomerDto();
-		cd.setName("奥瑞金");
+		ProductCatalog pc = cs.findProductCatalogByCode("HJP");
 	}
 }

@@ -123,7 +123,7 @@
 			<div title="客户管理" data-options="selected:true" style="padding: 10px;">
 				<div style="width: 100%; text-align: center">
 					<div style="padding-top: 10px; cursor: pointer;"
-						onclick="addPanel('customerlist',' 客户管理','<%=basePath%>win/customerlist.do')">
+						onclick="addPanel('customerlist','客户管理','<%=basePath%>win/customerlist.do')">
 						<img alt="客户管理" src="<%=basePath%>icon/evolution_tasks.png">
 						<div>客户管理</div>
 					</div>
@@ -132,7 +132,7 @@
 			<div title="报表管理" data-options="selected:true" style="padding: 10px;">
 				<div style="width: 100%; text-align: center">
 					<div style="padding-top: 10px; cursor: pointer;"
-						onclick="addPanel('customerlist',' 客户管理','<%=basePath%>win/customerlist.do')">
+						onclick="addPanel('customerlist','aaa','<%=basePath%>win/customerlist.do')">
 						<img alt="客户管理" src="<%=basePath%>icon/evolution_tasks.png">
 						<div>客户管理</div>
 					</div>
@@ -151,9 +151,14 @@
 						<div>任务类型管理</div>
 					</div>
 					<div style="padding-top: 10px; cursor: pointer;"
-						onclick="addPanel('authorityManager','集团管理','<%=basePath%>win/groupslist.do')">
+						onclick="addPanel('groupsManager','集团管理','<%=basePath%>win/groupslist.do')">
 						<img alt="集团管理" src="<%=basePath%>icon/key_blue.png">
 						<div>集团管理</div>
+					</div>
+					<div style="padding-top: 10px; cursor: pointer;"
+						onclick="addPanel('productsManager','产品管理','<%=basePath%>win/productlist.do')">
+						<img alt="产品管理" src="<%=basePath%>icon/key_blue.png">
+						<div>产品管理</div>
 					</div>
 				</div>
 			</div>
@@ -289,7 +294,7 @@
     </div>
 	<script type="text/javascript">
 
-	    function addPanel(id,title, href){  
+	    function addPanel(id,title, href){
 	        var tt = $('#tabs');  
 	        if (tt.tabs('exists', title)){//如果tab已经存在,则选中并刷新该tab          
 	            tt.tabs('select', title);  

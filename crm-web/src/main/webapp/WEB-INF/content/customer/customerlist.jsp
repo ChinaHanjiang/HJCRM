@@ -98,7 +98,6 @@
 				});
 			}
 		});
-		
 		/*初始化树形结构  end*/
 		
 		/*区域类型 begin*/
@@ -147,13 +146,14 @@
 							'info');
 		        			$('#addLocationWin').window('close');
 		        			
-		        			var newName = locName + "-" + locCode;
+		        			var newName = locName ;
 		        			
 		        			loc.tree('append', {
 								parent: (node?node.target:null),
 								data: [{
 									id:_id,
-									text: newName
+									text: newName,
+									attributes:{'code':locCode}
 								}]
 							});
 		        		}else{
@@ -227,11 +227,12 @@
 			        			$.messager.alert('成功', _data.message,
 								'info');
 			        			
-			        			var newName = locName + "-" + locCode;
+			        			var newName = locName;
 			        			
 			        			loc.tree('update', {
 			        				target: node.target,
-			        				text: newName
+			        				text: newName,
+									attributes:{'code':locCode}
 			        			});
 			        			
 			        			$('#addLocationWin').window('close');
@@ -478,7 +479,6 @@
 		});
 		
 		/* 客户信息操作 begin*/
-		
 		$('#c_addGrid').click(function(){
 			
 			$('#c_bmodify').hide();
@@ -1315,7 +1315,7 @@
 
 				<div style="float: left;">
 					<a id="ct_editGrid" href="#" class="easyui-linkbutton" plain="true"
-						icon="icon-save"">编辑</a>
+						icon="icon-save">编辑</a>
 				</div>
 
 				<div style="float: left;">
@@ -1390,7 +1390,6 @@
 			data-options="modal:true,closed:true,iconCls:'icon-save',minimizable:false,collapsible:false,maximizable:false"
 			style="width: 480px; height: 160px; padding: 10px;">
 			<div align="center">
-			
 				<form id="addLocationWinForm" method="post">
 					<table cellpadding="5">
 						<tr>
@@ -1479,10 +1478,10 @@
 			var node = loc.tree('getSelected');
 			var nodeId = node.id;
 			var nodeName = node.text;
+			var attibutes = node.attributes;
 			
-			var str = nodeName.split('-');
-			var locName = str[0];
-			var locCode = str[1];
+			var locName = nodeName;
+			var locCode = attributes.code;
 			
 			_loc_id = nodeId;
 			_loc_name = locName;

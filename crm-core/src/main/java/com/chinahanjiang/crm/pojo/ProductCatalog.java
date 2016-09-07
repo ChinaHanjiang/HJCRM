@@ -40,7 +40,7 @@ public class ProductCatalog {
 	
 	private String state;
 	
-	private List<ProductCatalog> childLocs;
+	private List<ProductCatalog> childPcs;
 	
 	private Timestamp createTime;
 	
@@ -54,12 +54,12 @@ public class ProductCatalog {
 	
 	public ProductCatalog(){
 		
-		this.isDelete = 0;
+		this.isDelete = 1;
 	}
 
 	public ProductCatalog(int id, String name, String code, int order,
 			ProductCatalog parentCatalog, String state,
-			List<ProductCatalog> childLocs, Timestamp createTime,
+			List<ProductCatalog> childPcs, Timestamp createTime,
 			Timestamp updateTime, String remarks, int isDelete, User user) {
 		super();
 		this.id = id;
@@ -68,7 +68,7 @@ public class ProductCatalog {
 		this.order = order;
 		this.parentCatalog = parentCatalog;
 		this.state = state;
-		this.childLocs = childLocs;
+		this.childPcs = childPcs;
 		this.createTime = createTime;
 		this.updateTime = updateTime;
 		this.remarks = remarks;
@@ -135,12 +135,12 @@ public class ProductCatalog {
 
 	@OneToMany(targetEntity=ProductCatalog.class,cascade={CascadeType.ALL},fetch=FetchType.EAGER,mappedBy="parentCatalog")
 	@Fetch(FetchMode.SUBSELECT)
-	public List<ProductCatalog> getChildLocs() {
-		return childLocs;
+	public List<ProductCatalog> getChildPcs() {
+		return childPcs;
 	}
 
-	public void setChildLocs(List<ProductCatalog> childLocs) {
-		this.childLocs = childLocs;
+	public void setChildPcs(List<ProductCatalog> childPcs) {
+		this.childPcs = childPcs;
 	}
 
 	@Column(name="pc_createTime")

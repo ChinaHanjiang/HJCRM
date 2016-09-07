@@ -33,13 +33,17 @@ public class Product {
 	
 	private String name;
 	
+	private String shortCode;
+	
 	private String code;
+	
+	private int orders;
 	
 	private ProductCatalog productCatalog;
 	
-	private List<Product> productMix;
+	private List<ProductConfiguration> productMix;
 	
-	private List<Product> beyondProducts;
+	private List<ProductConfiguration> beyondProducts;
 	
 	private List<ProductAndQuoteRelation> quoteProducts;
 	
@@ -61,7 +65,7 @@ public class Product {
 	
 	public Product(){
 		 
-		this.isDelete = 0;
+		this.isDelete = 1;
 	}
 
 	public Product(int id, String name, String code, List<Product> productMix,
@@ -188,24 +192,23 @@ public class Product {
 		this.remarks = remarks;
 	}
 
-	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "beyondProducts")
-	public List<Product> getProductMix() {
+	@OneToMany(targetEntity = ProductConfiguration.class, cascade = { CascadeType.ALL }, fetch = FetchType.LAZY, mappedBy = "sproduct")
+	@Fetch(FetchMode.SUBSELECT)
+	public List<ProductConfiguration> getProductMix() {
 		return productMix;
 	}
 
-	public void setProductMix(List<Product> productMix) {
+	public void setProductMix(List<ProductConfiguration> productMix) {
 		this.productMix = productMix;
 	}
 
-	@ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-	@JoinTable(name = "ProductConfigure",
-	joinColumns = {@JoinColumn(name = "pcf_pid", referencedColumnName = "p_id")},
-	inverseJoinColumns = {@JoinColumn(name = "pcf_pmid", referencedColumnName ="p_id")})
-	public List<Product> getBeyondProducts() {
+	@OneToMany(targetEntity = ProductConfiguration.class, cascade = { CascadeType.ALL }, fetch = FetchType.LAZY, mappedBy = "fproduct")
+	@Fetch(FetchMode.SUBSELECT)
+	public List<ProductConfiguration> getBeyondProducts() {
 		return beyondProducts;
 	}
 
-	public void setBeyondProducts(List<Product> beyondProducts) {
+	public void setBeyondProducts(List<ProductConfiguration> beyondProducts) {
 		this.beyondProducts = beyondProducts;
 	}
 
@@ -229,6 +232,46 @@ public class Product {
 
 	public void setTasks(List<Task> tasks) {
 		this.tasks = tasks;
+	}
+
+	@Column(name = "p_shortcode")
+	public String getShortCode() {
+		return shortCode;
+	}
+
+	public void setShortCode(String shortCode) {
+		this.shortCode = shortCode;
+	}
+
+	@Column(name = "p_oders")
+	public int getOrders() {
+		return orders;
+	}
+
+	public void setOrders(int orders) {
+		this.orders = orders;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + id;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Product other = (Product) obj;
+		if (id != other.id)
+			return false;
+		return true;
 	}
 	
 }
