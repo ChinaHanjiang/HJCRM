@@ -219,4 +219,24 @@ public class ProductServiceImpl implements ProductService {
 		ProductDto rpd = DataUtil.convertProductToDto(p);
 		return rpd;
 	}
+
+	@Override
+	public String searchByName(String q) {
+		
+		Search search = new Search();
+		search.addFilterEqual("isDelete", 1);
+		search.addFilterLike("name", "%" + q + "%");
+		SearchResult<Product> result = searchAndCount(search);
+		List<Product> pls = result.getResult();
+		if(pls.size()==0){
+			
+			Product newP = new Product();
+			newP.setId(-1);
+			newP.setName("查不到产品，请添加(点击)!");
+			pls.add(newP);
+		}
+		String str = DataUtil.productToComboSearchDto(pls);
+		
+		return str;
+	}
 }

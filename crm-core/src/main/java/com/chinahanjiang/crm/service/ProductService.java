@@ -26,4 +26,6 @@ public interface ProductService {
 
 	ProductDto findById(ProductDto pd);
 
+	String searchByName(String trim);
+
 }

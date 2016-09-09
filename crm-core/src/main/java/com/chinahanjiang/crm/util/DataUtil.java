@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.chinahanjiang.crm.dto.ComboResultDto;
+import com.chinahanjiang.crm.dto.ComboSearchDto;
 import com.chinahanjiang.crm.dto.ContactDto;
 import com.chinahanjiang.crm.dto.CustomerDto;
 import com.chinahanjiang.crm.dto.DataListDto;
@@ -772,5 +773,68 @@ public class DataUtil {
 		
 		return pcfds;
 	}
+
+	private static List<ComboSearchDto> convertCustomerToCsDto(List<Customer> cls) {
+		
+		List<ComboSearchDto> csds = new ArrayList<ComboSearchDto>();
+		
+		if(cls!=null){
+			
+			Iterator<Customer> it = cls.iterator();
+			while(it.hasNext()){
+				
+				Customer c = it.next();
+				ComboSearchDto csd = new ComboSearchDto();
+				csd.setQ(c.getName());
+				csd.setId(c.getId());
+				
+				csds.add(csd);
+			}
+		}
+		
+		return csds;
+	}
 	
+	public static String customerToComboSearchDto(List<Customer> cls) {
+		
+		Gson gson = new Gson();
+		List<ComboSearchDto> etds = convertCustomerToCsDto(cls);
+		String str = null;
+		if (etds != null) {
+			str = gson.toJson(etds);
+		}
+		return str;
+	}
+
+	public static String productToComboSearchDto(List<Product> pls) {
+		
+		Gson gson = new Gson();
+		List<ComboSearchDto> etds = convertProductToCsDto(pls);
+		String str = null;
+		if (etds != null) {
+			str = gson.toJson(etds);
+		}
+		return str;
+	}
+
+	private static List<ComboSearchDto> convertProductToCsDto(List<Product> pls) {
+
+		List<ComboSearchDto> csds = new ArrayList<ComboSearchDto>();
+		
+		if(pls!=null){
+			
+			Iterator<Product> it = pls.iterator();
+			while(it.hasNext()){
+				
+				Product p = it.next();
+				ComboSearchDto csd = new ComboSearchDto();
+				csd.setQ(p.getName());
+				csd.setId(p.getId());
+				
+				csds.add(csd);
+			}
+		}
+		
+		return csds;
+	}
 }

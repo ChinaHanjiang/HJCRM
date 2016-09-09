@@ -31,4 +31,6 @@ public interface CustomerService {
 
 	int countById(Location l);
 
+	String searchByName(String q);
+
 }

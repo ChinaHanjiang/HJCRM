@@ -404,13 +404,37 @@
 		    	  });
 		      }
 		});
+		
+		
+		$('#t_product').combobox({
+			onSelect:function(record){
+				
+				var text = record.q;
+				var id = record.id;
+				
+				if(id==-1){
+					
+					addProduct();
+					return;
+				}
+				
+				var str = "<div id='pdiv" + id + "' style='vertical-align:middle; line-height:25px; height:25px; margin-bottom:2px; background:#EDEDED; color:#000'>"
+				+ "<input id='product' " + id + " type='text'  value=" + id + " style='display:none;' />"
+				+ text 
+				+ "<img style='float:right;padding-top:5px;padding-right:8px;' src='<%=basePath%>icon/close.png' onClick='closeDiv(" + id + ")';></div>";
+				
+				$('#choseProducts').append(str);
+			}
+		});
+		
+	
 	});
 	</script>
 <title>任务列表</title>
 </head>
 <body>
 	<div>
-		<table id="taskgrid" cellspacing="0" cellpadding="0"
+		<table id="taskgrid" cellspacing="0" cellpadding="0" 
 			class="easyui-datagrid"
 			data-options="
 						url:'<%=basePath%>task/list.do',
@@ -546,6 +570,7 @@
 										style="width: 200px; height:20px;" type="text" name="f_t_code" required
 										data-options="editable:false"></input></td>
 								</tr>
+								<!-- 
 								<tr>
 									<td>客户:</td>
 									<td>
@@ -553,6 +578,87 @@
 										 type="text" name="f_t_customerId"></input>
 										<input id="t_search" class="easyui-searchbox" required
 											data-options="prompt:'请输入查询客户名称'" style="width: 200px;"></input>
+									</td>
+								</tr>
+								 -->
+								 <tr>
+									<td>客户:</td>
+									<td>
+										<input id="t_customer" class="easyui-combobox" name="f_t_customer"  style="width:100%;" data-options="
+											prompt:'输入要检索的客户名称',
+											url:'<%=basePath%>customer/find.do',
+											mode:'remote',
+											method:'get',
+											valueField:'id',
+											textField:'q',
+											panelHeight:'auto',
+											hasDownArrow:false,
+											filter: function(q, row){
+												var opts = $(this).combobox('options');
+												return row[opts.textField].indexOf(q) == 0;
+											},
+											onBeforeLoad: function(param){
+												if(param == null || param.q == null || param.q.replace(/ /g, '') == ''){
+													var value = $(this).combobox('getValue');
+													if(value){// 修改的时候才会出现q为空而value不为空
+														param.id = value;
+														return true;
+													}
+													return false;
+												}
+											},
+											onSelect:function(record){
+												
+												var id = record.id;
+												if(id==-1){
+													
+													addCustomer();
+													
+													return;
+												}
+												var str = '';
+												str += 'cd.id=' + id;
+												
+												$('#i_contact').combogrid({
+													url:'<%=basePath%>contact/find.do?' + str.trim()
+												});
+											}
+											"></input>
+									</td>
+								</tr>
+								<tr>
+									<td>产品:</td>
+									<td>
+										<input id="t_product" class="easyui-combobox" name="f_t_customer"  style="width:100%;" data-options="
+											prompt:'输入要检索的产品名称',
+											url:'<%=basePath%>product/search.do',
+											mode:'remote',
+											method:'get',
+											valueField:'id',
+											textField:'q',
+											panelHeight:'auto',
+											hasDownArrow:false,
+											filter: function(q, row){
+												var opts = $(this).combobox('options');
+												return row[opts.textField].indexOf(q) == 0;
+											},
+											onBeforeLoad: function(param){
+												if(param == null || param.q == null || param.q.replace(/ /g, '') == ''){
+													var value = $(this).combobox('getValue');
+													if(value){// 修改的时候才会出现q为空而value不为空
+														param.id = value;
+														return true;
+													}
+													return false;
+												}
+											}
+											"></input>
+									</td>
+								</tr>
+								<tr>
+									<td></td>
+									<td id="choseProducts">
+										
 									</td>
 								</tr>
 								<tr>
@@ -578,6 +684,82 @@
 									<td>编码:</td>
 									<td><input id="i_code" class="easyui-textbox"
 										style="width: 200px; height:20px;" type="text" name="f_i_code" required
+										data-options="editable:false"></input></td>
+								</tr>
+								<tr>
+									<td>类型:</td>
+									<td><input id="i_itemtype" class="easyui-textbox"
+										style="width: 200px; height:20px;" type="text" name="f_i_itemtype" required
+										data-options="editable:false"></input></td>
+								</tr>
+								<tr>
+									<td>联系人:</td>
+									<td>
+							            <select id="i_contact" class="easyui-combogrid" style="width:200px;" required 
+							            data-options=" 
+							                    panelWidth: 500,
+							                    idField: 'id',
+							                    textField: 'name',
+							                    columns: [[
+							                        {field:'id',title:'序号',width:80,align:'center'},
+							                        {field:'name',title:'名称',width:120,align:'center'},
+							                        {field:'duty',title:'职务',width:80,align:'center'}
+							                    ]],
+							                    fitColumns: true
+							                ">
+							            </select>
+									</td>
+								</tr>
+								<tr>
+									<td>备注:</td>
+									<td><textarea id="i_remarks" rows=5 style="width: 200px;height:40px;"
+											name="f_i_remarks" class="textarea easyui-validatebox"}></textarea></td>
+								</tr>
+							</table>
+		            	</form>
+		            </div>
+	            </div>
+	            <div data-options="region:'south',border:false"  style="padding:10px">
+	               <div style="text-align: center; padding: 5px">
+						<a id="t_bsubmit" href="javascript:void(0)" style="width: 80px;"
+							class="easyui-linkbutton">提交</a> <a id="t_bmodify"
+							href="javascript:void(0)" style="width: 80px;"
+							class="easyui-linkbutton">确认修改</a> <a id="t_bcancel"
+							href="javascript:void(0)" style="width: 80px;"
+							class="easyui-linkbutton">取消</a>
+					</div>
+	            </div>
+	        </div>
+	    </div>
+	</div>
+	
+	
+	<!-- 添加事件窗口 -->
+	<div id="addItemWin" class="easyui-window" title="任务编辑窗口"
+		data-options="modal:true,closed:true,iconCls:'icon-save',minimizable:false,collapsible:false,maximizable:false"
+		style="width: 480px; height: 600px; padding: 10px;">
+		<div class="easyui-panel" data-options="border:false" style="width:450px;height:550px;">
+	        <div class="easyui-layout" data-options="fit:true">
+	            <div id="f_item" data-options="region:'center',border:false" title="事件" style="width:450px; height:250px; padding:10px;">
+		            <div style="padding: 0px 20px 0px 50px">
+		            	<form id="addItemForm" method="post">
+		            		<table cellpadding="5"> 
+								<tr>
+									<td>内容:</td>
+									<td><input id="i_name" class="easyui-textbox"
+										style="width: 200px; height:40px;" type="text" name="f_i_name" required
+										data-options="multiline:true"></input></td>
+								</tr>
+								<tr>
+									<td>编码:</td>
+									<td><input id="i_code" class="easyui-textbox"
+										style="width: 200px; height:20px;" type="text" name="f_i_code" required
+										data-options="editable:false"></input></td>
+								</tr>
+								<tr>
+									<td>类型:</td>
+									<td><input id="i_itemtype" class="easyui-textbox"
+										style="width: 200px; height:20px;" type="text" name="f_i_itemtype" required
 										data-options="editable:false"></input></td>
 								</tr>
 								<tr>
@@ -631,6 +813,23 @@
 		 	
 		 </ul>
 	</div>
+	<script type="text/javascript">
+	
+		function closeDiv(id){
+			
+			$('#pdiv' + id).remove();
+		}
+		
+		function addCustomer(){
+			
+			parent.addPanel('customerlist','客户管理','<%=basePath%>win/customerlist.do');
+		}
+		
+		function addProduct(){
+			
+			parent.addPanel('productsManager','产品管理','<%=basePath%>win/productlist.do');
+		}
+	</script>
 </body>
 
 </html>

@@ -58,6 +58,8 @@ public class ProductAction extends BaseAction {
 	
 	private int catalogId;
 	
+	private String q;
+	
 	public List<Object> getRows() {
 		return rows;
 	}
@@ -129,6 +131,14 @@ public class ProductAction extends BaseAction {
 	public void setCatalogId(int catalogId) {
 		this.catalogId = catalogId;
 	}
+	
+	public String getQ() {
+		return q;
+	}
+
+	public void setQ(String q) {
+		this.q = q;
+	}
 
 	@Action("list")
 	public String list(){
@@ -192,5 +202,19 @@ public class ProductAction extends BaseAction {
 		
 		pd = productService.findById(pd);
 		return "load";
+	}
+	
+	@Action("search")
+	public void search() throws IOException{
+		
+		HttpServletResponse response=ServletActionContext.getResponse();
+		response.setContentType("text/html");  
+		PrintWriter out;  
+		out = response.getWriter();
+		String comboStr =  productService.searchByName(q.trim());
+		out.println(comboStr);  
+		out.flush();  
+		out.close(); 
+		
 	}
 }
