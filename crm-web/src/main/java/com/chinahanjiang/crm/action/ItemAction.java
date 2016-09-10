@@ -17,7 +17,11 @@ import org.springframework.stereotype.Controller;
 import com.chinahanjiang.crm.dto.ItemDto;
 import com.chinahanjiang.crm.dto.MessageDto;
 import com.chinahanjiang.crm.dto.SearchResultDto;
+import com.chinahanjiang.crm.dto.TaskDto;
+import com.chinahanjiang.crm.dto.UserDto;
 import com.chinahanjiang.crm.service.ItemService;
+import com.chinahanjiang.crm.service.TaskService;
+import com.chinahanjiang.crm.util.Constant;
 import com.chinahanjiang.crm.util.DateUtil;
 
 @Controller
@@ -39,9 +43,14 @@ public class ItemAction extends BaseAction {
 	@Resource
 	private ItemService itemService;
 	
+	@Resource
+	private TaskService taskService;
+	
 	private MessageDto md;
 	
 	private ItemDto id;
+	
+	private TaskDto td;
 	
 	private List<Object> rows;
 	
@@ -52,6 +61,14 @@ public class ItemAction extends BaseAction {
 	private String sort;
 
 	private String order;
+
+	public TaskDto getTd() {
+		return td;
+	}
+
+	public void setTd(TaskDto td) {
+		this.td = td;
+	}
 
 	public ItemDto getId() {
 		return id;
@@ -172,6 +189,9 @@ public class ItemAction extends BaseAction {
 	
 	@Action("add")
 	public String add(){
+		
+		UserDto ud = (UserDto) this.session.get(Constant.USERKEY);
+		md = itemService.update(id,td,ud);
 		
 		return "add";
 	}

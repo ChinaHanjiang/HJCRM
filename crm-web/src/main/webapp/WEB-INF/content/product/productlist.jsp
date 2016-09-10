@@ -646,11 +646,6 @@
 			}
 		});
 		
-		$('#test').click(function(){
-			
-			parent.addPanel('customerlist','客户管理','<%=basePath%>win/customerlist.do');
-		});
-		
 	});
 </script>
 <title>类型列表</title>
@@ -729,10 +724,6 @@
 					icon="icon-remove">删除</a>
 			</div>
 			
-			<div style="float: left;">
-				<a id="test" href="#" class="easyui-linkbutton" plain="true"
-					icon="icon-remove">删除</a>
-			</div>
 		</div>
 
 		<!-- 添加产品窗口 -->

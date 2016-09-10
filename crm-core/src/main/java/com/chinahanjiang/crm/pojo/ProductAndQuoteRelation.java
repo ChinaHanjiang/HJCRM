@@ -24,14 +24,16 @@ public class ProductAndQuoteRelation {
 	
 	private int isDelete;
 	
+	private int quantity;
+	
 	private String remarks;
 	
 	public ProductAndQuoteRelation(){
 		
-		isDelete = 0;
+		isDelete = 1;
 	}
 
-	public ProductAndQuoteRelation(int id, Product product,
+	public ProductAndQuoteRelation(int id, Product product, int quantity,
 			ProductQuoteDetails productQuoteDetails, double defindPrice,
 			int isDelete, String remarks) {
 		super();
@@ -40,6 +42,7 @@ public class ProductAndQuoteRelation {
 		this.productQuoteDetails = productQuoteDetails;
 		this.defindPrice = defindPrice;
 		this.isDelete = isDelete;
+		this.quantity = quantity;
 		this.remarks = remarks;
 	}
 
@@ -100,5 +103,13 @@ public class ProductAndQuoteRelation {
 	public void setRemarks(String remarks) {
 		this.remarks = remarks;
 	}
-	
+
+	@Column(name = "paqr_quantity")
+	public int getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+	}
 }

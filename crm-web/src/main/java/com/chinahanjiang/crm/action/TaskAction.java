@@ -212,7 +212,7 @@ public class TaskAction extends BaseAction {
 	public String add(){
 	
 		UserDto u = (UserDto) this.session.get(Constant.USERKEY);
-		md = taskService.update(td,id,u);
+		md = taskService.update(td,u);
 				
 		return "add";
 	}
@@ -220,7 +220,7 @@ public class TaskAction extends BaseAction {
 	@Action("modify")
 	public String modify(){
 		
-		md = taskService.update(td, null, null);
+		md = taskService.update(td, null);
 		
 		return "modify";
 	}

@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -52,6 +53,8 @@ public class Task {
 	
 	private List<Product> products;
 	
+	private int flag;//是否修改了产品配置 1表示修改了配置
+	
 	private TaskType taskType;
 	
 	private String remarks;
@@ -59,10 +62,11 @@ public class Task {
 	public Task(){
 		
 		this.isDelete = 1;
+		this.flag = 1;
 	}
 
 	public Task(int id, String name, String code, User createUser, int status, int isDelete,
-			Timestamp createTime, Timestamp updateTime, User updateUser,
+			Timestamp createTime, Timestamp updateTime, User updateUser,int flag,
 			Customer customer, List<Item> items, TaskType taskType, List<Product> products,
 			String remarks) {
 		super();
@@ -80,6 +84,7 @@ public class Task {
 		this.taskType = taskType;
 		this.products = products;
 		this.remarks = remarks;
+		this.flag = flag;
 	}
 
 	@Id
@@ -187,7 +192,7 @@ public class Task {
 		this.items = items;
 	}
 
-	@OneToOne(fetch = FetchType.EAGER)
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "t_ttid",referencedColumnName="tt_id")
 	public TaskType getTaskType() {
 		return taskType;
@@ -206,7 +211,10 @@ public class Task {
 		this.remarks = remarks;
 	}
 
-	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "tasks")
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinTable(name = "TaskProducts",
+	joinColumns = {@JoinColumn(name = "tp_tid", referencedColumnName = "t_id")},
+	inverseJoinColumns = {@JoinColumn(name = "tp_pid", referencedColumnName ="p_id")})
 	public List<Product> getProducts() {
 		return products;
 	}
@@ -214,4 +222,14 @@ public class Task {
 	public void setProducts(List<Product> products) {
 		this.products = products;
 	}
+
+	@Column(name="t_flag")
+	public int getFlag() {
+		return flag;
+	}
+
+	public void setFlag(int flag) {
+		this.flag = flag;
+	}
+	
 }

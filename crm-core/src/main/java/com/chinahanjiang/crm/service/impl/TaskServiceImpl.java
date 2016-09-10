@@ -2,6 +2,7 @@ package com.chinahanjiang.crm.service.impl;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -11,21 +12,19 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.chinahanjiang.crm.dao.TaskDao;
-import com.chinahanjiang.crm.dto.ItemDto;
 import com.chinahanjiang.crm.dto.MessageDto;
 import com.chinahanjiang.crm.dto.SearchResultDto;
 import com.chinahanjiang.crm.dto.TaskDto;
 import com.chinahanjiang.crm.dto.TaskTypeDto;
 import com.chinahanjiang.crm.dto.UserDto;
-import com.chinahanjiang.crm.pojo.Contact;
 import com.chinahanjiang.crm.pojo.Customer;
-import com.chinahanjiang.crm.pojo.Item;
+import com.chinahanjiang.crm.pojo.Product;
 import com.chinahanjiang.crm.pojo.Task;
 import com.chinahanjiang.crm.pojo.TaskType;
 import com.chinahanjiang.crm.pojo.User;
 import com.chinahanjiang.crm.service.ContactService;
 import com.chinahanjiang.crm.service.CustomerService;
-import com.chinahanjiang.crm.service.ItemService;
+import com.chinahanjiang.crm.service.ProductService;
 import com.chinahanjiang.crm.service.TaskService;
 import com.chinahanjiang.crm.service.TaskTypeService;
 import com.chinahanjiang.crm.service.UserService;
@@ -42,7 +41,7 @@ public class TaskServiceImpl implements TaskService {
 	private TaskDao taskDao;
 	
 	@Resource
-	private ItemService itemService;
+	private ProductService productService;
 	
 	@Resource
 	private UserService userService;
@@ -115,12 +114,11 @@ public class TaskServiceImpl implements TaskService {
 
 	@Override
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
-	public MessageDto update(TaskDto td, ItemDto id, UserDto u) {
+	public MessageDto update(TaskDto td, UserDto u) {
 		
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		MessageDto md = new MessageDto();
 		String message = "";
-		Item item = null;
 		User user = null;
 		Customer customer = null;
 		TaskType taskType = null;
@@ -139,11 +137,13 @@ public class TaskServiceImpl implements TaskService {
 		
 		if(tid!=0){
 			
+			/*更新任务*/
+			
 			t = taskDao.find(tid);
 			if(t!=null){
 				
 				t.setUpdateTime(now);
-				t.setStatus(0);
+				t.setStatus(td.getStatus());
 				
 				message = "id为：" + tid + "的任务修改成功！";
 				
@@ -154,6 +154,8 @@ public class TaskServiceImpl implements TaskService {
 			}
 		} else {
 			
+			/*新增任务*/
+			
 			t = new Task();
 			if(user!=null){
 				
@@ -163,39 +165,7 @@ public class TaskServiceImpl implements TaskService {
 				t.setUpdateTime(now);
 				t.setStatus(0);
 				
-				if(id!=null){
-					
-					int cid = id.getContactId();
-					Contact c = contactService.findById(cid);
-					
-					if(c==null){
-						
-						md.setT(false);
-						md.setMessage("新建的事件的联系人不能为空！");
-						return md;
-						
-					} else {
-						
-						item = new Item();
-						item.setName(id.getName());
-						item.setCode(id.getCode());
-						item.setCreateTime(now);
-						item.setContact(c);
-						if(customer!=null){
-							item.setCustomer(customer);
-						}
-						item.setRemarks(id.getRemarks());
-						item.setUser(user);
-						item.setStatus(0);
-						item.setTask(t);
-					}
-				}
-				
-				List<Item> ils = new ArrayList<Item>();
-				ils.add(item);
-				t.setItems(ils);
-				
-				message = "新的任务创建成功!";
+				message = "新的项目创建成功!";
 				
 			} else {
 				
@@ -225,13 +195,51 @@ public class TaskServiceImpl implements TaskService {
 				md.setMessage("任务类型不存在，请重新确认！");
 				return md;
 			}
-			t.setName(td.getName());
-			t.setCode(td.getCode());
-			t.setRemarks(td.getRemarks());
 		}
 		
+		t.setName(td.getName());
+		t.setCode(td.getCode());
+		t.setRemarks(td.getRemarks());
+		
+		System.out.println(td.getDeleteProducts());
+		
+		String[] addProductIds = td.getAddProducts()==null?null:td.getAddProducts().split(",");
+		String[] deleteProductIds = td.getDeleteProducts()==null?null:td.getDeleteProducts().split(",");
+		
+		if(addProductIds!=null && addProductIds.length!=0){
+			
+			t.setFlag(1);
+		}
+		
+		if(deleteProductIds!=null && deleteProductIds.length!=0){
+			
+			t.setFlag(1);
+		}
+		
+		List<Product> addProducts = productService.findByIds(addProductIds); 
+		List<Product> deleteProducts = productService.findByIds(deleteProductIds);
+		
+		List<Product> taskProducts = t.getProducts();
+		if(taskProducts == null){
+			 taskProducts = new ArrayList<Product>();
+		}
+		
+		Iterator<Product> it = deleteProducts.iterator();
+		while(it.hasNext()){
+			
+			Product p = it.next();
+			taskProducts.remove(p);
+		}
+		
+		taskProducts.addAll(addProducts);
+		t.setProducts(taskProducts);
+		
 		save(t);
+		
+		int ntId = t.getId();
+		
 		md.setT(true);
+		md.setIntF(ntId);
 		md.setMessage(message);
 		return md;
 	}
@@ -307,6 +315,34 @@ public class TaskServiceImpl implements TaskService {
 		}
 		
 		return result;
+	}
+
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+	public MessageDto updateProducts(TaskDto td) {
+		
+		MessageDto md = new MessageDto();
+		int id = td.getId();
+		if(id!=0){
+			
+			Task t = findById(id);
+			
+			if(t!=null){
+				
+				td.setName(t.getName());
+				td.setCode(t.getCode());
+				td.setRemarks(t.getRemarks());
+				
+				md = update(td, null);
+			}
+		} else {
+			
+			md.setT(false);
+			md.setMessage("项目：" + id + "在数据库中不存在！");
+			
+		}
+		
+		return md;
 	}
 
 }

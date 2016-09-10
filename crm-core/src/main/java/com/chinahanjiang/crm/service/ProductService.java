@@ -1,9 +1,12 @@
 package com.chinahanjiang.crm.service;
 
+import java.util.List;
+
 import com.chinahanjiang.crm.dto.MessageDto;
 import com.chinahanjiang.crm.dto.ProductDto;
 import com.chinahanjiang.crm.dto.SearchResultDto;
 import com.chinahanjiang.crm.pojo.Product;
+import com.chinahanjiang.crm.pojo.Task;
 import com.googlecode.genericdao.search.Search;
 import com.googlecode.genericdao.search.SearchResult;
 
@@ -27,5 +30,9 @@ public interface ProductService {
 	ProductDto findById(ProductDto pd);
 
 	String searchByName(String trim);
+
+	List<Product> findByIds(String[] addProductIds);
+
+	List<Product> findByTask(Task task);
 
 }

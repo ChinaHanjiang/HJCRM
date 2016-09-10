@@ -46,7 +46,7 @@ public class ProductQuote {
 	
 	public ProductQuote(){
 		
-		this.isDelete = 0;
+		this.isDelete = 1;
 	}
 
 	public ProductQuote(int id, String code,

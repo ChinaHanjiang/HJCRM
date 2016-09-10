@@ -15,11 +15,19 @@ import org.springframework.stereotype.Controller;
 
 import com.chinahanjiang.crm.pojo.Customer;
 import com.chinahanjiang.crm.pojo.Groups;
+import com.chinahanjiang.crm.pojo.Item;
+import com.chinahanjiang.crm.pojo.ItemType;
 import com.chinahanjiang.crm.pojo.Location;
+import com.chinahanjiang.crm.pojo.Product;
+import com.chinahanjiang.crm.pojo.Task;
 import com.chinahanjiang.crm.pojo.TaskType;
 import com.chinahanjiang.crm.service.CustomerService;
 import com.chinahanjiang.crm.service.GroupsService;
+import com.chinahanjiang.crm.service.ItemService;
+import com.chinahanjiang.crm.service.ItemTypeService;
 import com.chinahanjiang.crm.service.LocationService;
+import com.chinahanjiang.crm.service.ProductService;
+import com.chinahanjiang.crm.service.TaskService;
 import com.chinahanjiang.crm.service.TaskTypeService;
 
 @Controller
@@ -34,7 +42,11 @@ import com.chinahanjiang.crm.service.TaskTypeService;
 	@Result(name = "userlist", location = "/WEB-INF/content/setting/userlist.jsp"),
 	@Result(name = "quotelist", location = "/WEB-INF/content/quote/quotelist.jsp"),
 	@Result(name = "productlist", location = "/WEB-INF/content/product/productlist.jsp"),
-	@Result(name = "quotewindow", location = "/WEB-INF/content/quote/quotewindow.jsp")})
+	@Result(name = "quotewindow", location = "/WEB-INF/content/quote/quotewindow.jsp"),
+	@Result(name = "addtask", location = "/WEB-INF/content/task/addtask.jsp"),
+	@Result(name = "additem", location = "/WEB-INF/content/task/additem.jsp"),
+	@Result(name = "itemlist", location = "/WEB-INF/content/task/itemlist.jsp"),
+	@Result(name = "quote", location = "/WEB-INF/content/quote/quotewindow.jsp")})
 @ExceptionMappings({ @ExceptionMapping(exception = "java.lange.RuntimeException", result = "error") })
 public class WinAction extends BaseAction {
 
@@ -47,10 +59,22 @@ public class WinAction extends BaseAction {
 	private GroupsService groupsService;
 	
 	@Resource
+	private TaskService taskService;
+	
+	@Resource
 	private TaskTypeService taskTypeService;
 	
 	@Resource
 	private CustomerService customerService;
+	
+	@Resource
+	private ItemTypeService itemTypeService;
+	
+	@Resource
+	private ItemService itemService;
+	
+	@Resource
+	private ProductService productService;
 	
 	private List<Location> locations;
 	
@@ -58,8 +82,80 @@ public class WinAction extends BaseAction {
 	
 	private List<TaskType> taskTypes;
 	
+	private List<ItemType> itemTypes;
+	
 	private List<Customer> customers;
 	
+	private List<Product> products;
+	
+	private Item item;
+	
+	private int taskId;
+	
+	private Task task;
+
+	private String itemCode;
+	
+	private int itemId;
+	
+	private int quoteId;
+	
+	public int getQuoteId() {
+		return quoteId;
+	}
+
+	public void setQuoteId(int quoteId) {
+		this.quoteId = quoteId;
+	}
+
+	public List<Product> getProducts() {
+		return products;
+	}
+
+	public void setProducts(List<Product> products) {
+		this.products = products;
+	}
+
+	public Item getItem() {
+		return item;
+	}
+
+	public void setItem(Item item) {
+		this.item = item;
+	}
+
+	public int getItemId() {
+		return itemId;
+	}
+
+	public void setItemId(int itemId) {
+		this.itemId = itemId;
+	}
+
+	public String getItemCode() {
+		return itemCode;
+	}
+
+	public void setItemCode(String itemCode) {
+		this.itemCode = itemCode;
+	}
+
+	public int getTaskId() {
+		return taskId;
+	}
+
+	public void setTaskId(int taskId) {
+		this.taskId = taskId;
+	}
+
+	public Task getTask() {
+		return task;
+	}
+
+	public void setTask(Task task) {
+		this.task = task;
+	}
+
 	public List<Location> getLocations() {
 		return locations;
 	}
@@ -91,6 +187,14 @@ public class WinAction extends BaseAction {
 	public void setCustomers(List<Customer> customers) {
 		this.customers = customers;
 	}
+	
+	public List<ItemType> getItemTypes() {
+		return itemTypes;
+	}
+
+	public void setItemTypes(List<ItemType> itemTypes) {
+		this.itemTypes = itemTypes;
+	}
 
 	@Action("customerlist")
 	public String customerListWin(){
@@ -120,7 +224,6 @@ public class WinAction extends BaseAction {
 	public String taskListWin(){
 		
 		taskTypes = taskTypeService.findAll();
-		//customers = customerService.loadCustomers(20);
 		
 		return "tasklist";
 	}
@@ -147,5 +250,39 @@ public class WinAction extends BaseAction {
 	public String productlistWin(){
 		
 		return "productlist";
+	}
+	
+	@Action("addtask")
+	public String addtask(){
+		
+		taskTypes = taskTypeService.findAll();
+		
+		return "addtask";
+	}
+	
+	@Action("additem")
+	public String additem(){
+		
+		task = taskService.findById(taskId);
+		itemTypes = itemTypeService.findAll();
+		int itemnum = task.getItems()==null?1:task.getItems().size()+1 ;
+		itemCode = task.getCode() + "." + itemnum;
+		return "additem";
+	}
+	
+	@Action("itemlist")
+	public String itemlist(){
+		
+		return "itemlist";
+	}
+	
+	@Action("quote")
+	public String quote(){
+		
+		item = itemService.findById(itemId);
+		task = item.getTask();
+		products = productService.findByTask(task);
+		
+		return "quote";
 	}
 }

@@ -43,7 +43,7 @@ public class ProductQuoteDetails {
 	
 	public ProductQuoteDetails(){
 		
-		this.isDelete = 0;
+		this.isDelete = 1;
 	}
 
 	public ProductQuoteDetails(int id, ProductQuote productQuote,

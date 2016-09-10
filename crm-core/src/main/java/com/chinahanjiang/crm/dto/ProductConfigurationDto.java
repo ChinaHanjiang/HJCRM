@@ -18,6 +18,10 @@ public class ProductConfigurationDto {
 	
 	private String productCatalog;
 	
+	private Double standardPrice;
+	
+	private Double definedPrice;
+	
 	private int quantity;
 	
 	private String createTime;
@@ -121,5 +125,20 @@ public class ProductConfigurationDto {
 	public void setCode(String code) {
 		this.code = code;
 	}
-	
+
+	public Double getStandardPrice() {
+		return standardPrice;
+	}
+
+	public void setStandardPrice(Double standardPrice) {
+		this.standardPrice = standardPrice;
+	}
+
+	public Double getDefinedPrice() {
+		return definedPrice;
+	}
+
+	public void setDefinedPrice(Double definedPrice) {
+		this.definedPrice = definedPrice;
+	}
 }

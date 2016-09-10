@@ -2,6 +2,7 @@ package com.chinahanjiang.crm.service.impl;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -18,6 +19,7 @@ import com.chinahanjiang.crm.dto.SearchResultDto;
 import com.chinahanjiang.crm.pojo.Product;
 import com.chinahanjiang.crm.pojo.ProductCatalog;
 import com.chinahanjiang.crm.pojo.ProductConfiguration;
+import com.chinahanjiang.crm.pojo.Task;
 import com.chinahanjiang.crm.service.ProductCatalogService;
 import com.chinahanjiang.crm.service.ProductConfigurationService;
 import com.chinahanjiang.crm.service.ProductService;
@@ -238,5 +240,36 @@ public class ProductServiceImpl implements ProductService {
 		String str = DataUtil.productToComboSearchDto(pls);
 		
 		return str;
+	}
+
+	@Override
+	public List<Product> findByIds(String[] productIds) {
+		
+		List<Product> products = new ArrayList<Product>();
+		
+		if(productIds!=null&&productIds.length!=0){
+			
+			int len = productIds.length;
+			Integer[] obj = new Integer[len];
+			
+			for(int i=0;i<len;i++){
+				
+				System.out.println("id:" + productIds[i]);
+				obj[i] = Integer.valueOf(productIds[i]);
+			}
+			
+			Product[] ps = productDao.find(obj);
+			products.addAll(Arrays.asList(ps));
+		}
+		
+		return products;
+	}
+
+	@Override
+	public List<Product> findByTask(Task task) {
+		
+		String hql = "select p from Product as p join p.tasks as t where p.isDelete=1 and t= :tk "; 
+		
+		return productDao.loadProducts(hql, task);
 	}
 }

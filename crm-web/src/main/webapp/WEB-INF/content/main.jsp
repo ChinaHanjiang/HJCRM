@@ -174,7 +174,7 @@
 				<div style="padding-top: 15px;">
 
 					<div style="padding-left: 20px; display: block; float: left;">
-						<div id="p1" class="easyui-panel" title='当天的任务列表' data-options="border:true"
+						<div id="p1" class="easyui-panel" title='当天的任务列表' data-options="border:true,tools:'#gt1'"
 							style="width: 600px; height: 290px;">
 							<table id="dalytaskgrid" class="easyui-datagrid"
 								data-options="
@@ -187,7 +187,6 @@
 											pagination:true,
 											border:false
 											">
-					
 								<thead>
 									<tr>
 										<th data-options="field:'code',width:125,align:'center'">编号</th>
@@ -198,10 +197,15 @@
 									</tr>
 								</thead>
 							</table>
+							
+							<div id="gt1">
+								<a href="javascript:void(0)" class="icon-add" onclick="addTask()"></a>
+							</div>
+							
 						</div>
 					</div>
 					<div style="padding-left: 10px; display: block; float: left;">
-						<div id="p2" class="easyui-panel" title='当天的事件列表' data-options="border:true"
+						<div id="p2" class="easyui-panel" title='当天的事件列表' data-options="border:true,tools:'#gt2'"
 							style="width: 600px; height: 290px;">
 							<table id="dalyitemgrid" class="easyui-datagrid"
 								data-options="
@@ -226,13 +230,16 @@
 									</tr>
 								</thead>
 							</table>
+							<div id="gt2">
+								<a href="javascript:void(0)" class="icon-more" onclick="moreItem1()"></a>
+							</div>
 						</div>
 					</div>
 					
 					<div style="clear: both;"></div>
 
 					<div style="padding-left: 20px; padding-top:10px; display: block; float: left;">
-						<div id="p4" class="easyui-panel" title="未完成任务列表" data-options="border:true"
+						<div id="p4" class="easyui-panel" title="未完成任务列表" data-options="border:true,tools:'#gt3'"
 						style="width: 600px; height: 290px;">
 							<table id="undotaskgrid" class="easyui-datagrid"
 								data-options="
@@ -255,11 +262,14 @@
 									</tr>
 								</thead>
 							</table>
+							<div id="gt3">
+								<a href="javascript:void(0)" class="icon-more" onclick="moreTask()"></a>
+							</div>
 						</div>
 					</div>
 					<div
 						style="padding-left: 10px; padding-top:10px; display: block; float: left;">
-						<div id="p5" class="easyui-panel"  title="未完成事件"  data-options="border:true"
+						<div id="p5" class="easyui-panel"  title="未完成事件"  data-options="border:true,tools:'#gt4'"
 							style="width: 600px; height: 290px;">
 								<table id="undoitemgrid" class="easyui-datagrid"
 								data-options="
@@ -283,6 +293,9 @@
 									</tr>
 								</thead>
 							</table>
+							<div id="gt4">
+								<a href="javascript:void(0)" class="icon-more" onclick="moreItem2()"></a>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -328,7 +341,46 @@
 	        //_refresh_ifram.src = refresh_url;  
 	        _refresh_ifram.contentWindow.location.href=refresh_url;  
 	        }  
-	    }  
+	    }
+	    
+	    function openAndClose(newObj,oldTitle){
+	    	
+	    	 var id = newObj.id;
+	    	 var title = newObj.title;
+	    	 var href = newObj.href;
+	    	 
+	    	 closePanel(oldTitle);
+	    	 addPanel(id,title,href);
+	    	 
+	    }
+	    
+	    function closePanel(title){
+	    	
+	    	 var tt = $('#tabs');  
+		        if (tt.tabs('exists', title)){
+		        	tt.tabs('close', title);  
+		        }
+	    }
+	     
+	    function addTask(){
+	    	
+	    	addPanel('addtask','添加项目','<%=basePath%>win/addtask.do');
+	    }
+	    
+	    function moreTask(){
+	    	
+	    	
+	    }
+	    
+	    function moreItem1(){
+	    	
+	    	
+	    }
+	    
+	    function moreItem2(){
+	    	
+	    	
+	    }
 	</script>
 </body>
 </html>

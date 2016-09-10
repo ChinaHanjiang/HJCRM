@@ -1,6 +1,7 @@
 package com.chinahanjiang.crm.dto;
 
 
+
 public class TaskDto {
 
 	private int id;
@@ -36,6 +37,12 @@ public class TaskDto {
 	private int itemNum;
 	
 	private String remarks;
+	
+	private String addProducts;
+	
+	private String deleteProducts;
+	
+	private int flag;
 
 	public int getId() {
 		return id;
@@ -172,4 +179,29 @@ public class TaskDto {
 	public void setStatusStr(String statusStr) {
 		this.statusStr = statusStr;
 	}
+
+	public String getAddProducts() {
+		return addProducts;
+	}
+
+	public void setAddProducts(String addProducts) {
+		this.addProducts = addProducts;
+	}
+
+	public String getDeleteProducts() {
+		return deleteProducts;
+	}
+
+	public void setDeleteProducts(String deleteProducts) {
+		this.deleteProducts = deleteProducts;
+	}
+
+	public int getFlag() {
+		return flag;
+	}
+
+	public void setFlag(int flag) {
+		this.flag = flag;
+	}
+	
 }

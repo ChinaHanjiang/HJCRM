@@ -761,6 +761,8 @@ public class DataUtil {
 				pcfd.setProductCatalogId(pcf.getSproduct().getProductCatalog().getId());
 				pcfd.setProductCatalog(pcf.getSproduct().getProductCatalog().getName());
 				pcfd.setQuantity(pcf.getQuantity());
+				pcfd.setStandardPrice(pcf.getSproduct().getStandardPrice());
+				pcfd.setDefinedPrice(pcf.getSproduct().getStandardPrice());
 				pcfd.setRemarks(pcf.getRemarks());
 				pcfd.setCreateTime(pcf.getCreateTime() == null ? "" : sdf_dt
 						.format(pcf.getCreateTime()));

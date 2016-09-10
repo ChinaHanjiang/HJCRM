@@ -11,7 +11,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -222,10 +221,7 @@ public class Product {
 		this.quoteProducts = quoteProducts;
 	}
 
-	@ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-	@JoinTable(name = "TaskProducts",
-	joinColumns = {@JoinColumn(name = "tp_pid", referencedColumnName = "p_id")},
-	inverseJoinColumns = {@JoinColumn(name = "tp_tid", referencedColumnName ="t_id")})
+	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "products")
 	public List<Task> getTasks() {
 		return tasks;
 	}

@@ -6,12 +6,13 @@ public class MessageDto {
 	
 	private String message;
 	
-	private int intF;
+	private int intF; //作为临时域-int
 	
-	private String StringF;
+	private String StringF;//作为临时域-String
 	
 	public MessageDto(){
 		
+		this.t = true;
 	}
 
 	public MessageDto(boolean t, String message) {
