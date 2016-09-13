@@ -104,9 +104,9 @@
 			<div title="任务管理" style="padding: 10px;">
 				<div style="width: 100%; text-align: center">
 					<div style="padding-top: 10px; cursor: pointer;"
-						onclick="addPanel('tasklist','任务列表','<%=basePath%>win/tasklist.do')">
-						<img alt="任务列表" src="<%=basePath%>icon/document_new.png">
-						<div>任务列表</div>
+						onclick="addPanel('tasklist','项目列表','<%=basePath%>win/tasklist.do')">
+						<img alt="项目列表" src="<%=basePath%>icon/document_new.png">
+						<div>项目列表</div>
 					</div>
 					<div style="padding-top: 10px; cursor: pointer;"
 						onclick="addPanel('quotelist','报价列表','<%=basePath%>win/quotelist.do')">
@@ -314,7 +314,8 @@
 	            refreshTab({tabTitle:title,url:href});  
 	        } else {  
 	            if (href){  
-	                var content = '<iframe scrolling="no" frameborder="0"  src="'+href+'" style="width:100%;height:100%;"></iframe>';  
+	               var content = '<iframe scrolling="no" frameborder="0"  src="'+href+'" style="width:100%;height:100%;"></iframe>';
+	               //var content = href;
 	            } else {  
 	                var content = '未实现';  
 	            }  
@@ -352,6 +353,15 @@
 	    	 closePanel(oldTitle);
 	    	 addPanel(id,title,href);
 	    	 
+	    }
+	    
+	    function openPanel(newObj){
+	    	
+	    	 var id = newObj.id;
+	    	 var title = newObj.title;
+	    	 var href = newObj.href;
+	    	 
+	    	 addPanel(id,title,href);
 	    }
 	    
 	    function closePanel(title){

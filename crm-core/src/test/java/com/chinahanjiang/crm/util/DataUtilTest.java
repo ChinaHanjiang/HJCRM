@@ -30,4 +30,10 @@ public class DataUtilTest {
 		System.out.println(deletep.size());
 		
 	}
+	
+	@Test
+	public void testDouble(){
+		
+		System.out.println(Double.toString(new Double(2.5)));
+	}
 }

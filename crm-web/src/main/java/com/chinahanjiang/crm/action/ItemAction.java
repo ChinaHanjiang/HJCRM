@@ -136,7 +136,7 @@ public class ItemAction extends BaseAction {
 		SearchResultDto srd = new SearchResultDto();
 		
 		srd = itemService.searchAndCount(this.order, this.sort,
-				this.page, row, null, null,0);
+				this.page, row, null, null, 0,  td);
 		
 		this.rows.clear();
 		this.rows.addAll(srd.getRows());
@@ -158,7 +158,7 @@ public class ItemAction extends BaseAction {
 		Timestamp end = DateUtil.getCurrentDayEndTime();
 		
 		srd = itemService.searchAndCount(this.order, this.sort,
-				this.page, row, begin, end, 0);
+				this.page, row, begin, end, 0, null);
 		
 		this.rows.clear();
 		this.rows.addAll(srd.getRows());
@@ -177,7 +177,7 @@ public class ItemAction extends BaseAction {
 		SearchResultDto srd = new SearchResultDto();
 		
 		srd = itemService.searchAndCount(this.order, this.sort,
-				this.page, row, null, null,0);
+				this.page, row, null, null,0, null);
 		
 		this.rows.clear();
 		this.rows.addAll(srd.getRows());

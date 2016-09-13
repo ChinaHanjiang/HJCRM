@@ -1252,7 +1252,7 @@
 						<tr id="c_remarks">
 							<td>备注:</td>
 							<td><textarea id="cu_remarks" rows=5 style="width: 200px;height:60px;"
-									name="f_c_remarks" class="textarea easyui-validatebox"}></textarea></td>
+									name="f_c_remarks" class="textarea easyui-validatebox"} ></textarea></td>
 						</tr>
 
 					</table>

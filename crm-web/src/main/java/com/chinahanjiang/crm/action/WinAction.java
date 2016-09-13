@@ -19,6 +19,8 @@ import com.chinahanjiang.crm.pojo.Item;
 import com.chinahanjiang.crm.pojo.ItemType;
 import com.chinahanjiang.crm.pojo.Location;
 import com.chinahanjiang.crm.pojo.Product;
+import com.chinahanjiang.crm.pojo.ProductAndQuoteRelation;
+import com.chinahanjiang.crm.pojo.ProductQuoteDetails;
 import com.chinahanjiang.crm.pojo.Task;
 import com.chinahanjiang.crm.pojo.TaskType;
 import com.chinahanjiang.crm.service.CustomerService;
@@ -26,6 +28,8 @@ import com.chinahanjiang.crm.service.GroupsService;
 import com.chinahanjiang.crm.service.ItemService;
 import com.chinahanjiang.crm.service.ItemTypeService;
 import com.chinahanjiang.crm.service.LocationService;
+import com.chinahanjiang.crm.service.ProductAndQuoteRelationService;
+import com.chinahanjiang.crm.service.ProductQuoteService;
 import com.chinahanjiang.crm.service.ProductService;
 import com.chinahanjiang.crm.service.TaskService;
 import com.chinahanjiang.crm.service.TaskTypeService;
@@ -43,10 +47,13 @@ import com.chinahanjiang.crm.service.TaskTypeService;
 	@Result(name = "quotelist", location = "/WEB-INF/content/quote/quotelist.jsp"),
 	@Result(name = "productlist", location = "/WEB-INF/content/product/productlist.jsp"),
 	@Result(name = "quotewindow", location = "/WEB-INF/content/quote/quotewindow.jsp"),
-	@Result(name = "addtask", location = "/WEB-INF/content/task/addtask.jsp"),
-	@Result(name = "additem", location = "/WEB-INF/content/task/additem.jsp"),
+	@Result(name = "addtask", location = "/WEB-INF/content/task/taskedit.jsp"),
+	@Result(name = "modifytask", location = "/WEB-INF/content/task/taskedit.jsp"),
+	@Result(name = "additem", location = "/WEB-INF/content/task/itemedit.jsp"),
+	@Result(name = "modifyitem", location = "/WEB-INF/content/task/itemedit.jsp"),
 	@Result(name = "itemlist", location = "/WEB-INF/content/task/itemlist.jsp"),
-	@Result(name = "quote", location = "/WEB-INF/content/quote/quotewindow.jsp")})
+	@Result(name = "quote", location = "/WEB-INF/content/quote/quotewindow.jsp"),
+	@Result(name = "taskdetail", location = "/WEB-INF/content/task/taskdetail.jsp")})
 @ExceptionMappings({ @ExceptionMapping(exception = "java.lange.RuntimeException", result = "error") })
 public class WinAction extends BaseAction {
 
@@ -76,6 +83,12 @@ public class WinAction extends BaseAction {
 	@Resource
 	private ProductService productService;
 	
+	@Resource
+	private ProductAndQuoteRelationService paqrService;
+	
+	@Resource
+	private ProductQuoteService productQuoteServices;
+	
 	private List<Location> locations;
 	
 	private List<Groups> groups;
@@ -87,6 +100,10 @@ public class WinAction extends BaseAction {
 	private List<Customer> customers;
 	
 	private List<Product> products;
+	
+	private List<ProductQuoteDetails> pqds;
+	
+	private List<ProductAndQuoteRelation> paqrs;
 	
 	private Item item;
 	
@@ -100,6 +117,16 @@ public class WinAction extends BaseAction {
 	
 	private int quoteId;
 	
+	private int type; //1-add,2-modify
+	
+	public int getType() {
+		return type;
+	}
+
+	public void setType(int type) {
+		this.type = type;
+	}
+
 	public int getQuoteId() {
 		return quoteId;
 	}
@@ -196,6 +223,22 @@ public class WinAction extends BaseAction {
 		this.itemTypes = itemTypes;
 	}
 
+	public List<ProductAndQuoteRelation> getPaqrs() {
+		return paqrs;
+	}
+
+	public void setPaqrs(List<ProductAndQuoteRelation> paqrs) {
+		this.paqrs = paqrs;
+	}
+
+	public List<ProductQuoteDetails> getPqds() {
+		return pqds;
+	}
+
+	public void setPqds(List<ProductQuoteDetails> pqds) {
+		this.pqds = pqds;
+	}
+
 	@Action("customerlist")
 	public String customerListWin(){
 		
@@ -255,19 +298,42 @@ public class WinAction extends BaseAction {
 	@Action("addtask")
 	public String addtask(){
 		
+		this.type = 1;
 		taskTypes = taskTypeService.findAll();
 		
 		return "addtask";
 	}
 	
+	@Action("modifytask")
+	public String mofidytask(){
+		
+		this.type = 2;
+		task = taskService.findById(taskId);
+		taskTypes = taskTypeService.findAll();
+		
+		return "modifytask";
+	}
+	
 	@Action("additem")
 	public String additem(){
 		
+		this.type = 1;
 		task = taskService.findById(taskId);
 		itemTypes = itemTypeService.findAll();
 		int itemnum = task.getItems()==null?1:task.getItems().size()+1 ;
 		itemCode = task.getCode() + "." + itemnum;
 		return "additem";
+	}
+	
+	@Action("modifyitem")
+	public String modifyitem(){
+		
+		this.type = 2;
+		item = itemService.findById(itemId);
+		task = item.getTask();
+		itemTypes = itemTypeService.findAll();
+		itemCode = item.getCode();
+		return "modifyitem";
 	}
 	
 	@Action("itemlist")
@@ -281,8 +347,16 @@ public class WinAction extends BaseAction {
 		
 		item = itemService.findById(itemId);
 		task = item.getTask();
+		pqds = productQuoteServices.findProductQuoteDetailsByItem(item);
+		return "quote";
+	}
+	
+	@Action("taskdetail")
+	public String taskDetail(){
+		
+		task = taskService.findById(taskId);
 		products = productService.findByTask(task);
 		
-		return "quote";
+		return "taskdetail";
 	}
 }

@@ -37,16 +37,25 @@ public class ContactServiceImpl implements ContactService {
 			String sort, int page, int row) {
 		
 		Customer c = customerService.findById(customerId);
+		List<ContactDto> cds = null;
+		int records = 0;
 		Search search = new Search();
-		search.addFilterEqual("customer", c);
-		search.addFilterEqual("isDelete",1);
-		search.setMaxResults(row);
-		search.setPage(page - 1 < 0 ? 0 : page - 1);
-		SearchResult<Contact> result = searchAndCount(search);
-		List<Contact> cls = result.getResult();
-		
-		List<ContactDto> cds = DataUtil.convertContactToDto(cls);
-		int records = result.getTotalCount();
+		if(c!=null){
+			
+			search.addFilterEqual("customer", c);
+			search.addFilterEqual("isDelete",1);
+			search.setMaxResults(row);
+			search.setPage(page - 1 < 0 ? 0 : page - 1);
+			SearchResult<Contact> result = searchAndCount(search);
+			List<Contact> cls = result.getResult();
+			
+			cds = DataUtil.convertContactToDto(cls);
+			records = result.getTotalCount();
+		} else {
+			
+			cds = new ArrayList<ContactDto>();
+			records = 0;
+		}
 		
 		SearchResultDto srd = new SearchResultDto();
 		srd.getRows().clear();

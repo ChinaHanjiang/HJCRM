@@ -1,5 +1,7 @@
 package com.chinahanjiang.crm.pojo;
 
+import java.sql.Timestamp;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -15,27 +17,31 @@ import javax.persistence.Table;
 public class ProductAndQuoteRelation {
 
 	private int id;
-	
+
 	private Product product;
-	
+
 	private ProductQuoteDetails productQuoteDetails;
-	
+
 	private double defindPrice;
-	
+
 	private int isDelete;
-	
+
 	private int quantity;
 	
-	private String remarks;
+	private Timestamp createTime;
 	
-	public ProductAndQuoteRelation(){
-		
+	private Timestamp updateTime;
+
+	private String remarks;
+
+	public ProductAndQuoteRelation() {
+
 		isDelete = 1;
 	}
 
 	public ProductAndQuoteRelation(int id, Product product, int quantity,
 			ProductQuoteDetails productQuoteDetails, double defindPrice,
-			int isDelete, String remarks) {
+			int isDelete,Timestamp createTime, Timestamp updateTime, String remarks) {
 		super();
 		this.id = id;
 		this.product = product;
@@ -43,6 +49,8 @@ public class ProductAndQuoteRelation {
 		this.defindPrice = defindPrice;
 		this.isDelete = isDelete;
 		this.quantity = quantity;
+		this.createTime = createTime;
+		this.updateTime = updateTime;
 		this.remarks = remarks;
 	}
 
@@ -58,7 +66,7 @@ public class ProductAndQuoteRelation {
 	}
 
 	@OneToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "paqr_pid",referencedColumnName="p_id")
+	@JoinColumn(name = "paqr_pid", referencedColumnName = "p_id")
 	public Product getProduct() {
 		return product;
 	}
@@ -68,7 +76,7 @@ public class ProductAndQuoteRelation {
 	}
 
 	@OneToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "paqr_pqdid",referencedColumnName="pqd_id")
+	@JoinColumn(name = "paqr_pqdid", referencedColumnName = "pqd_id")
 	public ProductQuoteDetails getProductQuoteDetails() {
 		return productQuoteDetails;
 	}
@@ -111,5 +119,23 @@ public class ProductAndQuoteRelation {
 
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
+	}
+
+	@Column(name = "paqr_createtime")
+	public Timestamp getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Timestamp createTime) {
+		this.createTime = createTime;
+	}
+
+	@Column(name = "paqr_updatetime")
+	public Timestamp getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(Timestamp updateTime) {
+		this.updateTime = updateTime;
 	}
 }

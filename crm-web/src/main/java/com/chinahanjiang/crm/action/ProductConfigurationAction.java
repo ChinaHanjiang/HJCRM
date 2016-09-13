@@ -159,7 +159,7 @@ public class ProductConfigurationAction extends BaseAction {
 
 	@Action("savemix")
 	public String savemix() {
-
+		
 		md = productConfigurationService.saveProductMix(this.productId,
 				this.inserted, this.updated, this.deleted);
 

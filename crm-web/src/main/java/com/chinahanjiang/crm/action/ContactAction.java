@@ -129,6 +129,10 @@ public class ContactAction extends BaseAction {
 		srd = contactService.searchAndCount(this.customerId, this.order, this.sort,
 				this.page, row);
 		
+		if(this.rows == null) {
+			this.rows=new ArrayList<Object>();
+		}
+		
 		this.rows.clear();
 		this.rows.addAll(srd.getRows());
 		this.total = srd.getTotal();

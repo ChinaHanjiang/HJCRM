@@ -26,6 +26,7 @@ import com.chinahanjiang.crm.pojo.Groups;
 import com.chinahanjiang.crm.pojo.Item;
 import com.chinahanjiang.crm.pojo.Location;
 import com.chinahanjiang.crm.pojo.Product;
+import com.chinahanjiang.crm.pojo.ProductAndQuoteRelation;
 import com.chinahanjiang.crm.pojo.ProductCatalog;
 import com.chinahanjiang.crm.pojo.ProductConfiguration;
 import com.chinahanjiang.crm.pojo.Task;
@@ -452,7 +453,7 @@ public class DataUtil {
 				id.setId(i.getId());
 				id.setName(i.getName());
 				id.setCode(i.getCode());
-				id.setCustomer(i.getCustomer() == null ? "" : i.getCustomer()
+				id.setCustomer(i.getCustomer() == null ? "......" : i.getCustomer()
 						.getName());
 				id.setCustomerId(i.getCustomer() == null ? 0 : i.getCustomer()
 						.getId());
@@ -467,6 +468,8 @@ public class DataUtil {
 				id.setTasktypeId(i.getTask() == null ? 0 : (i.getTask()
 						.getTaskType() == null ? 0 : i.getTask().getTaskType()
 						.getId()));
+				id.setItemTypeId(i.getItemType()==null ? 0 : i.getItemType().getId());
+				id.setItemType(i.getItemType()==null ? "" : i.getItemType().getName());
 				id.setUser(i.getUser() == null ? "" : i.getUser().getName());
 				id.setUserId(i.getUser() == null ? 0 : i.getUser().getId());
 				id.setCreateTime(i.getCreateTime() == null ? "" : sdf_dt
@@ -475,6 +478,8 @@ public class DataUtil {
 						.format(i.getUpdateTime()));
 				id.setContact(i.getContact() == null ? "" : i.getContact().getName());
 				id.setContactId(i.getCode() == null ? 0 : i.getContact().getId());
+				
+				/*附件信息*/
 				
 				ids.add(id);
 			}
@@ -805,6 +810,7 @@ public class DataUtil {
 		if (etds != null) {
 			str = gson.toJson(etds);
 		}
+		
 		return str;
 	}
 
@@ -822,7 +828,6 @@ public class DataUtil {
 	private static List<ComboSearchDto> convertProductToCsDto(List<Product> pls) {
 
 		List<ComboSearchDto> csds = new ArrayList<ComboSearchDto>();
-		
 		if(pls!=null){
 			
 			Iterator<Product> it = pls.iterator();
@@ -836,7 +841,40 @@ public class DataUtil {
 				csds.add(csd);
 			}
 		}
-		
 		return csds;
+	}
+
+	public static List<ProductConfigurationDto> convertPqrsToPcds(
+			List<ProductAndQuoteRelation> pqrs) {
+		
+		List<ProductConfigurationDto> pcfds = new ArrayList<ProductConfigurationDto>();
+		if(pqrs!=null){
+			
+			Iterator<ProductAndQuoteRelation> it = pqrs.iterator();
+			while(it.hasNext()){
+				
+				ProductAndQuoteRelation pqr = it.next();
+				Product p = pqr.getProduct();
+				ProductConfigurationDto pcfd = new ProductConfigurationDto();
+				
+				pcfd.setId(pqr.getId());
+				pcfd.setSpid(p.getId());
+				pcfd.setSproduct(p.getName());
+				pcfd.setCode(p.getCode());
+				pcfd.setProductCatalogId(p.getProductCatalog().getId());
+				pcfd.setProductCatalog(p.getProductCatalog().getName());
+				pcfd.setQuantity(pqr.getQuantity());
+				pcfd.setStandardPrice(p.getStandardPrice());
+				pcfd.setDefinedPrice(pqr.getDefindPrice());
+				pcfd.setRemarks(pqr.getRemarks());
+				pcfd.setCreateTime(pqr.getCreateTime() == null ? "" : sdf_dt
+						.format(pqr.getCreateTime()));
+				pcfd.setUpdateTime(pqr.getUpdateTime() == null ? "" : sdf_dt
+						.format(pqr.getUpdateTime()));
+				
+				pcfds.add(pcfd);
+			}
+		}
+		return pcfds;
 	}
 }

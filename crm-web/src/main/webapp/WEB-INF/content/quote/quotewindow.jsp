@@ -33,11 +33,12 @@ html  {
 	var _pm_productCode = new Array();
 	var _pm_productId = new Array();
 	var _pm_productStandardPrice = new Array();
+	var _pm_productDefindPrice = new Array();
 </script>
 <title>报价列表</title>
 </head>
 <body>
-	<input id="quoteId" value="${quoteId }" style="display:none;" />
+	<input id="itemId" value="${item.id }" style="display:none;" />
 	<div id="quotewindow" class="easyui-panel" data-options="border:false"
 		style="padding: 10px;">
 		<div class="easyui-panel" data-options="border:true"
@@ -63,24 +64,25 @@ html  {
 			</table>
 		</div>
 
-		<s:if test="products!=null">
+		<s:if test="pqds!=null">
 			<%int i=0; %>
-			<s:iterator value="products" var="p">
+			<s:iterator value="pqds" var="p">
 				<script type="text/javascript">
 					gindex[<%=i %>] = undefined;
 					_pm_catalogName[<%=i %>] = undefined;
 					_pm_productName[<%=i %>] = undefined;
 					_pm_productCode[<%=i %>] = undefined;
 					_pm_productStandardPrice[<%=i %>] = undefined;
-					_pm_productId[<%=i %>] = ${p.id};
+					_pm_productDefindPrice[<%=i%>] = undefined;
+					_pm_productId[<%=i %>] = ${p.product.id};
 				</script>
 				<div class="easyui-panel" data-options="border:false"
 					style="width: 720px; padding-top: 10px;">
 					<table id="quotelist_<%=i %>" cellspacing="0" cellpadding="0"
 						class="easyui-datagrid"
 						data-options="
-							url:'<%=basePath%>pcf/list.do?pcfd.fpid = ' + ${p.id }, 
-							title:'${p.name }的报价单', 
+							url:'<%=basePath%>quotedetail/list.do?productQuoteDetailId= ' + ${p.id }, 
+							title:'${p.product.name }的报价单', 
 			       			loadMsg:'正在加载数据，请稍后...',
 			       			height: 250, 
 			       			border: true, 
@@ -159,7 +161,10 @@ html  {
 					    		 							_pm_productStandardPrice[<%=i %>] = data.pd.standardPrice;
 					    		 							$('#quotelist_<%=i %>').datagrid('getRows')[index]['code'] = _pm_productCode[<%=i %>];
 					    		 							$('#quotelist_<%=i %>').datagrid('getRows')[index]['standardPrice'] = _pm_productStandardPrice[<%=i %>];
-					    		 							$('#quotelist_<%=i %>').datagrid('getRows')[index]['definedPrice'] = _pm_productStandardPrice[<%=i %>];
+					    		 							if(_pm_productDefindPrice[<%=i%>] == undefined){
+					    		 								_pm_productDefindPrice[<%=i%>] = data.pd.standardPrice;
+					    		 								$('#quotelist_<%=i %>').datagrid('getRows')[index]['definedPrice'] = _pm_productDefindPrice[<%=i%>];
+					    		 							}
 					    		 						}
 													});
 												}
@@ -169,13 +174,17 @@ html  {
 								<th data-options="field:'code',width:150,align:'center'">产品编码</th>
 								<th
 									data-options="field:'standardPrice',width:90,align:'center'">标准价</th>
-								<th data-options="field:'definedPrice',width:90,align:'center',editor:{type:'textbox',option:{required:true}}">自定义价</th>
-								<th data-options="field:'quantity',width:50,align:'center',	editor:{type:'textbox',	option:{required:true}}">数量</th>
+								<th data-options="field:'definedPrice',width:90,align:'center',editor:{type:'textbox',options:{
+									onChange:function(newValue,oldValue){
+										_pm_productDefindPrice[<%=i%>] = newValue;
+									}
+								}}">自定义价</th>
+								<th data-options="field:'quantity',width:50,align:'center',	editor:{type:'textbox',	options:{required:true}}">数量</th>
 							</tr>
 						</thead>
 					</table>
 					<div id="tb_${p.id }"
-						style="border-bottom: 1px solid #ddd; height: 30px; padding: 3px 10px 0px 5px; background: #fafafa;">
+						style="border-bottom: 1px solid #ddd; height: 30px; padding: 3px 10px 0px 5px; background: #fafafa;" >
 						<a href="javascript:void(0)" class="easyui-linkbutton"
 							data-options="iconCls:'icon-add',plain:true"
 							onclick="append(<%=i %>)">增加</a> <a href="javascript:void(0)"
@@ -264,17 +273,18 @@ html  {
 				$('#'+gid).datagrid('getRows')[index]['sproduct'] = _pm_productName[j];
 				_pm_productName[j] = undefined;
 			}
-			if(_pm_productStandardPrice[j] != undefined){
+			
+			 if(_pm_productStandardPrice[j] != undefined){
 				
-				$('#'+gid).datagrid('getRows')[index]['definedPrice'] = _pm_productStandardPrice[j];
-				_pm_productStandardPrice[j] = undefined;
-			}
+				$('#'+gid).datagrid('getRows')[index]['definedPrice'] = _pm_productDefindPrice[j];
+				_pm_productDefindPrice[j] = undefined;
+			} 
 		}
 		
 		function append(id){
 			if (endEditing(id)){
 				$('#quotelist_'+id).datagrid('appendRow',{});
-				editIndex = $('#quotelist_'+id).datagrid('getRows').length-1;
+				gindex[id] = $('#quotelist_'+id).datagrid('getRows').length-1;
 				$('#quotelist_'+id).datagrid('selectRow', gindex[id])
 						.datagrid('beginEdit', gindex[id]);
 			}
@@ -298,9 +308,9 @@ html  {
 	                var inserted = $pmg.datagrid('getChanges', "inserted");
 	                var deleted = $pmg.datagrid('getChanges', "deleted");
 	                var updated = $pmg.datagrid('getChanges', "updated");
-	             	var quoteId = $('#quoteId').val();
+	             	var itemId = $('#itemId').val();
 	                var effectRow = new Object();
-	                effectRow['quote'] = quoteId;
+	                effectRow['itemId'] = itemId;
 	                effectRow['productId'] = _pm_productId[id];
 	                if (inserted.length) {
 	                    effectRow["inserted"] = JSON.stringify(inserted);
@@ -314,7 +324,7 @@ html  {
 	                
 	                $.post("<%=basePath%>quotedetail/savemix.do", effectRow, function (rsp) {
 	                    if (rsp) {
-	                    	
+	                    	 $.messager.alert("提示", "修改成功！");
 	                        $pmg.datagrid('acceptChanges');
 	                    }
 	                }, "JSON").error(function () {

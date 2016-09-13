@@ -874,7 +874,7 @@
 							<th data-options="field:'quantity',width:40,
 							editor:{
 								type:'textbox',
-								option:{
+								options:{
 									required:true
 								}
 							}">数量</th>

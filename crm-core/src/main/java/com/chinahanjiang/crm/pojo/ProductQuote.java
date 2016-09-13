@@ -88,7 +88,7 @@ public class ProductQuote {
 		this.code = code;
 	}
 
-	@OneToMany(targetEntity = ProductQuoteDetails.class, cascade = { CascadeType.ALL }, fetch = FetchType.LAZY, mappedBy = "productQuote")
+	@OneToMany(targetEntity = ProductQuoteDetails.class, cascade = { CascadeType.ALL }, fetch = FetchType.EAGER, mappedBy = "productQuote")
 	@Fetch(FetchMode.SUBSELECT)
 	public List<ProductQuoteDetails> getProductQuoteDetails() {
 		return productQuoteDetails;

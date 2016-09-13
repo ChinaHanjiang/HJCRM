@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
+<%@ page import="java.util.*,com.chinahanjiang.crm.pojo.*" %>
 <%@ taglib prefix="s" uri="/struts-tags"%>
 <%
 	String path = request.getContextPath();
@@ -25,6 +26,24 @@
 		
 		/*定义全局变量*/
 		var _t_id;
+		
+		<%
+			int type = (Integer)request.getAttribute("type");
+			if(type==1){
+				
+		%>
+		
+			$('#t_bsubmit').show();
+			$('#t_bmodify').hide();
+		
+		<%
+			} else {
+		%>
+			$('#t_submit').hide();
+			$('#t_bmodify').show();
+		<%
+			}
+		%>
 		
 		$('#t_bsubmit').click(function(){
 			
@@ -107,6 +126,11 @@
 			}
 		});
 		
+		$('#t_bmodify').click(function(){
+			
+			
+		});
+		
 		$('#t_bcancel').click(function(){
 			
 			 parent.closePanel('添加项目');
@@ -165,7 +189,7 @@
 </head>
 <body>
 	<!-- 添加任务窗口 -->
-	<div title="项目" class="easyui-panel" data-options="border:true"
+	<div id="taskedit" title="项目" class="easyui-panel" data-options="border:true"
 		style="width: 450px; height: auto;">
 		<div id="f_task"
 			 style=" padding: 10px">
@@ -289,7 +313,10 @@
 					</table>
 					<div style="text-align: center; padding: 5px">
 						<a id="t_bsubmit" href="javascript:void(0)" style="width: 80px;"
-							class="easyui-linkbutton">提交</a> <a id="t_bcancel"
+							class="easyui-linkbutton">提交</a> 
+						<a id="t_bmodify" href="javascript:void(0)" style="width: 80px;"
+							class="easyui-linkbutton">修改</a> 
+						<a id="t_bcancel"
 							href="javascript:void(0)" style="width: 80px;"
 							class="easyui-linkbutton">取消</a>
 					</div>

@@ -216,7 +216,7 @@ public class ProductConfigurationServiceImpl implements
 			}
 		}
 		
-		return null;
+		return md;
 	}
 
 	private ProductConfiguration findById(int id) {

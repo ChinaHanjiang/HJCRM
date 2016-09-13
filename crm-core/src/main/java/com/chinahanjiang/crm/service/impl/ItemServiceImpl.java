@@ -55,12 +55,21 @@ public class ItemServiceImpl implements ItemService {
 
 	@Override
 	public SearchResultDto searchAndCount(String order, String sort, int page,
-			int row, Timestamp begin, Timestamp end, int i) {
+			int row, Timestamp begin, Timestamp end, int i, TaskDto td) {
 
 		Search search = new Search();
 		search.addFilterEqual("isDelete", 1);
 		search.addFilterEqual("status", i);
-
+		
+		if(td!=null){
+			
+			Task task = taskService.findById(td.getId());
+			if(task!=null){
+				
+				search.addFilterEqual("task", task);
+			}
+		}
+		
 		if (begin != null) {
 			search.addFilterGreaterOrEqual("createTime", begin);
 		}

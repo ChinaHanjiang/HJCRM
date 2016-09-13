@@ -12,7 +12,7 @@ import com.chinahanjiang.crm.pojo.Item;
 public interface ItemService {
 
 	public SearchResultDto searchAndCount(String order, String sort, int page,
-			int row, Timestamp begin, Timestamp end, int i);
+			int row, Timestamp begin, Timestamp end, int i, TaskDto td);
 
 	MessageDto update(ItemDto id, TaskDto td, UserDto ud);
 

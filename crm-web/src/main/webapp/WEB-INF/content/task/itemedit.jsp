@@ -254,10 +254,11 @@
 			    						 
 			    					 } else {
 			    						
+			    						var taskId = $('#i_taskId').val();
 										var newObj = {
-				    						 id:'itemlist',
-				    						 title:'任务列表',
-				    						 href:'<%=basePath%>win/itemlist.do'
+				    						 id:'taskdetail',
+				    						 title:'项目详情',
+				    						 href:'<%=basePath%>win/taskdetail.do?taskId=' + taskId
 					    				 };
 					    				 
 					    				 parent.openAndClose(newObj,'添加任务');
@@ -266,10 +267,11 @@
 	    				 		});
 	    				 	} else {
 	    				 		
-	    				 		var newObj = {
-		    						 id:'itemlist',
-		    						 title:'任务列表',
-		    						 href:'<%=basePath%>win/itemlist.do'
+	    				 		var taskId = $('#i_taskId').val();
+								var newObj = {
+		    						 id:'taskdetail',
+		    						 title:'项目详情',
+		    						 href:'<%=basePath%>win/taskdetail.do?taskId=' + taskId
 			    				 };
 			    				 
 			    				 parent.openAndClose(newObj,'添加任务');
@@ -293,13 +295,14 @@
 		
 		$('#i_bcancel').click(function(){
 			
+			var taskId = $('#i_taskId').val();
+			
 			var newObj = {
-					 
-					 id:'tasklist',
-					 title:'项目列表',
-					 href:'<%=basePath%>win/tasklist.do'
+				 id:'taskdetail',
+				 title:'项目详情',
+				 href:'<%=basePath%>win/taskdetail.do?taskId=' + taskId
 			 };
-			 
+			
 			 parent.openAndClose(newObj,'添加任务');
 			
 		});
