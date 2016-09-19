@@ -43,6 +43,12 @@ public class DateUtil {
 		return covertDateToTimestamp(now);
 	}
 
+	public static String getCurrentDayStr(){
+		
+		Date now = new Date();
+		return shortSdf.format(now);
+	}
+	
 	private static Timestamp covertDateToTimestamp(Date date) {
 
 		Timestamp t;
@@ -66,5 +72,41 @@ public class DateUtil {
 		String dateStr = "";
 		dateStr = shortSdf2.format(now);
 		return dateStr;
+	}
+	
+
+	public static Timestamp convertStrToBeginTime(String str) {
+		
+		str = str.trim();
+		String[] date = str.split("/");
+		String nts = date[2]+"-"+date[0]+"-"+date[1] + " 00:00:00";
+		
+		return Timestamp.valueOf(nts);
+	}
+	
+	public static Timestamp convertStrToBeginTime2(String str) {
+		
+		str = str.trim();
+		
+		String nts = str + " 00:00:00";
+		
+		return Timestamp.valueOf(nts);
+	}
+
+	public static Timestamp convertStrToEndTime(String str) {
+
+		str = str.trim();
+		String[] date = str.split("/");
+		String nts = date[2]+"-"+date[0]+"-"+date[1] + " 23:59:59";
+		
+		return Timestamp.valueOf(nts);
+	}
+	
+	public static Timestamp convertStrToEndTime2(String str) {
+
+		str = str.trim();
+		String nts = str + " 23:59:59";
+		
+		return Timestamp.valueOf(nts);
 	}
 }

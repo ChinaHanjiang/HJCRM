@@ -1,6 +1,5 @@
 package com.chinahanjiang.crm.action;
 
-import java.sql.Timestamp;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -35,7 +34,9 @@ import com.chinahanjiang.crm.util.DateUtil;
 	@Result(name="check",type="json"),
 	@Result(name="dalytask",type="json"),
 	@Result(name="undotask",type="json"),
-	@Result(name="generatecode",type="json")})
+	@Result(name="generatecode",type="json"),
+	@Result(name="finish",type="json"),
+	@Result(name="giveup",type="json")})
 @ExceptionMappings({ @ExceptionMapping(exception = "java.lange.RuntimeException", result = "error") })
 public class TaskAction extends BaseAction {
 
@@ -64,6 +65,86 @@ public class TaskAction extends BaseAction {
 	
 	private TaskTypeDto ttd;
 	
+	private int tid;
+	
+	private String beginTime;
+	
+	private String endTime;
+	
+	private int tasktypeId;
+	
+	private int status;
+	
+	private int type;
+	
+	private String name;
+	
+	private String customerName;
+	
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getCustomerName() {
+		return customerName;
+	}
+
+	public void setCustomerName(String customerName) {
+		this.customerName = customerName;
+	}
+
+	public int getType() {
+		return type;
+	}
+
+	public void setType(int type) {
+		this.type = type;
+	}
+
+	public String getBeginTime() {
+		return beginTime;
+	}
+
+	public void setBeginTime(String beginTime) {
+		this.beginTime = beginTime;
+	}
+
+	public String getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(String endTime) {
+		this.endTime = endTime;
+	}
+
+	public int getTasktypeId() {
+		return tasktypeId;
+	}
+
+	public void setTasktypeId(int tasktypeId) {
+		this.tasktypeId = tasktypeId;
+	}
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
+
+	public int getTid() {
+		return tid;
+	}
+
+	public void setTid(int tid) {
+		this.tid = tid;
+	}
+
 	public ItemDto getId() {
 		return id;
 	}
@@ -154,8 +235,29 @@ public class TaskAction extends BaseAction {
 		
 		SearchResultDto srd = new SearchResultDto();
 		
-		srd = taskService.searchAndCount(this.order, this.sort,
-				this.page, row);
+		if(type!=0){
+			
+			if(type==1){
+				
+				srd = taskService.searchAndCount(this.order, this.sort,
+						this.page, row, beginTime, endTime , status, 0, tasktypeId, null, null);
+				
+			} else if(type==2) {
+				
+				srd = taskService.searchAndCount(this.order, this.sort,
+						this.page, row, null, null , -1, 0, 0, name, null);
+			} else if(type==3){
+				
+				srd = taskService.searchAndCount(this.order, this.sort,
+						this.page, row, null, null , -1, 0, 0, null, customerName);
+			}
+		} else {
+			
+			srd = taskService.searchAndCount(this.order, this.sort,
+					this.page, row);
+		}
+		
+		
 		
 		this.rows.clear();
 		this.rows.addAll(srd.getRows());
@@ -174,11 +276,13 @@ public class TaskAction extends BaseAction {
 		
 		SearchResultDto srd = new SearchResultDto();
 		
-		Timestamp todayBegin = DateUtil.getCurrentDayStartTime();
-		Timestamp todayEnd = DateUtil.getCurrentDayEndTime();
+		String todayBegin = DateUtil.getCurrentDayStr();
+		String todayEnd = DateUtil.getCurrentDayStr();
+		
+		System.out.println(todayBegin + "-" + todayEnd);
 		
 		srd = taskService.searchAndCount(this.order, this.sort,
-				this.page, row, todayBegin, todayEnd , 0);
+				this.page, row, todayBegin, todayEnd , -1, 0, 0, null, null);
 		
 		this.rows.clear();
 		this.rows.addAll(srd.getRows());
@@ -198,7 +302,7 @@ public class TaskAction extends BaseAction {
 		SearchResultDto srd = new SearchResultDto();
 		
 		srd = taskService.searchAndCount(this.order, this.sort,
-				this.page, row, null, null,0);
+				this.page, row, null, null, 0, 0, 0, null, null);
 		
 		this.rows.clear();
 		this.rows.addAll(srd.getRows());
@@ -238,5 +342,21 @@ public class TaskAction extends BaseAction {
 		
 		code = taskService.generateCode(ttd);
 		return "generatecode";
+	}
+	
+	@Action("finish")
+	public String finish(){
+		
+		md = taskService.finishTask(td);
+		
+		return "finish";
+	}
+	
+	@Action("giveup")
+	public String giveup(){
+		
+		md = taskService.giveupTask(td);
+		
+		return "giveup";
 	}
 }

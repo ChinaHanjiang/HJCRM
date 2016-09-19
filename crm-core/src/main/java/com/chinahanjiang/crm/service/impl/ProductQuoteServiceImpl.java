@@ -13,6 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.chinahanjiang.crm.dao.ProductQuoteDao;
 import com.chinahanjiang.crm.dto.MessageDto;
+import com.chinahanjiang.crm.dto.ProductQuoteDto;
+import com.chinahanjiang.crm.dto.SearchResultDto;
 import com.chinahanjiang.crm.dto.UserDto;
 import com.chinahanjiang.crm.pojo.Item;
 import com.chinahanjiang.crm.pojo.Product;
@@ -26,7 +28,9 @@ import com.chinahanjiang.crm.service.ItemService;
 import com.chinahanjiang.crm.service.ProductConfigurationService;
 import com.chinahanjiang.crm.service.ProductQuoteService;
 import com.chinahanjiang.crm.service.ProductService;
+import com.chinahanjiang.crm.service.TaskService;
 import com.chinahanjiang.crm.service.UserService;
+import com.chinahanjiang.crm.util.DataUtil;
 import com.googlecode.genericdao.search.Search;
 
 @Service("productQuoteService")
@@ -38,6 +42,9 @@ public class ProductQuoteServiceImpl implements ProductQuoteService {
 	
 	@Resource
 	private ItemService itemService;
+	
+	@Resource
+	private TaskService taskService;
 	
 	@Resource
 	private UserService userService;
@@ -75,8 +82,7 @@ public class ProductQuoteServiceImpl implements ProductQuoteService {
 				
 				//初始化ProductQuoteDetails
 				List<ProductQuoteDetails> pqds = new ArrayList<ProductQuoteDetails>();
-				Task task = i.getTask();
-				List<Product> products = productService.findByTask(task);
+				List<Product> products = productService.findByItem(i);
 				double totalPrice = 0.0;
 				if(products!=null){
 					
@@ -102,7 +108,7 @@ public class ProductQuoteServiceImpl implements ProductQuoteService {
 								pqr.setProductQuoteDetails(pqd);
 								pqr.setQuantity(pc.getQuantity());
 								pqr.setRemarks(pc.getRemarks());
-								price += pc.getSproduct().getStandardPrice();
+								price += pc.getSproduct().getStandardPrice()*pc.getQuantity();
 								pqr.setCreateTime(now);
 								pqrs.add(pqr);
 							}
@@ -144,7 +150,7 @@ public class ProductQuoteServiceImpl implements ProductQuoteService {
 	}
 
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
-	private boolean save(ProductQuote pq) {
+	public boolean save(ProductQuote pq) {
 		
 		return productQuoteDao.save(pq);
 	}
@@ -176,6 +182,113 @@ public class ProductQuoteServiceImpl implements ProductQuoteService {
 		search.addFilterEqual("isDelete", 1);
 		search.addFilterEqual("item", item);
 		return productQuoteDao.searchUnique(search);
+	}
+
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+	public void deleteQuoteByItem(Item i) {
+		
+		ProductQuote pq = findProductQuoteByItem(i);
+		pq.setIsDelete(0);
+		save(pq);
+	}
+
+	@Override
+	public MessageDto findProductQuoteByItemId(int itemId) {
+		
+		MessageDto md = new MessageDto();
+		
+		
+		Item item = itemService.findById(itemId);
+		if(item!=null){
+			
+			int flag = item.getFlag();
+			if(flag==1){
+				
+				md.setT(false);
+				md.setMessage("报价单已经报了价!");
+				
+			} else {
+				
+				ProductQuote pq = findProductQuoteByItem(item);
+				if(pq!=null){
+					
+					md.setT(true);
+					md.setIntF(pq.getId());
+				} else {
+					
+					md.setT(false);
+					md.setMessage("报价单找不到！");
+				}
+			}
+		}
+		
+		return md;
+	}
+
+	@Override
+	public SearchResultDto searchAndCount(int taskId, String order,
+			String sort, int page, int row) {
+		
+		SearchResultDto srd = new SearchResultDto();
+		Task task = taskService.findById(taskId);
+		if(task!=null){
+			
+			List<Item> items = itemService.findItemsByTask(task);
+			if(items!=null){
+				
+				List<ProductQuote> pqs = findProductQuoteByItems(items);
+				List<ProductQuoteDto> pqsd = DataUtil.convertProductQuoteToDto(pqs);
+				
+				srd.setTotal(pqs.size());
+				srd.getRows().clear();
+				srd.getRows().addAll(pqsd);
+			}
+		}
+		
+		return srd;
+	}
+
+	private List<ProductQuote> findProductQuoteByItems(List<Item> items) {
+		
+		Search search = new Search();
+		search.addFilterIn("item", items);
+		return productQuoteDao.search(search);
+	}
+
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+	public MessageDto closeProductQuote(ProductQuoteDto pqd) {
+		
+		MessageDto md = new MessageDto();
+		Timestamp now = new Timestamp(System.currentTimeMillis());
+		
+		int id = pqd.getId();
+		ProductQuote pq = findById(id);
+		
+		if(pq!=null){
+			
+			pq.setStatus(1);
+			pq.setUpdateTime(now);
+			
+			Item item = pq.getItem();
+			item.setFlag(1);
+			
+			save(pq);
+			
+			md.setT(true);
+		} else {
+			
+			md.setT(false);
+			md.setMessage("id为：" + id + "的报价单找不到");
+		}
+		
+		return md;
+	}
+
+	private ProductQuote findById(int id) {
+		
+		return productQuoteDao.find(id);
 	}
 }
 

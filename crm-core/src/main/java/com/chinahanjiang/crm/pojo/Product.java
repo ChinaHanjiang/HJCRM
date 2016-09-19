@@ -48,6 +48,8 @@ public class Product {
 	
 	private List<Task> tasks;
 	
+	private List<Item> items;
+	
 	private double standardPrice;
 	
 	private double definePrice;
@@ -71,7 +73,7 @@ public class Product {
 			List<Product> beyongProduct, ProductCatalog productCatalog, double standardPrice, 
 			double definePrice, int isDelete, User user,Timestamp createTime,
 			Timestamp updateTime, String remarks, List<ProductAndQuoteRelation> quoteProducts,
-			List<Task> tasks) {
+			List<Task> tasks, List<Item> items) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -86,6 +88,7 @@ public class Product {
 		this.remarks = remarks;
 		this.quoteProducts = quoteProducts;
 		this.tasks = tasks;
+		this.items = items;
 	}
 
 	@Id
@@ -228,6 +231,15 @@ public class Product {
 
 	public void setTasks(List<Task> tasks) {
 		this.tasks = tasks;
+	}
+
+	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "products")
+	public List<Item> getItems() {
+		return items;
+	}
+
+	public void setItems(List<Item> items) {
+		this.items = items;
 	}
 
 	@Column(name = "p_shortcode")

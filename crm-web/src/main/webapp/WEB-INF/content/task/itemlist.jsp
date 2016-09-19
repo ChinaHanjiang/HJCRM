@@ -48,12 +48,12 @@
 				<tr>
 					<th data-options="field:'id',width:30,hidden:true">序号</th>
 					<th data-options="field:'code',width:150,align:'center'">编码</th>
-					<th data-options="field:'task',width:150,align:'center'">任务编码</th>
+					<th data-options="field:'itemType',width:120,align:'center'">任务类型</th>
 					<th data-options="field:'customerId',hidden:true"></th>
 					<th data-options="field:'customer',width:200,align:'center'">客户</th>
-					<th data-options="field:'name',width:250,align:'center'">内容</th>
+					<th data-options="field:'name',width:280,align:'center'">内容</th>
 					<th data-options="field:'contactId',hidden:true"></th>
-					<th data-options="field:'contnact',width:100,align:'center'">联系人</th>
+					<th data-options="field:'contact',width:100,align:'center'">联系人</th>
 					<th data-options="field:'userId',hidden:true"></th>
 					<th data-options="field:'user',width:80,align:'center'">跟进者</th>
 					<th data-options="field:'createTime',width:100,align:'center'">创建时间</th>

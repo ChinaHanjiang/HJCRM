@@ -57,7 +57,9 @@
 						
 						title:'项目修改'
 					});
-					$('#t_product').textbox('disable');
+					$('#t_product').combobox({
+						disable:true
+					});
 					
 					var _t_id = <%=task.getId()%>;
 					var _t_name = '<%=task.getName()%>';
@@ -97,7 +99,7 @@
 						productDiv += "<div id='pdiv<%=p.getId() %>' style='vertical-align:middle; line-height:25px; height:25px; margin-bottom:2px; background:#EDEDED; color:#000' >";
 						productDiv += "<input name='product' id='product<%=p.getId() %>' type='text'  value=<%=p.getId() %> style='display:none;' />";
 					    productDiv += '<%=p.getName() %>';
-					    productDiv += "<img style='display:none; float:right; padding-top:5px; padding-right:8px;' src='<%=basePath%>icon/close.png' onClick='closeDiv(<%=p.getId() %>)'></div>";
+					    productDiv += "<img style='dispaly:none; float:right; padding-top:5px; padding-right:8px;' src='<%=basePath%>icon/close.png' onClick='closeDiv(<%=p.getId() %>)'></div>";
 		<%
 						if(i!=len){
 							
@@ -211,6 +213,13 @@
 			var t_customerId;
 			var t_remarks;
 			var t_product = [];
+			var t_oproduct = "";
+			var t_product_add = [];
+			var t_product_delete = [];
+			var t_productadd;
+			var t_productdelete;
+			var j=0;
+			var k=0;
 			
 			t_name = $('#t_name').textbox('getText');
 			t_code = $('#t_code').textbox('getText');
@@ -219,6 +228,65 @@
 				t_customerId = 0;
 			}
 			t_remarks = $('#t_remarks').textbox('getText');
+			
+			
+			/* $("input[name^='product']").each(function(i, o){
+			    t_product[i] = $(o).val();
+			    
+			    var isH = _t_product.indexOf(t_product[i]);
+			    if(isH==-1){
+			    	
+			    	t_product_add[j] = t_product[i];
+			    	j++;
+			    	
+			    } else {
+			    	
+			    	t_oproduct += t_product[i];
+			    }
+			});
+			
+			var t_products = _t_product.split(',');
+			$.each( t_products, function(i, n){
+				
+				var isR = t_oproduct.indexOf(n);
+				
+				if(isR==-1){
+					
+					t_product_delete[k] = t_products[i];
+					k++;
+				}
+			});
+			
+			var addlen = t_product_add.length;
+			if(addlen!=0){
+				t_productadd = "";
+			}
+			$.each( t_product_add, function(i, n){
+				if(i!=addlen-1){
+					
+					t_productadd += n + ",";
+				} else {
+					
+					t_productadd += n;
+				}
+				
+			});
+			
+			var deletelen = t_product_delete.length;
+			if(deletelen!=0){
+				t_productdelete = "";
+			}
+			$.each( t_product_delete, function(i, n){
+				
+				if(i!=deletelen-1){
+					
+					t_productdelete += n + ",";
+				} else {
+					
+					t_productdelete += n;
+				}
+				
+			}); */
 			
 			var t = $('#addTaskForm').form('enableValidation').form('validate');
 			if(t){
@@ -245,6 +313,14 @@
 					
 					isChange = true;
 				}
+				/* if(t_productadd != undefined){
+					
+					isChange = true;
+				}
+				if(t_productdelete != undefined){
+					
+					isChange = true;
+				} */
 				
 				if(isChange){
 					
@@ -254,6 +330,10 @@
 					str += "&td.code=" + t_code;
 					str += "&td.customerId=" + t_customerId;
 					str += "&td.remarks=" + t_remarks; 
+					/* if(t_productadd!=undefined)
+						str += "&td.addProducts=" + t_productadd;
+					if(t_productdelete!=undefined)
+						str += "&td.deleteProducts=" + t_productdelete; */
 					
 					$.ajax({
 						 type:"POST",

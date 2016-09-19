@@ -43,6 +43,16 @@ public class TaskDto {
 	private String deleteProducts;
 	
 	private int flag;
+	
+	private String ids;
+
+	public String getIds() {
+		return ids;
+	}
+
+	public void setIds(String ids) {
+		this.ids = ids;
+	}
 
 	public int getId() {
 		return id;

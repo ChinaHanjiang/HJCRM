@@ -1,7 +1,5 @@
 package com.chinahanjiang.crm.service;
 
-import java.sql.Timestamp;
-
 import com.chinahanjiang.crm.dto.MessageDto;
 import com.chinahanjiang.crm.dto.SearchResultDto;
 import com.chinahanjiang.crm.dto.TaskDto;
@@ -12,11 +10,8 @@ import com.chinahanjiang.crm.pojo.Task;
 public interface TaskService {
 
 	SearchResultDto searchAndCount(String order, String sort, int page, int row);
-	
-	boolean save(Task task);
 
-	SearchResultDto searchAndCount(String order, String sort, int page,
-			int row, Timestamp todayBegin, Timestamp todayEnd, int i);
+	boolean save(Task task);
 
 	MessageDto update(TaskDto td, UserDto u);
 
@@ -27,5 +22,13 @@ public interface TaskService {
 	String generateCode(TaskTypeDto ttd);
 
 	MessageDto updateProducts(TaskDto td);
+
+	MessageDto finishTask(TaskDto td);
+
+	MessageDto giveupTask(TaskDto td);
+
+	SearchResultDto searchAndCount(String order, String sort, int page,
+			int row, String begin, String end, int status, int taskId,
+			int tasktypeId, String name, String customerName);
 
 }

@@ -37,7 +37,7 @@ public class Task {
 	
 	private User createUser;
 	
-	private int status;/*0-进行中,1-关闭*/
+	private int status;/*0-进行中,1-完成,2-放弃*/
 	
 	private int isDelete;/*0-删除,1-没删除*/
 	
@@ -53,7 +53,7 @@ public class Task {
 	
 	private List<Product> products;
 	
-	private int flag;//是否修改了产品配置 1表示修改了配置
+	private int flag;//是否修改了产品配置 1表示修改了配置,0表示没有
 	
 	private TaskType taskType;
 	

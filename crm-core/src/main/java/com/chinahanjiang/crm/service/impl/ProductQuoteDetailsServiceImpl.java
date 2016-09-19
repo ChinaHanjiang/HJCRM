@@ -54,21 +54,23 @@ public class ProductQuoteDetailsServiceImpl implements
 		
 		MessageDto md = new MessageDto();
 		Timestamp now = new Timestamp(System.currentTimeMillis());
-		
-		
+		Double totalPrice = 0.0;
+		Double price = 0.0;
 		Product p = productService.findById(productId);
 		Item item = itemService.findById(itemId);
 		
 		ProductQuote pq =null;
 		if(item!=null){
 			pq= productQuoteService.findProductQuoteByItem(item);
+			totalPrice = pq.getPrice();
 		}
 		
 		ProductQuoteDetails pqd = null;
 		
-		if(pq!=null && item!=null){
+		if(pq!=null && p!=null){
 			
 			pqd = findPqdByProductAndQuote(p,pq);
+			price = pqd.getPrice();
 		}
 		
 		if(pqd!=null){
@@ -84,6 +86,11 @@ public class ProductQuoteDetailsServiceImpl implements
 					int rid = pcfd.getId();
 					
 					if(rid!=0){
+						
+						ProductAndQuoteRelation pqr = productAndQuoteRelationService.findById(rid);
+						
+						price -= pqr.getDefindPrice()*pqr.getQuantity();
+						totalPrice -= price;
 						
 						boolean isR = productAndQuoteRelationService.removeById(rid);
 						if(!isR){
@@ -111,16 +118,22 @@ public class ProductQuoteDetailsServiceImpl implements
 					
 					if(pqr!=null){
 						
+						price -= pqr.getDefindPrice()*pqr.getQuantity();
+						price += pd.getDefinedPrice()*pd.getQuantity();
+						totalPrice += price;
+						
 						Product sp = pqr.getProduct();
 						int ospid = sp.getId();
 						
 						if(ospid==nspid){
 							//修改
+							
 							pqr.setQuantity(pd.getQuantity());
 							pqr.setDefindPrice(pd.getDefinedPrice());
 							pqr.setRemarks(pd.getRemarks());
 							pqr.setUpdateTime(now);
 							productAndQuoteRelationService.save(pqr);
+							
 							
 						} else {
 							
@@ -166,10 +179,28 @@ public class ProductQuoteDetailsServiceImpl implements
 					npqr.setRemarks(pd.getRemarks());
 					
 					productAndQuoteRelationService.save(npqr);
+					
+					price += pd.getDefinedPrice()*pd.getQuantity();
+					totalPrice += price;
 				}
 				
 			}
 			
+		}
+		
+		//更新pqd和pq的价格
+		if(item!=null){
+			
+			pq= productQuoteService.findProductQuoteByItem(item);
+			pq.setPrice(totalPrice);
+			productQuoteService.save(pq);
+		}
+		
+		if(p!=null && pq!=null){
+			
+			pqd = findPqdByProductAndQuote(p,pq);
+			pqd.setPrice(price);
+			productQuoteDetailsDao.save(pqd);
 		}
 		
 		return md;

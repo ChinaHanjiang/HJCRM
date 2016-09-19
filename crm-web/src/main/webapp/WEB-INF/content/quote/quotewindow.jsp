@@ -34,15 +34,19 @@ html  {
 	var _pm_productId = new Array();
 	var _pm_productStandardPrice = new Array();
 	var _pm_productDefindPrice = new Array();
+	var _pm_i = new Array();
+	var totalPrice = 0.0;
 </script>
 <title>报价列表</title>
 </head>
 <body>
 	<input id="itemId" value="${item.id }" style="display:none;" />
+	<input id="quoteId" value="${quoteId}" style="display:none;" />
 	<div id="quotewindow" class="easyui-panel" data-options="border:false"
-		style="padding: 10px;">
-		<div class="easyui-panel" data-options="border:true"
+		style="padding: 10px; width: 800px; height:600px;">
+		<div class="easyui-panel" title="任务编号：${item.code }" data-options="border:true"
 			style="width: 720px; padding: 10px 60px 20px 60px">
+			
 			<table
 				style="width: 650px; margin-right: auto; margin-left: auto; font-family: '宋体'; font-size: 13px;">
 				<tr>
@@ -51,30 +55,33 @@ html  {
 					<td style="width: 80px; height: 20px;">客 户：</td>
 					<td>${task.customer.name }</td>
 				</tr>
-				<tr>
-					<td style="width: 110px; height: 25px;">内 容：</td>
-					<td colspan="3">${task.name }</td>
-				</tr>
+				
 				<tr>
 					<td style="width: 80px; height: 20px;">联系人：</td>
 					<td style="width: 180px; height: 20px;">${item.contact.name}</td>
 					<td style="width: 80px; height: 20px;">电 话：</td>
 					<td>${item.contact.mobilePhone }</td>
 				</tr>
+				<tr>
+					<td style="width: 110px; height: 25px;">内 容：</td>
+					<td colspan="3">${task.name }</td>
+				</tr>
 			</table>
 		</div>
 
 		<s:if test="pqds!=null">
-			<%int i=0; %>
+			<%int i=0;%>
 			<s:iterator value="pqds" var="p">
 				<script type="text/javascript">
 					gindex[<%=i %>] = undefined;
+					_pm_i[<%=i %>] = <%=i %>;
 					_pm_catalogName[<%=i %>] = undefined;
 					_pm_productName[<%=i %>] = undefined;
 					_pm_productCode[<%=i %>] = undefined;
 					_pm_productStandardPrice[<%=i %>] = undefined;
 					_pm_productDefindPrice[<%=i%>] = undefined;
 					_pm_productId[<%=i %>] = ${p.product.id};
+					totalPrice += ${p.price};
 				</script>
 				<div class="easyui-panel" data-options="border:false"
 					style="width: 720px; padding-top: 10px;">
@@ -183,6 +190,7 @@ html  {
 							</tr>
 						</thead>
 					</table>
+					<div style="padding-top:3px;"><span style="float:right; font-weight:bold; font-size:14; width:100px;">合计:&nbsp;&nbsp;<span id="pq_price_<%=i %>">${p.price }</span></span></div>
 					<div id="tb_${p.id }"
 						style="border-bottom: 1px solid #ddd; height: 30px; padding: 3px 10px 0px 5px; background: #fafafa;" >
 						<a href="javascript:void(0)" class="easyui-linkbutton"
@@ -202,11 +210,22 @@ html  {
 			<% i++; %>
 			</s:iterator>
 		</s:if>
+		<div style="padding-top:3px;height:25px;"><span style="padding-right:60px;float:right; font-weight:bold; font-size:14; width:100px;">总计:&nbsp;&nbsp;<span id="pq_totalPrice"></span></span></span></div>
+		<div style="text-align: center; padding-top: 5px;">
+			<a id="pq_bsubmit" href="javascript:void(0)" style="width: 80px;"
+				class="easyui-linkbutton">提交</a>
+			<a id="pq_bcancel"
+				href="javascript:void(0)" style="width: 80px;"
+				class="easyui-linkbutton">取消</a>
+		</div>
+		
 	</div>
 
 
 	<script type="text/javascript">
-		
+	
+		$('#pq_totalPrice').html(totalPrice);
+	
 		function endEditing(id){
 			
 			var editIndex = gindex[id];
@@ -278,7 +297,23 @@ html  {
 				
 				$('#'+gid).datagrid('getRows')[index]['definedPrice'] = _pm_productDefindPrice[j];
 				_pm_productDefindPrice[j] = undefined;
-			} 
+			}
+			
+			 var rows = $(this).datagrid("getRows");
+			 var price = 0.0;
+			 
+			 $.each(rows,function(m,n){
+				 
+				 var dp = n.definedPrice;
+				 var q = n.quantity;
+				 
+				 price += dp*q;
+			 });
+			 
+			 var t = $('#pq_price_'+j).html();
+			 totalPrice = totalPrice - parseFloat(t) + price;
+			 $('#pq_price_'+j).html(price);
+			 $('#pq_totalPrice').html(totalPrice);
 		}
 		
 		function append(id){
@@ -324,11 +359,11 @@ html  {
 	                
 	                $.post("<%=basePath%>quotedetail/savemix.do", effectRow, function (rsp) {
 	                    if (rsp) {
-	                    	 $.messager.alert("提示", "修改成功！");
+	                    	$.messager.alert("提示", "'#quotelist_" + id + "'报价单修改成功！");
 	                        $pmg.datagrid('acceptChanges');
 	                    }
 	                }, "JSON").error(function () {
-	                    $.messager.alert("提示", "提交错误了！");
+	                    $.messager.alert("提示", "'#quotelist_" + id + "'报价单提交错误了！");
 	                });
 	            }
 				
@@ -339,6 +374,50 @@ html  {
 			$('#quotelist_'+id).datagrid('rejectChanges');
 			gindex[id] = undefined;
 		}
+		
+		$('#pq_bsubmit').click(function(){
+			
+			$.each(_pm_i,function(j,o){
+				
+				accept(o);
+			});
+			
+			$.messager.confirm('Confirm','您确定要提交这个报价单吗?',function(r){
+				 
+			    if (r){
+			    	
+			    	//更新报价单
+					var quoteId = $('#quoteId').val();
+					$.ajax({
+						type: "POST",
+						url: "<%=basePath%>	quote/close.do?pqd.id=" + quoteId,
+						cache : false,
+						dataType : "json",
+						success : function(data){
+							
+							var _data =  data.md ;
+			        		if(_data.t){
+			        			
+			        			var id = ${task.id};
+			        			
+			        			 var newObj = {
+			        				 id:'taskdetail',
+			        				 title:'项目详情',
+			        				 href:'<%=basePath%>win/taskdetail.do?taskId=' + id
+			        			 };
+			        			 
+			        			parent.openAndClose(newObj,'产品报价');
+			        			
+			        		}else{
+			        			
+			        			$.messager.alert('失败', _data.message,
+								'info');
+			        		}
+						}
+					});
+			    }
+			});
+		});
 	</script>
 </body>
 

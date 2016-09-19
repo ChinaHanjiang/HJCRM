@@ -44,16 +44,19 @@ public class ProductQuote {
 	
 	private String remarks;
 	
+	private int status;
+	
 	public ProductQuote(){
 		
 		this.isDelete = 1;
+		this.status = 0;
 	}
 
 	public ProductQuote(int id, String code,
 			List<ProductQuoteDetails> productQuoteDetails, Item item,
 			ItemAttachment itemAttactment, double price, int isDelete,
 			Timestamp createTime, Timestamp updateTime, User user,
-			String remarks) {
+			String remarks, int status) {
 		super();
 		this.id = id;
 		this.code = code;
@@ -66,6 +69,7 @@ public class ProductQuote {
 		this.updateTime = updateTime;
 		this.user = user;
 		this.remarks = remarks;
+		this.status = status;
 	}
 
 	@Id
@@ -170,6 +174,15 @@ public class ProductQuote {
 
 	public void setRemarks(String remarks) {
 		this.remarks = remarks;
+	}
+
+	@Column(name = "pq_status")
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
 	}
 	
 }

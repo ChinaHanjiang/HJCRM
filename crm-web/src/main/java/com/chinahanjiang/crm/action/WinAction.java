@@ -9,8 +9,8 @@ import org.apache.struts2.convention.annotation.ExceptionMapping;
 import org.apache.struts2.convention.annotation.ExceptionMappings;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
-import org.apache.struts2.convention.annotation.Results;
 import org.apache.struts2.convention.annotation.Result;
+import org.apache.struts2.convention.annotation.Results;
 import org.springframework.stereotype.Controller;
 
 import com.chinahanjiang.crm.pojo.Customer;
@@ -53,7 +53,8 @@ import com.chinahanjiang.crm.service.TaskTypeService;
 	@Result(name = "modifyitem", location = "/WEB-INF/content/task/itemedit.jsp"),
 	@Result(name = "itemlist", location = "/WEB-INF/content/task/itemlist.jsp"),
 	@Result(name = "quote", location = "/WEB-INF/content/quote/quotewindow.jsp"),
-	@Result(name = "taskdetail", location = "/WEB-INF/content/task/taskdetail.jsp")})
+	@Result(name = "taskdetail", location = "/WEB-INF/content/task/taskdetail.jsp"),
+	@Result(name = "itemdetail", location = "/WEB-INF/content/task/itemdetail.jsp")})
 @ExceptionMappings({ @ExceptionMapping(exception = "java.lange.RuntimeException", result = "error") })
 public class WinAction extends BaseAction {
 
@@ -358,5 +359,18 @@ public class WinAction extends BaseAction {
 		products = productService.findByTask(task);
 		
 		return "taskdetail";
+	}
+	
+	@Action("itemdetail")
+	public String upload(){
+		
+		item = itemService.findById(itemId);
+		int flag = item.getFlag();
+		if(flag == 1){
+			
+			pqds = productQuoteServices.findProductQuoteDetailsByItem(item);
+		}
+		
+		return "itemdetail";
 	}
 }

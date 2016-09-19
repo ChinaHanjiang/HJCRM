@@ -34,7 +34,8 @@ import com.chinahanjiang.crm.util.DateUtil;
 	@Result(name="add",type="json"),
 	@Result(name="modify",type="json"),
 	@Result(name="delete",type="json"),
-	@Result(name="check",type="json")})
+	@Result(name="check",type="json"),
+	@Result(name="checkstatus",type="json")})
 @ExceptionMappings({ @ExceptionMapping(exception = "java.lange.RuntimeException", result = "error") })
 public class ItemAction extends BaseAction {
 
@@ -136,7 +137,7 @@ public class ItemAction extends BaseAction {
 		SearchResultDto srd = new SearchResultDto();
 		
 		srd = itemService.searchAndCount(this.order, this.sort,
-				this.page, row, null, null, 0,  td);
+				this.page, row, null, null, -1,  td);
 		
 		this.rows.clear();
 		this.rows.addAll(srd.getRows());
@@ -199,12 +200,32 @@ public class ItemAction extends BaseAction {
 	@Action("modify")
 	public String modify(){
 		
+		md = itemService.update(id,td,null);
+		
 		return "modify";
 	}
 	
 	@Action("del")
 	public String delete(){
 		
+		md = itemService.delete(id);
+		
 		return "delete";
+	}
+	
+	@Action("checkstatus")
+	public String checkStatus(){
+		
+		md = itemService.checkStatus(td);
+		
+		return "checkstatus";
+	}
+	
+	@Action("finish")
+	public String finish(){
+		
+		md = itemService.finishItem(id);
+		
+		return "finish";
 	}
 }

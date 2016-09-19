@@ -249,5 +249,16 @@ public class CustomerServiceImpl implements CustomerService {
 		
 		return str;
 	}
+
+	@Override
+	public List<Customer> findLikeName(String customerName) {
+		
+		Search search = new Search();
+		search.addFilterEqual("isDelete", 1);
+		search.addFilterLike("name", "%" + customerName + "%");
+		SearchResult<Customer> result = searchAndCount(search);
+		List<Customer> cls = result.getResult();
+		return cls;
+	}
 	
 }

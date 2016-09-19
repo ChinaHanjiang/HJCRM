@@ -11,6 +11,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -49,9 +51,13 @@ public class Item {
 	//联系人
 	private Contact contact;
 	
-	private int isDelete;
+	private int isDelete;/*0-删除，1-没删除*/
 	
 	private int status;/*0-进行中，1-完成*/
+	
+	private int flag;/* -1-无需报价,0-未报价,1-已报价*/
+	
+	private List<Product> products;
 	
 	private List<ItemAttachment> itemAttachements;
 	
@@ -59,13 +65,15 @@ public class Item {
 	
 	public Item(){
 		
+		this.flag = -1;
+		this.status = 0;
 		this.isDelete = 1;
 	}
 	
 	public Item(int id, String name, String code, Timestamp createTime,
 			Timestamp updateTime, User user, Task task, Customer customer,
-			Contact contact, int isDelete, ItemType itemType,
-			int status, List<ItemAttachment> itemAttachements, String remarks) {
+			Contact contact, int isDelete, ItemType itemType, List<Product> products,
+			int status, int flag, List<ItemAttachment> itemAttachements, String remarks) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -81,6 +89,8 @@ public class Item {
 		this.status = status;
 		this.itemAttachements = itemAttachements;
 		this.remarks = remarks;
+		this.products = products;
+		this.flag = flag;
 	}
 
 	@Id
@@ -198,7 +208,7 @@ public class Item {
 		this.remarks = remarks;
 	}
 
-	@OneToMany(targetEntity = ItemAttachment.class, cascade = { CascadeType.ALL }, fetch = FetchType.LAZY, mappedBy = "item")
+	@OneToMany(targetEntity = ItemAttachment.class, cascade = { CascadeType.ALL }, fetch = FetchType.EAGER, mappedBy = "item")
 	@Fetch(FetchMode.SUBSELECT)
 	public List<ItemAttachment> getItemAttachements() {
 		return itemAttachements;
@@ -216,5 +226,26 @@ public class Item {
 
 	public void setItemType(ItemType itemType) {
 		this.itemType = itemType;
+	}
+
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinTable(name = "ItemProducts",
+	joinColumns = {@JoinColumn(name = "ip_iid", referencedColumnName = "i_id")},
+	inverseJoinColumns = {@JoinColumn(name = "ip_pid", referencedColumnName ="p_id")})
+	public List<Product> getProducts() {
+		return products;
+	}
+
+	public void setProducts(List<Product> products) {
+		this.products = products;
+	}
+
+	@Column(name="i_flag")
+	public int getFlag() {
+		return flag;
+	}
+
+	public void setFlag(int flag) {
+		this.flag = flag;
 	}
 }

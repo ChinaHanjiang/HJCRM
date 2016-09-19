@@ -16,6 +16,7 @@ import com.chinahanjiang.crm.dao.ProductDao;
 import com.chinahanjiang.crm.dto.MessageDto;
 import com.chinahanjiang.crm.dto.ProductDto;
 import com.chinahanjiang.crm.dto.SearchResultDto;
+import com.chinahanjiang.crm.pojo.Item;
 import com.chinahanjiang.crm.pojo.Product;
 import com.chinahanjiang.crm.pojo.ProductCatalog;
 import com.chinahanjiang.crm.pojo.ProductConfiguration;
@@ -271,5 +272,13 @@ public class ProductServiceImpl implements ProductService {
 		String hql = "select p from Product as p join p.tasks as t where p.isDelete=1 and t= :tk "; 
 		
 		return productDao.loadProducts(hql, task);
+	}
+
+	@Override
+	public List<Product> findByItem(Item i) {
+		
+		String hql = "select p from Product as p join p.items as i where p.isDelete=1 and i= :item "; 
+		
+		return productDao.loadProducts(hql, i);
 	}
 }

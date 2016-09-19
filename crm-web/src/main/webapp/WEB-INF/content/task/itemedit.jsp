@@ -22,41 +22,111 @@
 <script type="text/javascript"
 	src="<%=basePath%>locale/easyui-lang-zh_CN.js"></script>
 <script type="text/javascript">
+	
+	var _i_init = 1;
+	
 	$(document).ready(function(){
 		
 		/*定义全局变量*/
 		var _i_id;
 		var productDiv = "";
 		var hasCustomer = 0;
+		var _i_itemtypeId = 0;
+		var _i_contactId = 0;
+		var _i_customerId = 0;
+		var _i_contact;
+		var _i_name;
+		var _i_code;
+		var _i_remarks;
+		
 		<%
 			Task task = (Task)request.getAttribute("task");
 			Customer customer = task.getCustomer();
-			if(customer!=null){
+			int type = (Integer)request.getAttribute("type");
+			List<Product> products = null;
+			if(type==1){
+				
+				products = task.getProducts();
 		%>
-		
-			hasCustomer = 1;
-			
-			$('#i_customer').combobox({
-				editable:false
-			});
-			
-			$('#i_customer').combobox('setText','<%=customer.getName()%>');
-			
-			$('#i_contact').combogrid({
-				url:'<%=basePath%>contact/find.do?cd.id=' + <%=customer.getId()%>
-			});
-		
+				$('#itemdeit').panel({
+					title:'任务添加'
+				});
+				_i_itemypteId = 0;
+				_i_contactId = 0;
+				_i_contact = '';
+				$('#i_bsubmit').show();
+				$('#i_bmodify').hide();
 		<%
 			} else {
+				
+				Item item = (Item)request.getAttribute("item");
+				if(customer==null)
+					customer = item.getCustomer();
+				
+				products = item.getProducts();
+				if(products == null) {
+					products = task.getProducts();
+				}
 		%>
-		
-			$('#i_customer').combobox({
-				editable:true
-			});
-		
+				$('#itemdeit').panel({
+					title:'任务修改'
+				});
+				_i_id = <%=item.getId()%>;
+				_i_itemtypeId = <%=item.getItemType().getId()%>;
+				_i_contactId = <%=item.getContact().getId()%>;
+				_i_contact = '<%=item.getContact().getName()%>';
+				_i_name = '<%=item.getName()%>';
+				_i_code = '<%=item.getCode()%>';
+				_i_remarks = '<%=item.getRemarks()%>';
+				
+				$('#i_name').textbox('setText','<%=item.getName()%>');
+				$('#i_remarks').textbox('setText','<%=item.getRemarks()%>');
+				
+				$('#i_bmodify').show();
+				$('#i_bsubmit').hide();
+/*				
+				$('#i_product').textbox('disable');
+				$('#chkOne').attr("disabled","disabled");
+ 				$('#tr_chkOne').remove();
+				$('#tr_product').remove();
+				$('#tr_choseProducts').remove();
+ */				
 		<%
 			}
-			List<Product> products = task.getProducts();
+		%>
+		
+		<%
+			
+			if(customer!=null){
+		%>
+				hasCustomer = 1;
+				
+				$('#i_customer').combobox({
+					editable:false
+				});
+				
+				$('#i_customerId').val(<%=customer.getId()%>);
+				_i_customerId = <%=customer.getId()%>;
+				
+				$('#i_customer').combobox('setText','<%=customer.getName()%>');
+				
+				$('#i_contact').combogrid({
+					url:'<%=basePath%>contact/find.do?cd.id=' + <%=customer.getId()%>
+				});
+				
+		<%
+			} else {
+				
+		%>
+				$('#i_customer').combobox({
+					editable:true
+				});
+				
+				_i_init = 0;
+				_i_customerId = 0;
+		<%
+			}
+		
 			if(products!=null){
 				
 				String s = "";
@@ -103,6 +173,7 @@
 			var i_code;
 			var i_contactId;
 			var i_remarks;
+			var i_itemtypeId;
 			var i_itemtype;
 			var i_customerId;
 			var i_product = [];
@@ -113,15 +184,15 @@
 			var i_productdelete;
 			var j=0;
 			var k=0;
+			var i_flag = -1;
 			
 			t_id = $('#i_taskId').val();
 			i_name = $('#i_name').textbox('getValue');
 			i_code = $('#i_code').textbox('getValue');
-			i_itemtype = $("#i_itemtype").combobox('getValue');
+			i_itemtypeId = $("#i_itemtype").combobox('getValue');
+			i_itemtype = $("#i_itemtype").combobox('getText');
 			i_remarks = $('#i_remarks').textbox('getText');
 			i_contactId = $('#i_contact').combogrid('getValue');
-			
-		
 			
 			if($('#chkOne').is(':checked')){
 				
@@ -187,6 +258,12 @@
 			var l = $('#addItemForm').form('enableValidation').form('validate');
 			if(l){
 				
+				var isR = i_itemtype.indexOf('报价');
+				if(isR!=-1){
+					
+					i_flag = 0;
+				}
+				
 				var str = '';
 				str += "td.id=" + t_id;
 				if(i_productadd!=undefined)
@@ -195,9 +272,10 @@
 					str += "&td.deleteProducts=" + i_productdelete;
 				str += "&id.name=" + i_name;
 				str += "&id.code=" + i_code;
-				str += "&id.itemTypeId=" + i_itemtype;
+				str += "&id.itemTypeId=" + i_itemtypeId;
 				str += "&id.remarks=" + i_remarks;
 				str += "&id.contactId=" + i_contactId;
+				str += "&id.flag=" + i_flag;
 				if(hasCustomer!=1){
 					
 					i_customerId = $('#i_customerId').val();
@@ -267,6 +345,11 @@
 	    				 		});
 	    				 	} else {
 	    				 		
+	    				 		//询问是否需要上传附件,上传完成后需询问是否关闭项目
+	    				 		
+	    				 		
+	    				 		
+	    				 		
 	    				 		var taskId = $('#i_taskId').val();
 								var newObj = {
 		    						 id:'taskdetail',
@@ -292,6 +375,261 @@
 			}
 		});
 		
+		$('#i_bmodify').click(function(){
+			
+			var t_id;
+			var i_name;
+			var i_code;
+			var i_contactId;
+			var i_remarks;
+			var i_itemtypeId;
+			var i_itemtype;
+			var i_customerId;
+			var i_product = [];
+			var i_oproduct = "";
+			var i_product_add = [];
+			var i_product_delete = [];
+			var i_productadd;
+			var i_productdelete;
+			var j=0;
+			var k=0;
+			var i_flag = -1;
+			
+			t_id = $('#i_taskId').val();
+			i_name = $('#i_name').textbox('getText');
+			i_code = $('#i_code').textbox('getText');
+			i_remarks = $('#i_remarks').textbox('getText');
+			i_customerId = $('#i_customerId').val();
+			i_contactId = $('#i_contact').combogrid('getValue');
+			i_itemtypeId = $("#i_itemtype").combobox('getValue');
+			i_itemtype = $("#i_itemtype").combobox('getText');
+			
+			/* var grid = $('#i_contact').combogrid('grid');	
+			var row = grid.datagrid('getSelected');	
+			i_contactId = row.id; */
+			
+			if($('#chkOne').is(':checked')){
+				
+				$("input[name^='product']").each(function(i, o){
+				    i_product[i] = $(o).val();
+				    
+				    var isH = _t_product.indexOf(i_product[i]);
+				    if(isH==-1){
+				    	
+				    	i_product_add[j] = i_product[i];
+				    	j++;
+				    	
+				    } else {
+				    	
+				    	i_oproduct += i_product[i];
+				    }
+				});
+				
+				var t_products = _t_product.split(',');
+				$.each( t_products, function(i, n){
+					
+					var isR = i_oproduct.indexOf(n);
+					
+					if(isR==-1){
+						
+						i_product_delete[k] = t_products[i];
+						k++;
+					}
+				});
+				
+				var addlen = i_product_add.length;
+				if(addlen!=0){
+					i_productadd = "";
+				}
+				$.each( i_product_add, function(i, n){
+					if(i!=addlen-1){
+						
+						i_productadd += n + ",";
+					} else {
+						
+						i_productadd += n;
+					}
+					
+				});
+				
+				var deletelen = i_product_delete.length;
+				if(deletelen!=0){
+					i_productdelete = "";
+				}
+				$.each( i_product_delete, function(i, n){
+					
+					if(i!=deletelen-1){
+						
+						i_productdelete += n + ",";
+					} else {
+						
+						i_productdelete += n;
+					}
+					
+				});
+			}
+			
+			var l = $('#addItemForm').form('enableValidation').form('validate');
+			if(l){
+				
+				var isChange = false;
+				
+				if(_i_name != i_name){
+					
+					isChange = true;
+				}
+				if(_i_code != i_code){
+					
+					isChange = true;
+				}
+				if(hasCustomer!=1){
+					
+					if(_i_customerId != i_customerId){
+						
+						isChange = true;
+					}
+				}
+				if(_i_itemtypeId != i_itemtypeId){
+					
+					isChange = true;
+					
+					var isR = i_itemtype.indexOf('报价');
+					if(isR!=-1){
+						
+						i_flag = 0;
+					}
+				}
+				if(_i_contactId != i_contactId){
+					
+					isChange = true;
+				}
+				if(_i_remarks != i_remarks){
+					
+					isChange = true;
+				}
+				if(i_productadd!=undefined){
+					
+					isChange = true;
+				}
+				if(i_productdelete!=undefined){
+					
+					isChange = true;
+				}
+				
+				if(isChange){
+					
+					var str = '';
+					str += "id.id=" + _i_id;
+					str += "&td.id=" + t_id;
+					if(i_productadd!=undefined)
+						str += "&td.addProducts=" + i_productadd;
+					if(i_productdelete!=undefined)
+						str += "&td.deleteProducts=" + i_productdelete;
+					str += "&id.name=" + i_name;
+					str += "&id.code=" + i_code;
+					str += "&id.itemTypeId=" + i_itemtypeId;
+					str += "&id.remarks=" + i_remarks;
+					str += "&id.contactId=" + i_contactId;
+					str += "&id.flag=" + i_flag;
+					if(hasCustomer!=1){
+						
+						i_customerId = $('#i_customerId').val();
+						str += "&id.customerId=" + i_customerId;
+					}
+					
+					$.ajax({
+						 type:"POST",
+			    		 url:"<%=basePath%>item/modify.do?" + str,
+			    		 cache:false,
+			    		 dataType:'json',
+			    		 success:function(data){
+			    			 
+			    			 var _data = data.md;
+			    			 if(_data.t){
+			    				 
+			    				var id = _data.intF;
+			    				 
+		    				 	var itemtype = $("#i_itemtype").combobox('getText');
+		    				 	var isHas = itemtype.indexOf('报价');
+		    				 	if(isHas!=-1){
+		    				 		
+		    				 		$.messager.confirm('Confirm','你是否要为这个任务报价呢？',function(r){
+				    					 
+				    					 if(r){
+				    						 
+				    						 $.ajax({
+				    							 type:"POST",
+				    				    		 url:"<%=basePath%>quote/add.do?itemId=" + id,
+				    				    		 cache:false,
+				    				    		 dataType:'json',
+				    				    		 success:function(data){
+				    				    			 
+				    				    			 var _data = data.md;
+				    				    			 if(_data.t){
+				    				    			 	
+				    				    				 var pqId = _data.intF;
+				    				    				 var newObj = {
+									    						 
+									    						 id:'quotewindow',
+									    						 title:'产品报价',
+									    						 href:'<%=basePath%>win/quote.do?itemId=' + id + "&quoteId=" + pqId
+									    				 };
+									    				 
+									    				 parent.openAndClose(newObj,'任务编辑');
+									    				 
+				    				    			 } else {
+				    				    				 
+				    				    				 $.messager.alert('失败', _data.message,
+				    										'info');
+				    				    			 }
+				    				    		 }
+				    						 });
+				    						 
+				    					 } else {
+				    						
+				    						var taskId = $('#i_taskId').val();
+											var newObj = {
+					    						 id:'taskdetail',
+					    						 title:'项目详情',
+					    						 href:'<%=basePath%>win/taskdetail.do?taskId=' + taskId
+						    				 };
+						    				 
+						    				 parent.openAndClose(newObj,'任务编辑');
+				    						 
+				    					 }
+		    				 		});
+		    				 	} else {
+		    				 		
+		    				 		var taskId = $('#i_taskId').val();
+									var newObj = {
+			    						 id:'taskdetail',
+			    						 title:'项目详情',
+			    						 href:'<%=basePath%>win/taskdetail.do?taskId=' + taskId
+				    				 };
+				    				 
+				    				 parent.openAndClose(newObj,'任务编辑');
+		    				 	}
+			    				 
+			    			 } else {
+			    				 
+			    				 $.messager.alert('失败', _data.message,
+									'info');
+			    			 }
+			    		 }
+					});
+					
+				} else {
+					
+					$.messager.alert('注意', '信息没有修改！',
+					'info');
+				}
+				
+			} else {
+				
+				$.messager.alert('注意', '请填完整的表单！',
+				'info');
+			}
+		});
 		
 		$('#i_bcancel').click(function(){
 			
@@ -303,7 +641,7 @@
 				 href:'<%=basePath%>win/taskdetail.do?taskId=' + taskId
 			 };
 			
-			 parent.openAndClose(newObj,'添加任务');
+			 parent.openAndClose(newObj,'任务编辑');
 			
 		});
 		
@@ -333,6 +671,10 @@
 		      required:true, 
 		      cache: false,
 		      panelHeight: 'auto',//自动高度适合
+		      onLoadSuccess:function(){
+		    	  
+		    	  $(this).combobox('setValue', _i_itemtypeId);
+		      }
 		});
 		
 		$('#chkOne').click(function(){
@@ -359,8 +701,8 @@
 <title>添加任务</title>
 </head>
 <body>
-	<div title="事件" class="easyui-panel" data-options="border:true"
-		style="width: 450px; ">
+	<div id="itemdeit" title="事件" class="easyui-panel" data-options="border:true"
+		style="width: 450px;">
 		<div id="f_item" style="padding: 10px;">
 			<div style="padding: 0px 0px 0px 50px">
 				<form id="addItemForm" method="post">
@@ -378,7 +720,7 @@
 							<td>客户:</td>
 							<td><input id="i_customerId" type="text" style="display:none" value="" />
 							<input id="i_customer" class="easyui-combobox"
-								name="f_i_customer" style="width: 100%;"
+								name="f_i_customer" required style="width: 100%;"
 								data-options="
 									prompt:'输入要检索的客户名称',
 									url:'<%=basePath%>customer/find.do',
@@ -448,11 +790,11 @@
 							</select></td>
 						</tr>
 						
-						<tr>
+						<tr id="tr_chkOne">
 							<td>是否修改产品:</td>
 							<td> <input type="checkbox" name="myBox" id="chkOne" value="1" /></td>
 						</tr>
-						<tr>
+						<tr id="tr_product">
 							<td>产品:</td>
 							<td><input id="i_product" class="easyui-combobox"
 								name="f_i_product" style="width: 100%;"
@@ -483,7 +825,7 @@
 							"></input>
 							</td>
 						</tr>
-						<tr>
+						<tr id="tr_choseProducts">
 							<td>选择的产品</td>
 							<td id="choseProducts">
 								<s:if test="task!=null">
@@ -506,7 +848,19 @@
 						                        {field:'name',title:'名称',width:120,align:'center'},
 						                        {field:'duty',title:'职务',width:80,align:'center'}
 						                    ]],
-						                    fitColumns: true
+						                    fitColumns: true,
+						                    onLoadSuccess:function(){
+						                    	
+						                    	if(_i_init==1){
+						                    	
+						                    		<s:if test="{item!=null}">
+						                    		$('#i_contact').combogrid('setValue','${item.contact.id}');
+						                    		</s:if>
+						                    		
+						                    		_i_init = 0;
+						                    	}
+						                    	
+						                    }
 						                ">
 							</select></td>
 						</tr>
@@ -520,6 +874,8 @@
 					<div style="text-align: center; padding: 5px">
 						<a id="i_bsubmit" href="javascript:void(0)" style="width: 80px;"
 							class="easyui-linkbutton">提交</a>
+						<a id="i_bmodify" href="javascript:void(0)" style="width: 80px;"
+							class="easyui-linkbutton">修改</a>
 						<a id="i_bcancel"
 							href="javascript:void(0)" style="width: 80px;"
 							class="easyui-linkbutton">取消</a>

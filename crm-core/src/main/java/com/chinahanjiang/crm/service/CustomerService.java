@@ -33,4 +33,6 @@ public interface CustomerService {
 
 	String searchByName(String q);
 
+	List<Customer> findLikeName(String customerName);
+
 }

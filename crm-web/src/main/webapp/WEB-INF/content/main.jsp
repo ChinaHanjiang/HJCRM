@@ -180,20 +180,21 @@
 								data-options="
 											url:'<%=basePath %>task/dalytask.do',
 											loadMsg:'数据加载中请稍后……',  
-											rownumbers:true,
 											height: 260, 
 											collapsible:false,
 											showHeader:true,
 											pagination:true,
-											border:false
+											border:false,
+											onDblClickRow:openTaskDetail
 											">
 								<thead>
 									<tr>
+										<th data-options="field:'id',width:30,hidden:true"></th>
 										<th data-options="field:'code',width:125,align:'center'">编号</th>
 										<th data-options="field:'taskType',width:80,align:'center'">类型</th>
-										<th data-options="field:'name',width:140,align:'center'">内容</th>
+										<th data-options="field:'name',width:160,align:'center'">内容</th>
 										<th data-options="field:'customer',width:180,align:'center'">客户</th>
-										<th data-options="field:'statusStr',width:40,align:'center'">状态</th>
+										<th data-options="field:'statusStr',width:30,align:'center'">状态</th>
 									</tr>
 								</thead>
 							</table>
@@ -211,21 +212,21 @@
 								data-options="
 											url:'<%=basePath %>item/dalyitem.do',
 											loadMsg:'数据加载中请稍后……',  
-											rownumbers:true,
 											height: 260, 
 											collapsible:false,
 											showHeader:true,
 											pagination:true,
-											border:false
+											border:false,
+											onDblClickRow:openItemDetail
 											">
 					
 								<thead>
 									<tr>
+										<th data-options="field:'id',width:30,hidden:true"></th>
 										<th data-options="field:'code',width:140,align:'center'">编号</th>
 										<th data-options="field:'taskType',width:70,align:'center'">类型</th>
-										<th data-options="field:'task',width:120,align:'center'">任务号</th>
-										<th data-options="field:'name',width:100,align:'center'">内容</th>
-										<th data-options="field:'customer',width:100,align:'center'">客户</th>
+										<th data-options="field:'name',width:180,align:'center'">内容</th>
+										<th data-options="field:'customer',width:160,align:'center'">客户</th>
 										<th data-options="field:'statusStr',width:30,align:'center'">状态</th>
 									</tr>
 								</thead>
@@ -245,20 +246,21 @@
 								data-options="
 											url:'<%=basePath %>task/undotask.do',
 											loadMsg:'数据加载中请稍后……',  
-											rownumbers:true,
 											height: 260, 
 											collapsible:false,
 											showHeader:true,
 											pagination:true,
-											border:false
+											border:false,
+											onDblClickRow:openTaskDetail
 											">
 								<thead>
 									<tr>
+										<th data-options="field:'id',width:30,hidden:true"></th>
 										<th data-options="field:'code',width:125,align:'center'">编号</th>
-										<th data-options="field:'tasktype',width:80,align:'center'">类型</th>
-										<th data-options="field:'name',width:140,align:'center'">内容</th>
+										<th data-options="field:'taskType',width:80,align:'center'">类型</th>
+										<th data-options="field:'name',width:160,align:'center'">内容</th>
 										<th data-options="field:'customer',width:180,align:'center'">客户</th>
-										<th data-options="field:'statusStr',width:40,align:'center'">状态</th>
+										<th data-options="field:'statusStr',width:30,align:'center'">状态</th>
 									</tr>
 								</thead>
 							</table>
@@ -275,20 +277,20 @@
 								data-options="
 											url:'<%=basePath %>item/undoitem.do',
 											loadMsg:'数据加载中请稍后……',  
-											rownumbers:true,
 											height: 260, 
 											collapsible:false,
 											showHeader:true,
 											pagination:true,
-											border:false
+											border:false,
+											onDblClickRow:openItemDetail
 											">
 								<thead>
 									<tr>
+										<th data-options="field:'id',width:30,hidden:true"></th>
 										<th data-options="field:'code',width:140,align:'center'">编号</th>
 										<th data-options="field:'tasktype',width:70,align:'center'">类型</th>
-										<th data-options="field:'task',width:120,align:'center'">任务号</th>
-										<th data-options="field:'name',width:100,align:'center'">内容</th>
-										<th data-options="field:'customer',width:100,align:'center'">客户</th>
+										<th data-options="field:'name',width:180,align:'center'">内容</th>
+										<th data-options="field:'customer',width:160,align:'center'">客户</th>
 										<th data-options="field:'statusStr',width:30,align:'center'">状态</th>
 									</tr>
 								</thead>
@@ -374,22 +376,34 @@
 	     
 	    function addTask(){
 	    	
-	    	addPanel('addtask','添加项目','<%=basePath%>win/addtask.do');
+	    	addPanel('taskedit','项目编辑','<%=basePath%>win/addtask.do');
 	    }
 	    
 	    function moreTask(){
 	    	
-	    	
+	    	addPanel('tasklist','项目列表','<%=basePath%>win/tasklist.do');
 	    }
 	    
 	    function moreItem1(){
 	    	
-	    	
+	    	addPanel('itemlist','任务列表','<%=basePath%>win/itemlist.do');
 	    }
 	    
 	    function moreItem2(){
 	    	
+	    	addPanel('itemlist','任务列表','<%=basePath%>win/itemlist.do');
+	    }
+	    
+	    function openTaskDetail(index,row){
 	    	
+	    	var _id = row.id;
+	    	addPanel('taskdetail','项目详情','<%=basePath%>win/taskdetail.do?taskId='+_id);
+	    }
+	    
+ 		function openItemDetail(index,row){
+	    	
+	    	var _id = row.id;
+	    	addPanel('itemdetail','任务详情','<%=basePath%>win/itemdetail.do?itemId='+_id);
 	    }
 	</script>
 </body>

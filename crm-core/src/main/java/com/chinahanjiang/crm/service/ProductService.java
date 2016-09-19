@@ -5,6 +5,7 @@ import java.util.List;
 import com.chinahanjiang.crm.dto.MessageDto;
 import com.chinahanjiang.crm.dto.ProductDto;
 import com.chinahanjiang.crm.dto.SearchResultDto;
+import com.chinahanjiang.crm.pojo.Item;
 import com.chinahanjiang.crm.pojo.Product;
 import com.chinahanjiang.crm.pojo.Task;
 import com.googlecode.genericdao.search.Search;
@@ -34,5 +35,7 @@ public interface ProductService {
 	List<Product> findByIds(String[] addProductIds);
 
 	List<Product> findByTask(Task task);
+
+	List<Product> findByItem(Item i);
 
 }

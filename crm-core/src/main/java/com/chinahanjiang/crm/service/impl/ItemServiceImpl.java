@@ -1,6 +1,8 @@
 package com.chinahanjiang.crm.service.impl;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -19,14 +21,18 @@ import com.chinahanjiang.crm.pojo.Contact;
 import com.chinahanjiang.crm.pojo.Customer;
 import com.chinahanjiang.crm.pojo.Item;
 import com.chinahanjiang.crm.pojo.ItemType;
+import com.chinahanjiang.crm.pojo.Product;
 import com.chinahanjiang.crm.pojo.Task;
 import com.chinahanjiang.crm.pojo.User;
 import com.chinahanjiang.crm.service.ContactService;
 import com.chinahanjiang.crm.service.CustomerService;
 import com.chinahanjiang.crm.service.ItemService;
 import com.chinahanjiang.crm.service.ItemTypeService;
+import com.chinahanjiang.crm.service.ProductQuoteService;
+import com.chinahanjiang.crm.service.ProductService;
 import com.chinahanjiang.crm.service.TaskService;
 import com.chinahanjiang.crm.service.UserService;
+import com.chinahanjiang.crm.util.Constant;
 import com.chinahanjiang.crm.util.DataUtil;
 import com.googlecode.genericdao.search.Search;
 import com.googlecode.genericdao.search.SearchResult;
@@ -53,23 +59,28 @@ public class ItemServiceImpl implements ItemService {
 	@Resource
 	private ContactService contactService;
 
+	@Resource
+	private ProductService productService;
+
+	@Resource
+	private ProductQuoteService productQuoteService;
+	
 	@Override
 	public SearchResultDto searchAndCount(String order, String sort, int page,
 			int row, Timestamp begin, Timestamp end, int i, TaskDto td) {
 
 		Search search = new Search();
 		search.addFilterEqual("isDelete", 1);
-		search.addFilterEqual("status", i);
 		
-		if(td!=null){
-			
+		if (td != null) {
+
 			Task task = taskService.findById(td.getId());
-			if(task!=null){
-				
+			if (task != null) {
+
 				search.addFilterEqual("task", task);
 			}
 		}
-		
+
 		if (begin != null) {
 			search.addFilterGreaterOrEqual("createTime", begin);
 		}
@@ -78,7 +89,7 @@ public class ItemServiceImpl implements ItemService {
 			search.addFilterLessOrEqual("createTime", end);
 		}
 
-		if (i != 0) {
+		if (i != -1) {
 			search.addFilterEqual("status", i);
 		}
 
@@ -118,6 +129,83 @@ public class ItemServiceImpl implements ItemService {
 		String addProducts = td.getAddProducts();
 		String deleteProducts = td.getDeleteProducts();
 
+		int cId = id.getCustomerId();
+		customer = customerService.findById(cId);
+
+		int ctId = id.getContactId();
+		contact = contactService.findById(ctId);
+		
+		int itemTypeId = id.getItemTypeId();
+		ItemType itemType = itemTypeService.findById(itemTypeId);
+
+		if (ud != null) {
+
+			int uid = ud.getId();
+			user = userService.findById(uid);
+		}
+
+		int iId = id.getId();
+		if (iId != 0) {
+
+			i = findById(iId);
+			if (i != null) {
+
+				i.setUpdateTime(now);
+				i.setStatus(0);
+				message = "任务修改成功！";
+
+			} else {
+
+				md.setT(false);
+				md.setMessage("任务在数据库中找不到！");
+			}
+
+		} else {
+
+			i = new Item();
+			i.setCreateTime(now);
+			i.setStatus(0);
+			i.setTask(task);
+			
+			message = "任务添加成功!";
+
+			if (user != null) {
+
+				i.setUser(user);
+				i.setCreateTime(now);
+				i.setStatus(0);
+
+				message = "新的任务创建成功!";
+
+			} else {
+
+				md.setT(false);
+				md.setMessage("创建者不存在，请重新登陆！");
+				return md;
+			}
+		}
+
+		if (customer != null) {
+
+			i.setCustomer(customer);
+		}
+
+		if (contact != null) {
+
+			i.setContact(contact);
+		}
+
+		if (itemType != null) {
+
+			i.setItemType(itemType);
+			
+		} else {
+
+			md.setT(false);
+			md.setMessage("任务类型不存在，请重新确认！");
+			return md;
+		}
+
 		int tId = td.getId();
 		if (tId != 0) {
 
@@ -132,107 +220,66 @@ public class ItemServiceImpl implements ItemService {
 			return md;
 		}
 
+		String taskType = task.getTaskType().getName();
 		if ((addProducts != null && !addProducts.equals(""))
 				|| (deleteProducts != null && !deleteProducts.equals(""))) {
+			if (!taskType.equals(Constant.GT)) {
 
-			md = taskService.updateProducts(td);
-		}
+				md = taskService.updateProducts(td);
 
-		if (!md.isT()) {
+				if (!md.isT()) {
 
-			return md;
-
-		} else {
-
-			int cId = id.getCustomerId();
-			customer = customerService.findById(cId);
-
-			int ctId = id.getContactId();
-			contact = contactService.findById(ctId);
-
-			if (ud != null) {
-
-				int uid = ud.getId();
-				user = userService.findById(uid);
-			}
-
-			int iId = id.getId();
-			if (iId != 0) {
-
-				i = findById(iId);
-				if (i != null) {
-
-					i.setUpdateTime(now);
-					i.setStatus(0);
-
-					message = "任务修改成功！";
-
-				} else {
-
-					md.setT(false);
-					md.setMessage("任务在数据库中找不到！");
-				}
-
-			} else {
-
-				i = new Item();
-				i.setCreateTime(now);
-				i.setStatus(0);
-				i.setTask(task);
-
-				message = "任务添加成功!";
-
-				if (user != null) {
-
-					i.setUser(user);
-					i.setCreateTime(now);
-					i.setStatus(0);
-
-					message = "新的任务创建成功!";
-
-				} else {
-
-					md.setT(false);
-					md.setMessage("创建者不存在，请重新登陆！");
 					return md;
+
+				} else {
+
+					List<Product> products = productService.findByTask(task);
+					i.getProducts().clear();
+					i.getProducts().addAll(products);
 				}
-			}
 
-			if (customer != null) {
-
-				i.setCustomer(customer);
-			}
-
-			if (contact != null) {
-
-				i.setContact(contact);
-			}
-
-			int itemTypeId = id.getItemTypeId();
-			ItemType itemType = itemTypeService.findById(itemTypeId);
-			if (itemType != null) {
-
-				i.setItemType(itemType);
 			} else {
 
-				md.setT(false);
-				md.setMessage("任务类型不存在，请重新确认！");
-				return md;
+				String[] addProductIds = addProducts == null ? null
+						: addProducts.split(",");
+				String[] deleteProductIds = deleteProducts == null ? null
+						: deleteProducts.split(",");
+
+				List<Product> addProduct = productService
+						.findByIds(addProductIds);
+				List<Product> deleteProduct = productService
+						.findByIds(deleteProductIds);
+
+				List<Product> itemProducts = i.getProducts();
+				if (itemProducts == null) {
+					itemProducts = new ArrayList<Product>();
+				}
+
+				Iterator<Product> it = deleteProduct.iterator();
+				while (it.hasNext()) {
+
+					Product p = it.next();
+					itemProducts.remove(p);
+				}
+
+				itemProducts.addAll(addProduct);
+				i.setProducts(itemProducts);
 			}
-
-			i.setName(id.getName());
-			i.setCode(id.getCode());
-			i.setRemarks(id.getRemarks());
-
-			save(i);
-
-			int niId = i.getId();
-
-			md.setT(true);
-			md.setIntF(niId);
-			md.setMessage(message);
-			return md;
 		}
+		i.setName(id.getName());
+		i.setCode(id.getCode());
+		i.setFlag(id.getFlag());
+		i.setRemarks(id.getRemarks());
+
+		save(i);
+
+		int niId = i.getId();
+
+		md.setT(true);
+		md.setIntF(niId);
+		md.setMessage(message);
+		return md;
+
 	}
 
 	@Override
@@ -246,6 +293,238 @@ public class ItemServiceImpl implements ItemService {
 	public Item findById(int iId) {
 
 		return itemDao.find(iId);
+	}
+
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+	public void deleteItemsByTask(Task t) {
+
+		Search search = new Search();
+		search.addFilterEqual("task", t);
+
+		List<Item> items = itemDao.search(search);
+
+		Iterator<Item> it = items.iterator();
+		while (it.hasNext()) {
+
+			Item i = it.next();
+
+			i.setIsDelete(0);
+
+			save(i);
+		}
+	}
+
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+	public MessageDto delete(ItemDto id) {
+		
+		MessageDto md = new MessageDto();
+		Item i = null;
+		Timestamp now = new Timestamp(System.currentTimeMillis());
+		
+		String ids = id.getIds();
+		if(ids!=null && !ids.equals("")){
+			
+			String[] idarrs = ids.split(",");
+			
+			for(String is : idarrs){
+				
+				int idstr = Integer.valueOf(is);
+				
+				i = findById(idstr);
+				if(i!=null){
+					
+					i.setIsDelete(0);
+					i.setUpdateTime(now);
+					
+					productQuoteService.deleteQuoteByItem(i);
+					save(i);
+					
+					md.setT(true);
+					md.setMessage("任务信息修改成功！");
+					
+				} else {
+					
+					md.setT(false);
+					md.setMessage("任务在数据库不存在！");
+				}
+			}
+		} else {
+			
+			md.setT(false);
+			md.setMessage("删除的任务的ID不能为空！");
+		}
+		
+		return md;
+	}
+
+	@Override
+	public MessageDto checkStatus(TaskDto td) {
+		
+		MessageDto md = new MessageDto();
+		
+		int tid = td.getId();
+		
+		if(tid!=0){
+			
+			Task task = taskService.findById(tid);
+			
+			if(task!=null){
+				
+				Search search = new Search();
+				search.addFilterEqual("isDelete", 1);
+				search.addFilterEqual("task", task);
+				
+				List<Item> is = itemDao.search(search);
+				Iterator<Item> it = is.iterator();
+				int j = 0;
+				while(it.hasNext()){
+					
+					Item i = it.next();
+					
+					int status = i.getStatus();
+					if(status == 0){
+						
+						j ++;
+					}
+				}
+				
+				if(j!=0){
+					
+					md.setT(true);
+					md.setIntF(j);
+					md.setMessage("总共有" + j + "个子任务没有完成！请确认");
+					
+					return md;
+				} else {
+					
+					md.setT(true);
+					md.setIntF(j);
+					md.setMessage("ok");
+					
+					return md;
+				}
+				
+			} else {
+				
+				md.setT(false);
+				md.setMessage("任务id="+ tid + "在数据库中找不到！");
+				
+				return md;
+				
+			}
+		} else {
+			
+			md.setT(false);
+			md.setMessage("任务id不能为0！");
+			
+			return md;
+		}
+	}
+
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+	public void finishItemsByTask(Task task) {
+		
+		Timestamp now = new Timestamp(System.currentTimeMillis());
+		Search search = new Search();
+		search.addFilterEqual("task", task);
+		List<Item> items = itemDao.search(search);
+		
+		Iterator<Item> it = items.iterator();
+		while(it.hasNext()){
+			
+			Item i = it.next();
+			
+			i.setStatus(1);
+			i.setUpdateTime(now);
+			
+			save(i);
+		}
+	}
+
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+	public void giveupItemsByTask(Task task) {
+		
+		Timestamp now = new Timestamp(System.currentTimeMillis());
+		Search search = new Search();
+		search.addFilterEqual("task", task);
+		List<Item> items = itemDao.search(search);
+		
+		Iterator<Item> it = items.iterator();
+		while(it.hasNext()){
+			
+			Item i = it.next();
+			
+			i.setIsDelete(0);
+			i.setUpdateTime(now);
+			
+			save(i);
+		}
+	}
+
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+	public MessageDto finishItem(ItemDto id) {
+		
+		MessageDto md = new MessageDto();
+		String message = "";
+		int j = 0;
+		Timestamp now = new Timestamp(System.currentTimeMillis());
+		
+		String ids = id.getIds();
+		if(ids!=null && !ids.equals("")){
+			
+			String[] arrs = ids.split(",");
+			
+			for(String is : arrs){
+				
+				int itemId = Integer.valueOf(is);
+				
+				Item item = findById(itemId);
+				if(item!=null){
+					
+					/*ItemType itemType = item.getItemType();
+					if("报价".indexOf(itemType.getName())!=-1){
+						
+						if(item.getFlag()==0){
+							
+							continue;
+						}
+					}*/
+					//针对报价单未保存的情况
+					if(item.getFlag()==0){
+						
+						message += item.getCode() + "报价单未保存,不能关闭！";
+						j++;
+						continue;
+					}
+					
+					item.setStatus(1);
+					item.setUpdateTime(now);
+					
+					save(item);
+				}
+			}
+		}
+		
+		md.setT(true);
+		md.setIntF(j);
+		md.setMessage(message);
+		
+		return md;
+	}
+
+	@Override
+	public List<Item> findItemsByTask(Task task) {
+		
+		Search search = new Search();
+		search.addFilterEqual("task", task);
+		
+		return itemDao.search(search);
+		
 	}
 
 }

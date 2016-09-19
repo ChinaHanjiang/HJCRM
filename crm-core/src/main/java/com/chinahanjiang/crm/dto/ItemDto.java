@@ -42,6 +42,36 @@ public class ItemDto {
 	private String remarks;
 
 	private String statusStr;
+	
+	private int flag;
+	
+	private String flagStr;
+	
+	private String ids;
+	
+	public String getIds() {
+		return ids;
+	}
+
+	public void setIds(String ids) {
+		this.ids = ids;
+	}
+
+	public String getFlagStr() {
+		return flagStr;
+	}
+
+	public void setFlagStr(String flagStr) {
+		this.flagStr = flagStr;
+	}
+
+	public int getFlag() {
+		return flag;
+	}
+
+	public void setFlag(int flag) {
+		this.flag = flag;
+	}
 
 	public int getId() {
 		return id;
