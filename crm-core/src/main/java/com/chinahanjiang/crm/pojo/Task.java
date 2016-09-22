@@ -183,7 +183,7 @@ public class Task {
 	}
 
 	@OneToMany(targetEntity = Item.class, cascade = { CascadeType.ALL }, fetch = FetchType.LAZY, mappedBy = "task")
-	@Fetch(FetchMode.SUBSELECT)
+	//@Fetch(FetchMode.SUBSELECT)
 	public List<Item> getItems() {
 		return items;
 	}

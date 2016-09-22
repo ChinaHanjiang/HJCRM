@@ -1,6 +1,5 @@
 package com.chinahanjiang.crm.util;
 
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -487,7 +486,7 @@ public class DataUtil {
 						.format(i.getUpdateTime()));
 				id.setContact(i.getContact() == null ? "" : i.getContact()
 						.getName());
-				id.setContactId(i.getCode() == null ? 0 : i.getContact()
+				id.setContactId(i.getContact() == null ? 0 : i.getContact()
 						.getId());
 
 				/* 附件信息 */
@@ -922,5 +921,22 @@ public class DataUtil {
 			}
 		}
 		return pqds;
+	}
+
+	public static TaskTypeDto convertTaskTypeToDto(TaskType tt) {
+		
+		TaskTypeDto ttd = new TaskTypeDto();
+		ttd.setId(tt.getId());
+		ttd.setName(tt.getName());
+		ttd.setCode(tt.getCode());
+		ttd.setRemarks(tt.getRemarks());
+		ttd.setCreateTime(tt.getCreateTime() == null ? "" : sdf_dt
+				.format(tt.getCreateTime()));
+		ttd.setUpdateTime(tt.getUpdateTime() == null ? "" : sdf_dt
+				.format(tt.getUpdateTime()));
+		ttd.setUser(tt.getUser() == null ? "" : tt.getUser().getName());
+		ttd.setUserId(tt.getUser() == null ? 0 : tt.getUser().getId());
+		
+		return ttd;
 	}
 }

@@ -277,7 +277,7 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public List<Product> findByItem(Item i) {
 		
-		String hql = "select p from Product as p join p.items as i where p.isDelete=1 and i= :item "; 
+		String hql = "select p from Product as p join p.items as i where p.isDelete=1 and i= :tk "; 
 		
 		return productDao.loadProducts(hql, i);
 	}

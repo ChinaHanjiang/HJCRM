@@ -189,8 +189,10 @@ public class ProductQuoteServiceImpl implements ProductQuoteService {
 	public void deleteQuoteByItem(Item i) {
 		
 		ProductQuote pq = findProductQuoteByItem(i);
-		pq.setIsDelete(0);
-		save(pq);
+		if(pq!=null){
+			pq.setIsDelete(0);
+			save(pq);
+		}
 	}
 
 	@Override
@@ -234,7 +236,7 @@ public class ProductQuoteServiceImpl implements ProductQuoteService {
 		Task task = taskService.findById(taskId);
 		if(task!=null){
 			
-			List<Item> items = itemService.findItemsByTask(task);
+			List<Item> items = itemService.findItemsByTaskForQuote(task);
 			if(items!=null){
 				
 				List<ProductQuote> pqs = findProductQuoteByItems(items);
@@ -253,6 +255,7 @@ public class ProductQuoteServiceImpl implements ProductQuoteService {
 		
 		Search search = new Search();
 		search.addFilterIn("item", items);
+		search.addSort("createTime", true);
 		return productQuoteDao.search(search);
 	}
 
@@ -273,6 +276,11 @@ public class ProductQuoteServiceImpl implements ProductQuoteService {
 			
 			Item item = pq.getItem();
 			item.setFlag(1);
+			item.setUpdateTime(now);
+			
+			Task task = item.getTask();
+			task.setFlag(0);
+			task.setUpdateTime(now);
 			
 			save(pq);
 			

@@ -87,8 +87,8 @@
 					    	
 					    	$.each(row,function(i, o){
 							   
-					    		 var rowIndex = $('#taskgrid').datagrid('getRowIndex', o);
-								 $('#taskgrid').datagrid('deleteRow',rowIndex);
+					    		 var rowIndex = $('#itemgrid').datagrid('getRowIndex', o);
+								 $('#itemgrid').datagrid('deleteRow',rowIndex);
 								 
 								 id[i] = o.id;
 							});
@@ -207,7 +207,7 @@
 							    						 
 							    						 id:'quotewindow',
 							    						 title:'产品报价',
-							    						 href:'<%=basePath%>win/quote.do?itemId=' + itemId + "&quoteId=" + pqId
+							    						 href:'<%=basePath%>win/quote.do?itemId=' + itemId + '&quoteId=' + pqId
 							    				 };
 							    				 
 							    				 parent.openPanel(newObj);
@@ -313,12 +313,29 @@
 				</tr>
 				<tr>
 					<td style="width: 80px; height: 25px;">报价状态：</td>
-					<td style="width: 180px; height: 20px;"><s:if
-							test='task.flag == 1'><span style="background-color:#D1D1D1;color:#2E8B57;font-weight:bold;">需求有改变，未报价</span></s:if> <s:else><span style="background-color:#D1D1D1;color:#CD0000;">已报价</span></s:else></td>
+					<td style="width: 180px; height: 20px;">
+						<s:if test="task.taskType.name.indexOf('日常任务')==-1">
+							<s:if test='task.flag == 1'>
+								<span style="background-color:#D1D1D1;color:#2E8B57;font-weight:bold;">需求有改变，未<a href="#" onClick="newQuote(${task.id});">报价</a>
+								</span>
+							</s:if> 
+							<s:else>
+								<span style="background-color:#D1D1D1;color:#CD0000;">已报价</span>
+							</s:else>
+						</s:if>
+					</td>
 					<td style="width: 80px; height: 25px;">项目状态：</td>
-					<td style="height: 20px;"><s:if test='task.status == 0'><span style="background-color:#D1D1D1;color:#2E8B57;font-weight:bold;">进行中</span></s:if>
-						<s:elseif test='task.status == 1'><span style="background-color:#D1D1D1;color:#CD0000;">完成</span></s:elseif>
-						<s:else><span style="background-color:#D1D1D1;color:#CD0000;">已放弃</span></s:else></td>
+					<td style="height: 20px;">
+						<s:if test='task.status == 0'>
+							<span style="background-color:#D1D1D1;color:#2E8B57;font-weight:bold;">进行中</span>
+						</s:if>
+						<s:elseif test='task.status == 1'>
+							<span style="background-color:#D1D1D1;color:#CD0000;">完成</span>
+						</s:elseif>
+						<s:else>
+							<span style="background-color:#D1D1D1;color:#CD0000;">已放弃</span>
+						</s:else>
+					</td>
 				</tr>
 			</table>
 		</div>
@@ -478,6 +495,76 @@
 			if (flag==0){
 				return 'background-color:#ffee00;color:red;';
 			}
+		}
+		
+		function newQuote(taskId){
+			
+			$.messager.confirm('Confirm','你是否要为这个项目报价呢？',function(r){
+				
+				if(r){
+					
+					//新建Item
+					var itemId = 0;
+					
+					$.ajax({
+						
+						type:"POST",
+			    		 url:"<%=basePath%>item/addquote.do?td.id=" + taskId,
+			    		 cache:false,
+			    		 dataType:'json',
+			    		 success:function(data){
+			    			 
+			    			 var _data = data.md;
+			    			 if(_data.t){
+			    				 
+			    				 itemId = _data.intF;
+			    				 
+			    				 
+			    				 if(itemId!=0){
+			 						
+			 						$.ajax({
+			 							
+			 							type:"POST",
+			 				    		 url:"<%=basePath%>quote/add.do?itemId=" + itemId,
+			 				    		 cache:false,
+			 				    		 dataType:'json',
+			 				    		 success:function(data){
+			 				    			 
+			 				    			 var _data = data.md;
+			 				    			 if(_data.t){
+			 				    			 	
+			 				    				 var pqId = _data.intF;
+			 				    				 var newObj = {
+			 				    						 
+			 				    						 id:'quotewindow',
+			 				    						 title:'产品报价',
+			 				    						 href:'<%=basePath%>win/quote.do?itemId=' + itemId + "&quoteId=" + pqId
+			 				    				 };
+			 				    				 
+			 				    				 parent.openAndClose(newObj,'任务编辑');
+			 				    				 
+			 				    			 } else {
+			 				    				 
+			 				    				 $.messager.alert('失败', _data.message,
+			 										'info');
+			 				    			 }
+			 				    		 }
+			 						});
+			 					} else {
+			 						
+			 						$.messager.alert('失败', "要报的任务Id不能为0",
+			 						'info');
+			 					}
+			    				 
+			    			 } else {
+			    				 
+			    				 $.messager.alert('失败', _data.message,
+									'info');
+			    			 }
+			    		 }
+					});
+				}
+			});
 		}
 	</script>
 </body>

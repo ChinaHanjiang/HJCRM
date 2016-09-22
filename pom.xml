@@ -332,7 +332,16 @@
 				<artifactId>quartz-all</artifactId>
 				<version>1.6.3</version>
 			</dependency>
-
+			<dependency>
+			    <groupId>org.freemarker</groupId>
+			    <artifactId>freemarker</artifactId>
+			    <version>2.3.16</version>
+			</dependency>
+			<dependency>
+			    <groupId>net.sf.jacob-project</groupId>
+			    <artifactId>jacob</artifactId>
+			    <version>1.18</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 

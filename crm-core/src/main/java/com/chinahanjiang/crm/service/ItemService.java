@@ -36,4 +36,8 @@ public interface ItemService {
 
 	public List<Item> findItemsByTask(Task task);
 
+	public MessageDto addQuoteItem(TaskDto td, UserDto ud);
+
+	List<Item> findItemsByTaskForQuote(Task task);
+
 }

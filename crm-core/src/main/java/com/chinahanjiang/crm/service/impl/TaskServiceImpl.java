@@ -161,6 +161,9 @@ public class TaskServiceImpl implements TaskService {
 		int customerId = td.getCustomerId();
 		customer = customerService.findById(customerId);
 
+		int tasktypeId = td.getTaskTypeId();
+		taskType = taskTypeService.findById(tasktypeId);
+		
 		if (u != null) {
 
 			int uid = u.getId();
@@ -198,6 +201,10 @@ public class TaskServiceImpl implements TaskService {
 				t.setCreateTime(now);
 				t.setUpdateTime(now);
 				t.setStatus(0);
+				
+				TaskTypeDto ttd = DataUtil.convertTaskTypeToDto(taskType);
+				String code = generateCode(ttd);
+				t.setCode(code);
 
 				message = "新的项目创建成功!";
 
@@ -208,8 +215,7 @@ public class TaskServiceImpl implements TaskService {
 				return md;
 			}
 
-			int tasktypeId = td.getTaskTypeId();
-			taskType = taskTypeService.findById(tasktypeId);
+			
 			if (taskType != null) {
 
 				t.setTaskType(taskType);
@@ -227,7 +233,6 @@ public class TaskServiceImpl implements TaskService {
 		}
 
 		t.setName(td.getName());
-		t.setCode(td.getCode());
 		t.setRemarks(td.getRemarks());
 
 		String[] addProductIds = td.getAddProducts() == null ? null : td

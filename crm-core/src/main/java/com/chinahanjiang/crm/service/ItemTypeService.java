@@ -11,4 +11,5 @@ public interface ItemTypeService {
 
 	ItemType findById(int itemTypeId);
 
+	ItemType findByName(String name);
 }

@@ -35,7 +35,8 @@ import com.chinahanjiang.crm.util.DateUtil;
 	@Result(name="modify",type="json"),
 	@Result(name="delete",type="json"),
 	@Result(name="check",type="json"),
-	@Result(name="checkstatus",type="json")})
+	@Result(name="checkstatus",type="json"),
+	@Result(name="addquote",type="json")})
 @ExceptionMappings({ @ExceptionMapping(exception = "java.lange.RuntimeException", result = "error") })
 public class ItemAction extends BaseAction {
 
@@ -227,5 +228,14 @@ public class ItemAction extends BaseAction {
 		md = itemService.finishItem(id);
 		
 		return "finish";
+	}
+	
+	@Action("addquote")
+	public String addQuote(){
+		
+		UserDto ud = (UserDto) this.session.get(Constant.USERKEY);
+		md = itemService.addQuoteItem(td,ud);
+		
+		return "addquote";
 	}
 }

@@ -16,6 +16,7 @@ import com.chinahanjiang.crm.dto.ItemDto;
 import com.chinahanjiang.crm.dto.MessageDto;
 import com.chinahanjiang.crm.dto.SearchResultDto;
 import com.chinahanjiang.crm.dto.TaskDto;
+import com.chinahanjiang.crm.dto.TaskTypeDto;
 import com.chinahanjiang.crm.dto.UserDto;
 import com.chinahanjiang.crm.pojo.Contact;
 import com.chinahanjiang.crm.pojo.Customer;
@@ -23,6 +24,7 @@ import com.chinahanjiang.crm.pojo.Item;
 import com.chinahanjiang.crm.pojo.ItemType;
 import com.chinahanjiang.crm.pojo.Product;
 import com.chinahanjiang.crm.pojo.Task;
+import com.chinahanjiang.crm.pojo.TaskType;
 import com.chinahanjiang.crm.pojo.User;
 import com.chinahanjiang.crm.service.ContactService;
 import com.chinahanjiang.crm.service.CustomerService;
@@ -93,6 +95,7 @@ public class ItemServiceImpl implements ItemService {
 			search.addFilterEqual("status", i);
 		}
 
+		search.addSort("createTime", true);
 		search.setMaxResults(row);
 		search.setPage(page - 1 < 0 ? 0 : page - 1);
 		SearchResult<Item> result = searchAndCount(search);
@@ -129,6 +132,9 @@ public class ItemServiceImpl implements ItemService {
 		String addProducts = td.getAddProducts();
 		String deleteProducts = td.getDeleteProducts();
 
+		int tid = td.getId();
+		task = taskService.findById(tid);
+		
 		int cId = id.getCustomerId();
 		customer = customerService.findById(cId);
 
@@ -165,7 +171,25 @@ public class ItemServiceImpl implements ItemService {
 			i = new Item();
 			i.setCreateTime(now);
 			i.setStatus(0);
-			i.setTask(task);
+			if(task!=null){
+				
+				i.setTask(task);
+				TaskType tt = task.getTaskType();
+				TaskTypeDto ttd = DataUtil.convertTaskTypeToDto(tt);
+				
+				String code = taskService.generateCode(ttd);
+				Search search = new Search();
+				search.addFilterEqual("task", task);
+				int num = itemDao.count(search);
+				i.setCode(code + "." + (num+1));
+				
+			} else {
+				
+				md.setT(false);
+				md.setMessage(" 项目不存在，请重新确认！");
+				return md;
+			}
+			
 			
 			message = "任务添加成功!";
 
@@ -234,6 +258,10 @@ public class ItemServiceImpl implements ItemService {
 				} else {
 
 					List<Product> products = productService.findByTask(task);
+					if(i.getProducts()==null){
+						List<Product> ps = new ArrayList<Product>();
+						i.setProducts(ps);
+					}
 					i.getProducts().clear();
 					i.getProducts().addAll(products);
 				}
@@ -267,7 +295,6 @@ public class ItemServiceImpl implements ItemService {
 			}
 		}
 		i.setName(id.getName());
-		i.setCode(id.getCode());
 		i.setFlag(id.getFlag());
 		i.setRemarks(id.getRemarks());
 
@@ -525,6 +552,74 @@ public class ItemServiceImpl implements ItemService {
 		
 		return itemDao.search(search);
 		
+	}
+	
+	@Override
+	public List<Item> findItemsByTaskForQuote(Task task) {
+		
+		Search search = new Search();
+		search.addFilterEqual("task", task);
+		search.addFilterEqual("flag", 1);
+		
+		return itemDao.search(search);
+		
+	}
+
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+	public MessageDto addQuoteItem(TaskDto td, UserDto ud) {
+		
+		MessageDto md = new MessageDto();
+		Timestamp now = new Timestamp(System.currentTimeMillis());
+		
+		int uid = ud.getId();
+		User user = userService.findById(uid);
+		
+		int tid = td.getId();
+		Task task = taskService.findById(tid);
+		
+		Item i = new Item();
+		i.setName("项目-" + task.getCode() + "-报价");
+		i.setFlag(0);
+		i.setTask(task);
+		
+		TaskType tt = task.getTaskType();
+		TaskTypeDto ttd = DataUtil.convertTaskTypeToDto(tt);
+		
+		String code = taskService.generateCode(ttd);
+		Search search = new Search();
+		search.addFilterEqual("task", task);
+		int num = itemDao.count(search);
+		
+		i.setCode(code + "." + (num+1));
+		i.setStatus(0);
+		i.setCustomer(task.getCustomer());
+		i.setCreateTime(now);
+
+		ItemType it = itemTypeService.findByName("产品报价");
+		if(it!=null){
+			i.setItemType(it);
+		} else {
+			
+			md.setT(false);
+			md.setMessage("产品类型找不到！");
+			return md;
+		}
+		
+		List<Product> products = productService.findByTask(task);
+		i.setProducts(products);
+		
+		if(user!=null)
+			i.setUser(user);
+		i.setRemarks("任务自动生成");
+		
+		save(i);
+		
+		int itemId = i.getId();
+		md.setT(true);
+		md.setIntF(itemId);
+		
+		return md;
 	}
 
 }
