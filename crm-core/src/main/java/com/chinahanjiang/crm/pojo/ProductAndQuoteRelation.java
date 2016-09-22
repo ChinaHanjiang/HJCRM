@@ -17,6 +17,8 @@ import javax.persistence.Table;
 public class ProductAndQuoteRelation {
 
 	private int id;
+	
+	private int orders;
 
 	private Product product;
 
@@ -40,7 +42,7 @@ public class ProductAndQuoteRelation {
 	}
 
 	public ProductAndQuoteRelation(int id, Product product, int quantity,
-			ProductQuoteDetails productQuoteDetails, double defindPrice,
+			ProductQuoteDetails productQuoteDetails, double defindPrice,int orders,
 			int isDelete,Timestamp createTime, Timestamp updateTime, String remarks) {
 		super();
 		this.id = id;
@@ -52,6 +54,7 @@ public class ProductAndQuoteRelation {
 		this.createTime = createTime;
 		this.updateTime = updateTime;
 		this.remarks = remarks;
+		this.orders = orders;
 	}
 
 	@Id
@@ -137,5 +140,14 @@ public class ProductAndQuoteRelation {
 
 	public void setUpdateTime(Timestamp updateTime) {
 		this.updateTime = updateTime;
+	}
+
+	@Column(name = "paqr_order" , nullable = true)
+	public int getOrders() {
+		return orders;
+	}
+
+	public void setOrders(int orders) {
+		this.orders = orders;
 	}
 }

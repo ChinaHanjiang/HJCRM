@@ -18,6 +18,8 @@ public class ProductConfiguration {
 
 	private int id;
 	
+	private int orders;
+	
 	private Product fproduct;
 	
 	private Product sproduct;
@@ -39,7 +41,7 @@ public class ProductConfiguration {
 	}
 
 	public ProductConfiguration(int id, Product fproduct, Product sproduct,int quantity,
-			int isDelete, String remarks, Timestamp createTime,
+			int isDelete, String remarks, Timestamp createTime,int orders,
 			Timestamp updateTime) {
 		super();
 		this.id = id;
@@ -50,6 +52,7 @@ public class ProductConfiguration {
 		this.remarks = remarks;
 		this.createTime = createTime;
 		this.updateTime = updateTime;
+		this.orders = orders;
 	}
 
 	@Id
@@ -126,6 +129,15 @@ public class ProductConfiguration {
 
 	public void setUpdateTime(Timestamp updateTime) {
 		this.updateTime = updateTime;
+	}
+	
+	@Column(name = "pcfg_order" , nullable = true)
+	public int getOrders() {
+		return orders;
+	}
+
+	public void setOrders(int orders) {
+		this.orders = orders;
 	}
 
 	@Override

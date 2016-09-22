@@ -32,6 +32,8 @@ public class Product {
 	
 	private String name;
 	
+	private String ename;
+	
 	private String shortCode;
 	
 	private String code;
@@ -64,6 +66,12 @@ public class Product {
 	
 	private String remarks;
 	
+	private String eremarks;
+	
+	private Unit unit;
+	
+	private List<ProductProperty> properties;
+	
 	public Product(){
 		 
 		this.isDelete = 1;
@@ -73,7 +81,8 @@ public class Product {
 			List<Product> beyongProduct, ProductCatalog productCatalog, double standardPrice, 
 			double definePrice, int isDelete, User user,Timestamp createTime,
 			Timestamp updateTime, String remarks, List<ProductAndQuoteRelation> quoteProducts,
-			List<Task> tasks, List<Item> items) {
+			List<Task> tasks, List<Item> items, Unit unit, List<ProductProperty> properties,
+			String ename, String eremarks) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -89,6 +98,10 @@ public class Product {
 		this.quoteProducts = quoteProducts;
 		this.tasks = tasks;
 		this.items = items;
+		this.unit = unit;
+		this.properties = properties;
+		this.ename = ename;
+		this.eremarks = eremarks;
 	}
 
 	@Id
@@ -258,6 +271,44 @@ public class Product {
 
 	public void setOrders(int orders) {
 		this.orders = orders;
+	}
+
+	@OneToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "p_utid",referencedColumnName="ut_id")
+	public Unit getUnit() {
+		return unit;
+	}
+
+	public void setUnit(Unit unit) {
+		this.unit = unit;
+	}
+
+	@OneToMany(targetEntity = ProductProperty.class, cascade = { CascadeType.ALL }, fetch = FetchType.LAZY, mappedBy = "product")
+	@Fetch(FetchMode.SUBSELECT)
+	public List<ProductProperty> getProperties() {
+		return properties;
+	}
+
+	public void setProperties(List<ProductProperty> properties) {
+		this.properties = properties;
+	}
+
+	@Column(name = "p_ename")
+	public String getEname() {
+		return ename;
+	}
+
+	public void setEname(String ename) {
+		this.ename = ename;
+	}
+
+	@Column(name = "p_eremarks")
+	public String getEremarks() {
+		return eremarks;
+	}
+
+	public void setEremarks(String eremarks) {
+		this.eremarks = eremarks;
 	}
 
 	@Override
