@@ -4,6 +4,8 @@ public class ProductDto {
 
 	private int id;
 	
+	private String ids;
+	
 	private String name;
 	
 	private String code;
@@ -18,7 +20,9 @@ public class ProductDto {
 	
 	private String productCatalog;
 	
-	private double standardPrice;
+	private String fullProductCatalog;
+	
+	private String standardPrice;
 	
 	private int productId;
 	
@@ -33,6 +37,36 @@ public class ProductDto {
 	private String updateTime;
 	
 	private String remarks;
+	
+	private String ename;
+	
+	private int unitId;
+	
+	private String unit;
+	
+	public String getUnit() {
+		return unit;
+	}
+
+	public void setUnit(String unit) {
+		this.unit = unit;
+	}
+
+	public String getEname() {
+		return ename;
+	}
+
+	public void setEname(String ename) {
+		this.ename = ename;
+	}
+
+	public int getUnitId() {
+		return unitId;
+	}
+
+	public void setUnitId(int unitId) {
+		this.unitId = unitId;
+	}
 
 	public int getId() {
 		return id;
@@ -40,6 +74,14 @@ public class ProductDto {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public String getIds() {
+		return ids;
+	}
+
+	public void setIds(String ids) {
+		this.ids = ids;
 	}
 
 	public String getName() {
@@ -74,11 +116,11 @@ public class ProductDto {
 		this.productCatalog = productCatalog;
 	}
 
-	public double getStandardPrice() {
+	public String getStandardPrice() {
 		return standardPrice;
 	}
 
-	public void setStandardPrice(double standardPrice) {
+	public void setStandardPrice(String standardPrice) {
 		this.standardPrice = standardPrice;
 	}
 
@@ -161,6 +203,13 @@ public class ProductDto {
 	public void setProductId(int productId) {
 		this.productId = productId;
 	}
-	
+
+	public String getFullProductCatalog() {
+		return fullProductCatalog;
+	}
+
+	public void setFullProductCatalog(String fullProductCatalog) {
+		this.fullProductCatalog = fullProductCatalog;
+	}
 	
 }

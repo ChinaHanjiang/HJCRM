@@ -21,9 +21,11 @@ import com.chinahanjiang.crm.pojo.Product;
 import com.chinahanjiang.crm.pojo.ProductCatalog;
 import com.chinahanjiang.crm.pojo.ProductConfiguration;
 import com.chinahanjiang.crm.pojo.Task;
+import com.chinahanjiang.crm.pojo.Unit;
 import com.chinahanjiang.crm.service.ProductCatalogService;
 import com.chinahanjiang.crm.service.ProductConfigurationService;
 import com.chinahanjiang.crm.service.ProductService;
+import com.chinahanjiang.crm.service.UnitService;
 import com.chinahanjiang.crm.util.DataUtil;
 import com.googlecode.genericdao.search.Search;
 import com.googlecode.genericdao.search.SearchResult;
@@ -40,6 +42,9 @@ public class ProductServiceImpl implements ProductService {
 	
 	@Resource
 	private ProductConfigurationService productConfigurationService;
+	
+	@Resource
+	private UnitService unitService;
 	
 	@Override
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
@@ -103,7 +108,8 @@ public class ProductServiceImpl implements ProductService {
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		int pcId = pd.getProductCatalogId();
 		ProductCatalog pc = productCatalogService.findById(pcId);
-		
+		int unitId = pd.getUnitId();
+		Unit unit = unitService.findById(unitId);
 		int pId = pd.getId();
 		Product p = null;
 		if(pId==0){
@@ -122,10 +128,19 @@ public class ProductServiceImpl implements ProductService {
 		if(p!=null){
 			
 			p.setName(pd.getName());
+			p.setEname(pd.getEname());
 			p.setCode(pd.getCode());
-			p.setStandardPrice(pd.getStandardPrice());
+			try{
+				
+				p.setStandardPrice(Double.parseDouble(pd.getStandardPrice()));
+			}catch(NumberFormatException e){
+				
+				p.setStandardPrice(0.0);
+			}
+			
 			p.setRemarks(pd.getRemarks());
 			p.setProductCatalog(pc);
+			p.setUnit(unit);
 			
 			boolean isT = save(p);
 			if(isT){
@@ -140,6 +155,7 @@ public class ProductServiceImpl implements ProductService {
 				p.setProductMix(prodctMix);
 				save(p);
 				
+				md.setIntF(p.getId());
 				md.setT(true);
 				md.setMessage("产品添加成功！");
 			} else {
@@ -170,24 +186,32 @@ public class ProductServiceImpl implements ProductService {
 
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		MessageDto md = new MessageDto();
-		int id = pd.getId();
 		
-		Product c = findById(id);
-		if(c!=null){
+		String ids = pd.getIds();
+		
+		if(ids!=null){
 			
-			c.setIsDelete(0);
-			c.setUpdateTime(now);
+			String[] arrs = ids.split(",");
 			
-			save(c);
-			md.setT(true);
-			md.setMessage("产品删除成功！");
-			
-		} else {
-			
-			md.setT(false);
-			md.setMessage("产品找不到！");
+			for(String i : arrs){
+				
+				Product c = findById(Integer.valueOf(i));
+				if(c!=null){
+					
+					c.setIsDelete(0);
+					c.setUpdateTime(now);
+					
+					save(c);
+					md.setT(true);
+					md.setMessage("产品删除成功！");
+					
+				} else {
+					
+					md.setT(false);
+					md.setMessage("产品找不到！");
+				}
+			}
 		}
-		
 		
 		return md;
 	}

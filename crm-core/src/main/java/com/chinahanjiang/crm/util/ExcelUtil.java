@@ -383,7 +383,7 @@ public class ExcelUtil {
 				pd.setProductCatalog(catalog==null?"":getValue(catalog));
 				
 				HSSFCell standardPrice = hssfRow.getCell(4);
-				pd.setStandardPrice(standardPrice==null?Double.valueOf(0.0):Double.valueOf(getValue(standardPrice)));
+				pd.setStandardPrice(standardPrice==null?"0.0":getValue(standardPrice));
 				
 				HSSFCell remarks = hssfRow.getCell(5);
 				pd.setRemarks(remarks==null?"":getValue(remarks));

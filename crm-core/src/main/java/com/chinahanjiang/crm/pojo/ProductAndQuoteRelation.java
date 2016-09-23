@@ -16,9 +16,9 @@ import javax.persistence.Table;
 @Table(name = "ProductAndQuoteRelation")
 public class ProductAndQuoteRelation {
 
-	private int id;
+	private Integer id;
 	
-	private int orders;
+	private Integer orders;
 
 	private Product product;
 
@@ -26,9 +26,9 @@ public class ProductAndQuoteRelation {
 
 	private double defindPrice;
 
-	private int isDelete;
+	private Integer isDelete;
 
-	private int quantity;
+	private Integer quantity;
 	
 	private Timestamp createTime;
 	
@@ -41,9 +41,9 @@ public class ProductAndQuoteRelation {
 		isDelete = 1;
 	}
 
-	public ProductAndQuoteRelation(int id, Product product, int quantity,
-			ProductQuoteDetails productQuoteDetails, double defindPrice,int orders,
-			int isDelete,Timestamp createTime, Timestamp updateTime, String remarks) {
+	public ProductAndQuoteRelation(Integer id, Product product, Integer quantity,
+			ProductQuoteDetails productQuoteDetails, double defindPrice,Integer orders,
+			Integer isDelete,Timestamp createTime, Timestamp updateTime, String remarks) {
 		super();
 		this.id = id;
 		this.product = product;
@@ -60,11 +60,11 @@ public class ProductAndQuoteRelation {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "paqr_id", unique = true, nullable = false)
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -98,11 +98,11 @@ public class ProductAndQuoteRelation {
 	}
 
 	@Column(name = "paqr_isDelete")
-	public int getIsDelete() {
+	public Integer getIsDelete() {
 		return isDelete;
 	}
 
-	public void setIsDelete(int isDelete) {
+	public void setIsDelete(Integer isDelete) {
 		this.isDelete = isDelete;
 	}
 
@@ -116,11 +116,11 @@ public class ProductAndQuoteRelation {
 	}
 
 	@Column(name = "paqr_quantity")
-	public int getQuantity() {
+	public Integer getQuantity() {
 		return quantity;
 	}
 
-	public void setQuantity(int quantity) {
+	public void setQuantity(Integer quantity) {
 		this.quantity = quantity;
 	}
 
@@ -143,11 +143,11 @@ public class ProductAndQuoteRelation {
 	}
 
 	@Column(name = "paqr_order" , nullable = true)
-	public int getOrders() {
+	public Integer getOrders() {
 		return orders;
 	}
 
-	public void setOrders(int orders) {
+	public void setOrders(Integer orders) {
 		this.orders = orders;
 	}
 }

@@ -16,17 +16,17 @@ import javax.persistence.Table;
 @Table(name = "ProductConfiguration")
 public class ProductConfiguration {
 
-	private int id;
+	private Integer id;
 	
-	private int orders;
+	private Integer orders;
 	
 	private Product fproduct;
 	
 	private Product sproduct;
 	
-	private int quantity;
+	private Integer quantity;
 	
-	private int isDelete;
+	private Integer isDelete;
 	
 	private String remarks;
 	
@@ -40,8 +40,8 @@ public class ProductConfiguration {
 		this.quantity = 1;
 	}
 
-	public ProductConfiguration(int id, Product fproduct, Product sproduct,int quantity,
-			int isDelete, String remarks, Timestamp createTime,int orders,
+	public ProductConfiguration(Integer id, Product fproduct, Product sproduct,Integer quantity,
+			Integer isDelete, String remarks, Timestamp createTime,Integer orders,
 			Timestamp updateTime) {
 		super();
 		this.id = id;
@@ -58,11 +58,11 @@ public class ProductConfiguration {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "pcfg_id", unique = true, nullable = false)
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -87,20 +87,20 @@ public class ProductConfiguration {
 	}
 	
 	@Column(name="pcfg_quantity")
-	public int getQuantity() {
+	public Integer getQuantity() {
 		return quantity;
 	}
 
-	public void setQuantity(int quantity) {
+	public void setQuantity(Integer quantity) {
 		this.quantity = quantity;
 	}
 
 	@Column(name = "pcfg_isDelete")
-	public int getIsDelete() {
+	public Integer getIsDelete() {
 		return isDelete;
 	}
 
-	public void setIsDelete(int isDelete) {
+	public void setIsDelete(Integer isDelete) {
 		this.isDelete = isDelete;
 	}
 
@@ -132,11 +132,11 @@ public class ProductConfiguration {
 	}
 	
 	@Column(name = "pcfg_order" , nullable = true)
-	public int getOrders() {
+	public Integer getOrders() {
 		return orders;
 	}
 
-	public void setOrders(int orders) {
+	public void setOrders(Integer orders) {
 		this.orders = orders;
 	}
 

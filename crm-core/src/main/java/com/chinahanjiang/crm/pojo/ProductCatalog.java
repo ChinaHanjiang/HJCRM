@@ -32,6 +32,8 @@ public class ProductCatalog {
 	
 	private String name;
 	
+	private String ename;
+	
 	private String code;//区域编码
 	
 	private int order;
@@ -52,18 +54,22 @@ public class ProductCatalog {
 	
 	private User user;
 	
+	private int isF; /*0:no,1:yes*/
+	
 	public ProductCatalog(){
 		
+		this.isF = 0;
 		this.isDelete = 1;
 	}
 
 	public ProductCatalog(int id, String name, String code, int order,
-			ProductCatalog parentCatalog, String state,
-			List<ProductCatalog> childPcs, Timestamp createTime,
+			ProductCatalog parentCatalog, String state, String ename,
+			List<ProductCatalog> childPcs, Timestamp createTime,int isF,
 			Timestamp updateTime, String remarks, int isDelete, User user) {
 		super();
 		this.id = id;
 		this.name = name;
+		this.ename = ename;
 		this.code = code;
 		this.order = order;
 		this.parentCatalog = parentCatalog;
@@ -74,6 +80,7 @@ public class ProductCatalog {
 		this.remarks = remarks;
 		this.isDelete = isDelete;
 		this.user = user;
+		this.isF = isF;
 	}
 
 	@Id
@@ -94,6 +101,15 @@ public class ProductCatalog {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	@Column(name="pc_ename")
+	public String getEname() {
+		return ename;
+	}
+
+	public void setEname(String ename) {
+		this.ename = ename;
 	}
 
 	@Column(name="pc_code")
@@ -133,7 +149,7 @@ public class ProductCatalog {
 		this.state = state;
 	}
 
-	@OneToMany(targetEntity=ProductCatalog.class,cascade={CascadeType.ALL},fetch=FetchType.EAGER,mappedBy="parentCatalog")
+	@OneToMany(targetEntity=ProductCatalog.class, cascade={CascadeType.ALL}, fetch=FetchType.LAZY, mappedBy="parentCatalog")
 	@Fetch(FetchMode.SUBSELECT)
 	public List<ProductCatalog> getChildPcs() {
 		return childPcs;
@@ -188,4 +204,14 @@ public class ProductCatalog {
 	public void setUser(User user) {
 		this.user = user;
 	}
+
+	@Column(name="pc_isF")
+	public int getIsF() {
+		return isF;
+	}
+
+	public void setIsF(int isF) {
+		this.isF = isF;
+	}
+	
 }

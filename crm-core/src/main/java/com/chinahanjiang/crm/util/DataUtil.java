@@ -17,6 +17,7 @@ import com.chinahanjiang.crm.dto.GroupsDto;
 import com.chinahanjiang.crm.dto.ItemDto;
 import com.chinahanjiang.crm.dto.ProductConfigurationDto;
 import com.chinahanjiang.crm.dto.ProductDto;
+import com.chinahanjiang.crm.dto.ProductPropertyDto;
 import com.chinahanjiang.crm.dto.ProductQuoteDto;
 import com.chinahanjiang.crm.dto.TaskDto;
 import com.chinahanjiang.crm.dto.TaskTypeDto;
@@ -30,6 +31,7 @@ import com.chinahanjiang.crm.pojo.Product;
 import com.chinahanjiang.crm.pojo.ProductAndQuoteRelation;
 import com.chinahanjiang.crm.pojo.ProductCatalog;
 import com.chinahanjiang.crm.pojo.ProductConfiguration;
+import com.chinahanjiang.crm.pojo.ProductProperty;
 import com.chinahanjiang.crm.pojo.ProductQuote;
 import com.chinahanjiang.crm.pojo.Task;
 import com.chinahanjiang.crm.pojo.TaskType;
@@ -623,7 +625,7 @@ public class DataUtil {
 				pd.setProductCatalog(p.getProductCatalog() == null ? "" : p
 						.getProductCatalog().getName());
 				pd.setRemarks(p.getRemarks());
-				pd.setStandardPrice(p.getStandardPrice());
+				pd.setStandardPrice(Double.toString(p.getStandardPrice()));
 				pd.setUserId(p.getUser() == null ? 0 : p.getUser().getId());
 				pd.setUser(p.getUser() == null ? "" : p.getUser().getName());
 				pd.setMixNum(p.getProductMix() == null ? 0 : p.getProductMix()
@@ -632,7 +634,11 @@ public class DataUtil {
 						.format(p.getCreateTime()));
 				pd.setUpdateTime(p.getUpdateTime() == null ? "" : sdf_dt
 						.format(p.getUpdateTime()));
-
+				pd.setEname(p.getEname());
+				pd.setUnit(p.getUnit()==null?"":p.getUnit().getName());
+				pd.setUnitId(p.getUnit()==null?0:p.getUnit().getId());
+				pd.setFullProductCatalog(p.getProductCatalog() == null ? "" : p
+						.getProductCatalog().getName());
 				pds.add(pd);
 			}
 		}
@@ -666,7 +672,7 @@ public class DataUtil {
 				etd.setId(pc.getId());
 				etd.setText(pc.getName());
 				etd.setState(pc.getState());
-
+				etd.setIsF(pc.getIsF());
 				etds.add(etd);
 			}
 		}
@@ -723,7 +729,7 @@ public class DataUtil {
 			pd.setName(p.getName());
 			pd.setShortCode(p.getShortCode());
 			pd.setCode(p.getCode());
-			pd.setStandardPrice(p.getStandardPrice());
+			pd.setStandardPrice(Double.toString(p.getStandardPrice()));
 			pd.setRemarks(p.getRemarks());
 		}
 
@@ -790,6 +796,7 @@ public class DataUtil {
 						.format(pcf.getCreateTime()));
 				pcfd.setUpdateTime(pcf.getUpdateTime() == null ? "" : sdf_dt
 						.format(pcf.getUpdateTime()));
+				pcfd.setUnit(pcf.getSproduct().getUnit().getName());
 
 				pcfds.add(pcfd);
 			}
@@ -890,6 +897,7 @@ public class DataUtil {
 				pcfd.setUpdateTime(pqr.getUpdateTime() == null ? "" : sdf_dt
 						.format(pqr.getUpdateTime()));
 
+				pcfd.setUnit(pqr.getProduct().getUnit().getName());
 				pcfds.add(pcfd);
 			}
 		}
@@ -938,5 +946,30 @@ public class DataUtil {
 		ttd.setUserId(tt.getUser() == null ? 0 : tt.getUser().getId());
 		
 		return ttd;
+	}
+
+	public static List<ProductPropertyDto> convertPropertiesToDto(
+			List<ProductProperty> productProperties) {
+		
+		List<ProductPropertyDto> ppds = new ArrayList<ProductPropertyDto>();
+		if(productProperties!=null){
+			
+			Iterator<ProductProperty> it = productProperties.iterator();
+			while(it.hasNext()){
+				
+				ProductProperty pp = it.next();
+				ProductPropertyDto ppd = new ProductPropertyDto();
+				ppd.setId(pp.getId());
+				ppd.setName(pp.getName());
+				ppd.setValue(pp.getValue());
+				ppd.setEname(pp.getEname());
+				ppd.setEvalue(pp.getEvalue());
+				ppd.setRemarks(pp.getRemarks());
+				
+				ppds.add(ppd);
+			}
+		}
+		
+		return ppds;
 	}
 }

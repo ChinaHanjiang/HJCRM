@@ -53,6 +53,8 @@
 		<mapping class="com.chinahanjiang.crm.pojo.ProductCatalog" />
 		<mapping class="com.chinahanjiang.crm.pojo.ProductQuote" />
 		<mapping class="com.chinahanjiang.crm.pojo.ProductQuoteDetails" />
+		<mapping class="com.chinahanjiang.crm.pojo.ProductProperty" />
+		<mapping class="com.chinahanjiang.crm.pojo.Unit" />
 		
 	</session-factory>
 </hibernate-configuration>

@@ -28,7 +28,7 @@ import org.hibernate.annotations.FetchMode;
 @Table(name = "Product")
 public class Product {
 
-	private int id;
+	private Integer id;
 	
 	private String name;
 	
@@ -38,7 +38,7 @@ public class Product {
 	
 	private String code;
 	
-	private int orders;
+	private Integer orders;
 	
 	private ProductCatalog productCatalog;
 	
@@ -56,7 +56,7 @@ public class Product {
 	
 	private double definePrice;
 	
-	private int isDelete;
+	private Integer isDelete;
 	
 	private User user;
 	
@@ -65,8 +65,6 @@ public class Product {
 	private Timestamp updateTime;
 	
 	private String remarks;
-	
-	private String eremarks;
 	
 	private Unit unit;
 	
@@ -77,12 +75,12 @@ public class Product {
 		this.isDelete = 1;
 	}
 
-	public Product(int id, String name, String code, List<Product> productMix,
+	public Product(Integer id, String name, String code, List<Product> productMix,
 			List<Product> beyongProduct, ProductCatalog productCatalog, double standardPrice, 
-			double definePrice, int isDelete, User user,Timestamp createTime,
+			double definePrice, Integer isDelete, User user,Timestamp createTime,
 			Timestamp updateTime, String remarks, List<ProductAndQuoteRelation> quoteProducts,
 			List<Task> tasks, List<Item> items, Unit unit, List<ProductProperty> properties,
-			String ename, String eremarks) {
+			String ename) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -101,17 +99,16 @@ public class Product {
 		this.unit = unit;
 		this.properties = properties;
 		this.ename = ename;
-		this.eremarks = eremarks;
 	}
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "p_id", unique = true, nullable = false)
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -162,11 +159,11 @@ public class Product {
 	}
 
 	@Column(name = "p_isdelete")
-	public int getIsDelete() {
+	public Integer getIsDelete() {
 		return isDelete;
 	}
 
-	public void setIsDelete(int isDelete) {
+	public void setIsDelete(Integer isDelete) {
 		this.isDelete = isDelete;
 	}
 
@@ -264,12 +261,12 @@ public class Product {
 		this.shortCode = shortCode;
 	}
 
-	@Column(name = "p_oders")
-	public int getOrders() {
+	@Column(name = "p_oders" ,nullable=true)
+	public Integer getOrders() {
 		return orders;
 	}
 
-	public void setOrders(int orders) {
+	public void setOrders(Integer orders) {
 		this.orders = orders;
 	}
 
@@ -293,22 +290,13 @@ public class Product {
 		this.properties = properties;
 	}
 
-	@Column(name = "p_ename")
+	@Column(name = "p_ename" , nullable=true)
 	public String getEname() {
 		return ename;
 	}
 
 	public void setEname(String ename) {
 		this.ename = ename;
-	}
-
-	@Column(name = "p_eremarks")
-	public String getEremarks() {
-		return eremarks;
-	}
-
-	public void setEremarks(String eremarks) {
-		this.eremarks = eremarks;
 	}
 
 	@Override

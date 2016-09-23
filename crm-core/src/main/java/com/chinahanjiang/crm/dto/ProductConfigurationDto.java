@@ -29,6 +29,10 @@ public class ProductConfigurationDto {
 	private String updateTime;
 	
 	private String remarks;
+	
+	private String unit;
+	
+	private int orders;
 
 	public int getId() {
 		return id;
@@ -141,4 +145,21 @@ public class ProductConfigurationDto {
 	public void setDefinedPrice(Double definedPrice) {
 		this.definedPrice = definedPrice;
 	}
+
+	public String getUnit() {
+		return unit;
+	}
+
+	public void setUnit(String unit) {
+		this.unit = unit;
+	}
+
+	public int getOrders() {
+		return orders;
+	}
+
+	public void setOrders(int orders) {
+		this.orders = orders;
+	}
+	
 }

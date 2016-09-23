@@ -23,6 +23,7 @@ import com.chinahanjiang.crm.pojo.ProductAndQuoteRelation;
 import com.chinahanjiang.crm.pojo.ProductQuoteDetails;
 import com.chinahanjiang.crm.pojo.Task;
 import com.chinahanjiang.crm.pojo.TaskType;
+import com.chinahanjiang.crm.pojo.Unit;
 import com.chinahanjiang.crm.service.CustomerService;
 import com.chinahanjiang.crm.service.GroupsService;
 import com.chinahanjiang.crm.service.ItemService;
@@ -33,6 +34,7 @@ import com.chinahanjiang.crm.service.ProductQuoteService;
 import com.chinahanjiang.crm.service.ProductService;
 import com.chinahanjiang.crm.service.TaskService;
 import com.chinahanjiang.crm.service.TaskTypeService;
+import com.chinahanjiang.crm.service.UnitService;
 
 @Controller
 @ParentPackage("default")
@@ -54,7 +56,10 @@ import com.chinahanjiang.crm.service.TaskTypeService;
 	@Result(name = "itemlist", location = "/WEB-INF/content/task/itemlist.jsp"),
 	@Result(name = "quote", location = "/WEB-INF/content/quote/quotewindow.jsp"),
 	@Result(name = "taskdetail", location = "/WEB-INF/content/task/taskdetail.jsp"),
-	@Result(name = "itemdetail", location = "/WEB-INF/content/task/itemdetail.jsp")})
+	@Result(name = "itemdetail", location = "/WEB-INF/content/task/itemdetail.jsp"),
+	@Result(name = "addproduct", location = "/WEB-INF/content/product/productedit.jsp"),
+	@Result(name = "modifyproduct", location = "/WEB-INF/content/product/productedit.jsp"),
+	@Result(name = "productdetail", location = "/WEB-INF/content/product/productdetails.jsp")})
 @ExceptionMappings({ @ExceptionMapping(exception = "java.lange.RuntimeException", result = "error") })
 public class WinAction extends BaseAction {
 
@@ -90,6 +95,9 @@ public class WinAction extends BaseAction {
 	@Resource
 	private ProductQuoteService productQuoteServices;
 	
+	@Resource
+	private UnitService unitService;
+	
 	private List<Location> locations;
 	
 	private List<Groups> groups;
@@ -106,6 +114,8 @@ public class WinAction extends BaseAction {
 	
 	private List<ProductAndQuoteRelation> paqrs;
 	
+	private List<Unit> units;
+	
 	private Item item;
 	
 	private int taskId;
@@ -120,6 +130,26 @@ public class WinAction extends BaseAction {
 	
 	private int type; //1-add,2-modify
 	
+	private int productId;
+	
+	private Product product;
+	
+	public int getProductId() {
+		return productId;
+	}
+
+	public void setProductId(int productId) {
+		this.productId = productId;
+	}
+
+	public Product getProduct() {
+		return product;
+	}
+
+	public void setProduct(Product product) {
+		this.product = product;
+	}
+
 	public int getType() {
 		return type;
 	}
@@ -238,6 +268,14 @@ public class WinAction extends BaseAction {
 
 	public void setPqds(List<ProductQuoteDetails> pqds) {
 		this.pqds = pqds;
+	}
+
+	public List<Unit> getUnits() {
+		return units;
+	}
+
+	public void setUnits(List<Unit> units) {
+		this.units = units;
 	}
 
 	@Action("customerlist")
@@ -372,5 +410,32 @@ public class WinAction extends BaseAction {
 		}
 		
 		return "itemdetail";
+	}
+	
+	@Action("addproduct")
+	public String addproduct(){
+		
+		this.type = 1;
+		units = unitService.findAllUnits();
+		
+		return "addproduct";
+	}
+	
+	@Action("modifyproduct")
+	public String modifyProduct(){
+		
+		this.type = 2;
+		product = productService.findById(productId);
+		System.out.println(product);
+		units = unitService.findAllUnits();
+		
+		return "modifyproduct";
+	}
+	
+	@Action("productdetail")
+	public String productDetail(){
+		
+		product = productService.findById(productId);
+		return "productdetail";
 	}
 }

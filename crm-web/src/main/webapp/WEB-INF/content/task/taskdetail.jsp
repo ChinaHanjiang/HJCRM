@@ -53,10 +53,10 @@
 		
 		$('#i_editItem').click(function(){
 			
-			var row = $('#itemgrid').datagrid("getSelected");
-			if(row!=null){
+			var row = $('#itemgrid').datagrid("getSelections");
+			if(row!=null && row.length == 1){
 				
-				var i_id = row.id;
+				var i_id = row[0].id;
 				
 				var newObj = {
 						 
@@ -69,7 +69,7 @@
 				 
 			} else {
 				
-				$.messager.alert('注意', '请选择行数据!',
+				$.messager.alert('注意', '请选择1行数据!',
 				'info');
 			}
 		});
