@@ -15,6 +15,7 @@ import com.chinahanjiang.crm.dto.DataListDto;
 import com.chinahanjiang.crm.dto.EyTreeDto;
 import com.chinahanjiang.crm.dto.GroupsDto;
 import com.chinahanjiang.crm.dto.ItemDto;
+import com.chinahanjiang.crm.dto.ProductCatalogDto;
 import com.chinahanjiang.crm.dto.ProductConfigurationDto;
 import com.chinahanjiang.crm.dto.ProductDto;
 import com.chinahanjiang.crm.dto.ProductPropertyDto;
@@ -971,5 +972,36 @@ public class DataUtil {
 		}
 		
 		return ppds;
+	}
+
+	public static List<ProductCatalogDto> convertProductCatalogToProductCatalogDto(
+			List<ProductCatalog> pcs) {
+		
+		List<ProductCatalogDto> pcds = new ArrayList<ProductCatalogDto>();
+		if(pcs!=null){
+			
+			Iterator<ProductCatalog> it = pcs.iterator();
+			while(it.hasNext()){
+				
+				ProductCatalog pc = it.next();
+				
+				ProductCatalogDto pcd = new ProductCatalogDto();
+				pcd.setId(pc.getId());
+				pcd.setName(pc.getName());
+				pcd.setEname(pc.getEname());
+				pcd.setCode(pc.getCode());
+				pcd.setParentId(pc.getParentCatalog()==null?0:pc.getParentCatalog().getId());
+				pcd.setParentName(pc.getParentCatalog()==null?"":pc.getParentCatalog().getName());
+				pcd.setCreateTime(pc.getCreateTime() == null ? "" : sdf_dt
+						.format(pc.getCreateTime()));
+				pcd.setUpdateTime(pc.getUpdateTime() == null ? "" : sdf_dt
+						.format(pc.getUpdateTime()));
+				pcd.setRemarks(pc.getRemarks());
+				
+				pcds.add(pcd);
+			}
+		}
+		
+		return pcds;
 	}
 }

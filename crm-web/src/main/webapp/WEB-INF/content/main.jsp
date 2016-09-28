@@ -160,6 +160,11 @@
 						<img alt="产品管理" src="<%=basePath%>icon/key_blue.png">
 						<div>产品管理</div>
 					</div>
+					<div style="padding-top: 10px; cursor: pointer;"
+						onclick="addPanel('catalogManager','产品类型列表','<%=basePath%>win/cataloglist.do')">
+						<img alt="产品类型列表" src="<%=basePath%>icon/key_blue.png">
+						<div>产品类型管理</div>
+					</div>
 				</div>
 			</div>
 		</div>

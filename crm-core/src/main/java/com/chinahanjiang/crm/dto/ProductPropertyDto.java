@@ -15,6 +15,8 @@ public class ProductPropertyDto {
 	private String evalue;
 	
 	private String remarks;
+	
+	private int productId;
 
 	public int getId() {
 		return id;
@@ -71,4 +73,13 @@ public class ProductPropertyDto {
 	public void setRemarks(String remarks) {
 		this.remarks = remarks;
 	}
+
+	public int getProductId() {
+		return productId;
+	}
+
+	public void setProductId(int productId) {
+		this.productId = productId;
+	}
+	
 }

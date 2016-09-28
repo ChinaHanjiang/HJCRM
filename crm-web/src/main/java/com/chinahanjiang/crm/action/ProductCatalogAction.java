@@ -2,6 +2,7 @@ package com.chinahanjiang.crm.action;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
@@ -18,12 +19,14 @@ import org.springframework.stereotype.Controller;
 
 import com.chinahanjiang.crm.dto.MessageDto;
 import com.chinahanjiang.crm.dto.ProductCatalogDto;
+import com.chinahanjiang.crm.dto.SearchResultDto;
 import com.chinahanjiang.crm.service.ProductCatalogService;
 
 @Controller
 @ParentPackage("ajaxdefault")
 @Namespace("/catalog")
 @Results({ @Result(name = "error", location = "/error.jsp"),
+	@Result(name="gridlist",type="json"),
 	@Result(name="list",type="json"),
 	@Result(name="add",type="json"),
 	@Result(name="modify",type="json"),
@@ -37,6 +40,16 @@ public class ProductCatalogAction extends BaseAction {
 	@Resource
 	private ProductCatalogService productCatalogService;
 	
+	private List<Object> rows;
+
+	private int total;
+
+	private int page;
+
+	private String sort;
+
+	private String order;
+	
 	private String pcTree;
 	
 	private ProductCatalogDto pcd;
@@ -45,6 +58,16 @@ public class ProductCatalogAction extends BaseAction {
 	
 	private int id;
 	
+	private int parentCatalogId;
+	
+	public int getParentCatalogId() {
+		return parentCatalogId;
+	}
+
+	public void setParentCatalogId(int parentCatalogId) {
+		this.parentCatalogId = parentCatalogId;
+	}
+
 	public MessageDto getMd() {
 		return md;
 	}
@@ -76,7 +99,66 @@ public class ProductCatalogAction extends BaseAction {
 	public void setId(int id) {
 		this.id = id;
 	}
+	
+	public List<Object> getRows() {
+		return rows;
+	}
 
+	public void setRows(List<Object> rows) {
+		this.rows = rows;
+	}
+
+	public int getTotal() {
+		return total;
+	}
+
+	public void setTotal(int total) {
+		this.total = total;
+	}
+
+	public int getPage() {
+		return page;
+	}
+
+	public void setPage(int page) {
+		this.page = page;
+	}
+
+	public String getSort() {
+		return sort;
+	}
+
+	public void setSort(String sort) {
+		this.sort = sort;
+	}
+
+	public String getOrder() {
+		return order;
+	}
+
+	public void setOrder(String order) {
+		this.order = order;
+	}
+
+	@Action("gridlist")
+	public String gridlist(){
+		
+		int row = Integer
+				.parseInt(this.httpServletRequest.getParameter("rows") == null ? "10"
+						: this.httpServletRequest.getParameter("rows"));
+		
+		
+		SearchResultDto srd = new SearchResultDto();
+		
+		srd = productCatalogService.searchAndCount(this.parentCatalogId,this.order, this.sort,
+				this.page, row);
+		
+		this.rows.clear();
+		this.rows.addAll(srd.getRows());
+		this.total = srd.getTotal();
+		return "gridlist";
+	}
+	
 	@Action("list")
 	public String list(){
 		

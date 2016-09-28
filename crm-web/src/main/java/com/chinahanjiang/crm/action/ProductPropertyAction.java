@@ -24,7 +24,10 @@ import com.chinahanjiang.crm.util.Constant;
 @ParentPackage("ajaxdefault")
 @Namespace("/productproperty")
 @Results({ @Result(name = "error", location = "/error.jsp"),
-	@Result(name="list",type="json")
+	@Result(name="list",type="json"),
+	@Result(name="add",type="json"),
+	@Result(name="modify",type="json"),
+	@Result(name="delete",type="json")
 	})
 @ExceptionMappings({ @ExceptionMapping(exception = "java.lange.RuntimeException", result = "error") })
 public class ProductPropertyAction extends BaseAction {
@@ -146,7 +149,7 @@ public class ProductPropertyAction extends BaseAction {
 		return "modify";
 	}
 	
-	@Action("delete")
+	@Action("del")
 	public String delete(){
 		
 		md = productPropertyService.delete(ppd);

@@ -14,10 +14,12 @@ import org.springframework.transaction.annotation.Transactional;
 import com.chinahanjiang.crm.dao.ProductCatalogDao;
 import com.chinahanjiang.crm.dto.MessageDto;
 import com.chinahanjiang.crm.dto.ProductCatalogDto;
+import com.chinahanjiang.crm.dto.SearchResultDto;
 import com.chinahanjiang.crm.pojo.ProductCatalog;
 import com.chinahanjiang.crm.service.ProductCatalogService;
 import com.chinahanjiang.crm.util.DataUtil;
 import com.googlecode.genericdao.search.Search;
+import com.googlecode.genericdao.search.SearchResult;
 
 @Service("productCatalogService")
 @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
@@ -120,6 +122,7 @@ public class ProductCatalogServiceImpl implements ProductCatalogService {
 		if(productCatalog != null){
 			
 			productCatalog.setName(pcd.getName());
+			productCatalog.setEname(pcd.getEname());
 			productCatalog.setCode(pcd.getCode());
 			
 			productCatalog.setParentCatalog(pProductCatalog);
@@ -150,33 +153,32 @@ public class ProductCatalogServiceImpl implements ProductCatalogService {
 		
 		MessageDto md = new MessageDto();
 		ProductCatalog productCatalog = new ProductCatalog();
-		int id = pcd.getId();
 		
-		if(id == 0){
+		String ids = pcd.getIds();
+		String[] arrs = ids.split(",");
+		if(arrs.length == 0){
 			
 			md.setMessage("删除产品类型信息不全，删除失败!");
 			md.setT(false);
 			return md;
 			
-		} else {
+		}else {
 			
-			productCatalog = findById(id);
-			if(productCatalog!=null){
+			for(String i : arrs){
 				
-				delete(productCatalog);
-				
-				/*需要看父类别还有没子类别,需不需要把closed去掉*/
-				
-				
-				
-				md.setMessage("删除产品类型成功！");
-				md.setT(true);
-			} else {
-				
-				md.setMessage("产品类型信息不存在！");
-				md.setT(false);
+				int id = Integer.valueOf(i);
+				productCatalog = findById(id);
+				if(productCatalog!=null){
+					
+					delete(productCatalog);
+					
+					/*需要看父类别还有没子类别,需不需要把closed去掉*/
+				}
 			}
-			
+
+			md.setMessage("删除产品类型成功！");
+			md.setT(true);
+		
 			return md;
 		}
 	}
@@ -285,7 +287,10 @@ public class ProductCatalogServiceImpl implements ProductCatalogService {
 	private String generateStrForTree(ProductCatalog pc){
 		
 		String str = "";
-		List<ProductCatalog> pcs = pc.getChildPcs();
+		Search search = new Search();
+		search.addFilterEqual("isDelete", 1);
+		search.addFilterEqual("parentCatalog", pc);
+		List<ProductCatalog> pcs = productCatalogDao.search(search);
 		str = DataUtil.productCatalogToJson(pcs);
 		return str;
 	}
@@ -313,6 +318,49 @@ public class ProductCatalogServiceImpl implements ProductCatalogService {
 			c = productCatalogDao.searchUnique(search);
 		}
 		return c;
+	}
+
+	@Override
+	public SearchResultDto searchAndCount(int id, String order,
+			String sort, int page, int row) {
+		
+		ProductCatalog pc;
+		if(id != 0){
+			
+			pc = findById(id);
+			
+		} else {
+			
+			pc = findProductCatalogByCode("HJP");
+		
+		}
+		
+		Search search = new Search();
+		search.addFilterEqual("isDelete", 1);
+		if(pc!=null){
+			
+			search.addFilterEqual("parentCatalog", pc);
+		}
+		
+		search.setMaxResults(row);
+		search.setPage(page - 1 < 0 ? 0 : page - 1);
+		SearchResult<ProductCatalog> result = searchAndCount(search);
+		List<ProductCatalog> pcs = result.getResult();
+
+		List<ProductCatalogDto> pcds = DataUtil.convertProductCatalogToProductCatalogDto(pcs);
+		int records = result.getTotalCount();
+
+		SearchResultDto srd = new SearchResultDto();
+		srd.getRows().clear();
+		srd.getRows().addAll(pcds);
+		srd.setTotal(records);
+
+		return srd;
+	}
+
+	private SearchResult<ProductCatalog> searchAndCount(Search search) {
+		
+		return productCatalogDao.searchAndCount(search);
 	}
 
 }

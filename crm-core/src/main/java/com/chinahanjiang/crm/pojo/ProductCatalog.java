@@ -130,7 +130,7 @@ public class ProductCatalog {
 		this.order = order;
 	}
 
-	@ManyToOne(fetch=FetchType.LAZY)
+	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="pc_pid")
 	public ProductCatalog getParentCatalog() {
 		return parentCatalog;

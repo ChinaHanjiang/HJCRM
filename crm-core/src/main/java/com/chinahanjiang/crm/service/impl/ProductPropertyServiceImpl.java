@@ -65,8 +65,13 @@ public class ProductPropertyServiceImpl implements ProductPropertyService {
 		String message = "";
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		ProductProperty pp = null;
-		int uid = ud.getId();
-		User user = userService.findById(uid);
+		User user = null;
+		if(ud!=null){
+			int uid = ud.getId();
+			user = userService.findById(uid);
+		}
+		int pid = ppd.getProductId();
+		Product p = productService.findById(pid);
 		
 		int ppId = ppd.getId();
 		if(ppId!=0){
@@ -97,6 +102,7 @@ public class ProductPropertyServiceImpl implements ProductPropertyService {
 			pp.setEname(ppd.getEname());
 			pp.setEvalue(ppd.getEvalue());
 			pp.setRemarks(ppd.getRemarks());
+			pp.setProduct(p);
 			
 			save(pp);
 			

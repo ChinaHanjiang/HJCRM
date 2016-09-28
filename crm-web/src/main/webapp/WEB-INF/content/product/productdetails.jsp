@@ -57,7 +57,6 @@
 			$('#pp_bsubmit').show();
 			$('#pp_bmodify').hide();
 			
-			
 			$('#addPropertyWin').window('open');
 		});
 		
@@ -112,7 +111,7 @@
 							 
 							$.ajax({
 								type: "POST",
-								url: "<%=basePath%>productproperty/del.do?ppd.id=" + p_id,
+								url: "<%=basePath%>productproperty/del.do?ppd.ids=" + id,
 								cache: false,
 					        	dataType : "json",
 					        	success:function(data){
@@ -142,7 +141,7 @@
 			var pp_name = $('#pp_name').textbox('getText');
 			var pp_value = $('#pp_value').textbox('getText');
 			var pp_ename = $('#pp_ename').textbox('getText');
-			var pp_value = $('#pp_evalue').textbox('getText');
+			var pp_evalue = $('#pp_evalue').textbox('getText');
 			var pp_remarks = $('#pp_remarks').textbox('getText');
 			
 			var l = $('#addPropertyWinForm').form('enableValidation').form('validate');
@@ -154,6 +153,7 @@
 				str += "&ppd.ename=" + pp_ename;
 				str += "&ppd.evalue=" + pp_evalue;
 				str += "&ppd.remarks=" + pp_remarks;
+				str += "&ppd.productId=" + _p_id;
 				
 				$.ajax({
 					 type:"POST",
@@ -167,7 +167,8 @@
 		    				 
 		    				 $.messager.alert('成功', _data.message,
 								'info');
-		    				 $("#productgrid").datagrid('reload');
+		    				 $('#addPropertyWin').window('close');
+		    				 $("#productPropertyGrid").datagrid('reload');
 		    				 
 		    			 } else {
 		    				 
@@ -187,7 +188,7 @@
 			var pp_name = $('#pp_name').textbox('getText');
 			var pp_value = $('#pp_value').textbox('getText');
 			var pp_ename = $('#pp_ename').textbox('getText');
-			var pp_value = $('#pp_evalue').textbox('getText');
+			var pp_evalue = $('#pp_evalue').textbox('getText');
 			var pp_remarks = $('#pp_remarks').textbox('getText');
 			
 			var str = '';
@@ -196,12 +197,13 @@
 			var l = $('#addPropertyWinForm').form('enableValidation').form('validate');
 			if(l){
 				
-				str += "ppd.id=" + _p_id;
+				str += "ppd.id=" + _pp_id;
 				str += "&ppd.name=" + pp_name;
 				str += "&ppd.value=" + pp_value;
 				str += "&ppd.ename=" + pp_ename;
 				str += "&ppd.evalue=" + pp_evalue;
 				str += "&ppd.remarks=" + pp_remarks;
+				str += "&ppd.productId=" + _p_id;
 				
 				if(_pp_name != pp_name){
 					
@@ -238,7 +240,8 @@
 			    				 
 			    				 $.messager.alert('成功', _data.message,
 									'info');
-			    				 $("#productgrid").datagrid('reload');
+			    				 $('#addPropertyWin').window('close');
+			    				 $("#productPropertyGrid").datagrid('reload');
 			    				 
 			    			 } else {
 			    				 
@@ -322,10 +325,7 @@
 					singleSelect:false,
 					autoRowHeight:true,
 					autoRowWidth:true,
-					sortOrder:'desc',
-					toolbar: '#pp_tb' ,
-					onClickCell: onClickCell,
-					onEndEdit: onEndEdit
+					toolbar: '#pp_tb' 
 					">
 				<thead>
 					<tr>
@@ -469,43 +469,43 @@
 	<!-- 添加产品属性窗口 -->
 	<div id="addPropertyWin" class="easyui-window" title="添加产品属性"
 		data-options="modal:true,closed:true,iconCls:'icon-save',minimizable:false,collapsible:false,maximizable:false"
-		style="width: 480px; height: 160px; padding: 10px;">
+		style="width: 480px; height: 300px; padding: 10px;">
 		<div align="center">
 		
 			<form id="addPropertyWinForm" method="post">
 				<table cellpadding="5">
 					<tr>
 						<td>中文名称:</td>
-						<td><input id="pp_cname" class="easyui-textbox"
-							style="width: 200px" type="text" name="cname"
+						<td><input id="pp_name" class="easyui-textbox"
+							style="width: 200px" type="text" name="f_pp_name"
 							data-options="required:true"></input>
 							</td>
 					</tr>
 					<tr>
 						<td>中文数值:</td>
-						<td><input id="pp_cvalue" class="easyui-textbox"
-							style="width: 200px" type="text" name="cname"
+						<td><input id="pp_value" class="easyui-textbox"
+							style="width: 200px" type="text" name="f_pp_value"
 							data-options="required:true"></input>
 							</td>
 					</tr>
 					<tr>
 						<td>英文名称:</td>
 						<td><input id="pp_ename" class="easyui-textbox"
-							style="width: 200px" type="text" name="cname"
+							style="width: 200px" type="text" name="f_pp_ename"
 							data-options="required:true"></input>
 							</td>
 					</tr>
 					<tr>
 						<td>英文数值:</td>
 						<td><input id="pp_evalue" class="easyui-textbox"
-							style="width: 200px" type="text" name="cname"
+							style="width: 200px" type="text" name="f_pp_evalue"
 							data-options="required:true"></input>
 							</td>
 					</tr>
 					<tr>
 						<td>备注:</td>
 						<td><input id="pp_remarks" class="easyui-textbox"
-							style="width: 200px" type="text" name="cname"
+							style="width: 200px" type="text" name="f_pp_remarks"
 							data-options="required:true"></input>
 							</td>
 					</tr>

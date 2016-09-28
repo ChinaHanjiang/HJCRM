@@ -78,7 +78,7 @@
 							 
 							 $.ajax({
 									type: "POST",
-									url: "<%=basePath%>product/del.do?pd.ids=" + p_id,
+									url: "<%=basePath%>product/del.do?pd.ids=" + id,
 									cache: false,
 						        	dataType : "json",
 						        	success:function(data){

@@ -257,7 +257,6 @@
 			    				 /* $.messager.alert('成功', _data.message,
 									'info'); */
 								/*成功，跳转到"产品详情"页面*/
-								
 			    				 var newObj = {
 			    						 id:'productdetail',
 			    						 title:'产品详情',
@@ -304,6 +303,18 @@
 			}
 		});
 		
+		$('#addCatalog').click(function(){
+			
+			 var newObj = {
+				 id:'catalogManager',
+				 title:'产品类型列表',
+				 href:'<%=basePath%>win/cataloglist.do'
+			 };
+			 
+			 parent.openPanel(newObj);
+			
+		});
+		
 	});
 </script>
 <title>类型列表</title>
@@ -332,7 +343,8 @@
 						<td>产品类型:</td>
 						<td>
 							<input id="pu_catalog" class="easyui-combotree" name="f_p_catalog" 
-							data-options="" style="width:100%">
+							data-options="" style="width:180px;">
+							<img id="addCatalog" style="" alt="11111" src="<%=basePath %>icon/c_add.png" />
 						</td>
 					</tr>
 					<tr id="p_shotcode">
