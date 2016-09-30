@@ -1,9 +1,11 @@
 package com.chinahanjiang.crm.action;
 
+import java.io.File;
 import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.ExceptionMapping;
 import org.apache.struts2.convention.annotation.ExceptionMappings;
@@ -314,10 +316,17 @@ public class TaskAction extends BaseAction {
 	
 	@Action("add")
 	public String add(){
-	
+		
 		UserDto u = (UserDto) this.session.get(Constant.USERKEY);
 		md = taskService.update(td,u);
-				
+		
+		int tid = md.getIntF();
+		String root = ServletActionContext.getServletContext().getRealPath("/uploadfile");
+		File file =new File(root + "\\" + tid ); 
+		
+		if(!file .exists()  && !file .isDirectory()){
+			file .mkdir();
+		}
 		return "add";
 	}
 	

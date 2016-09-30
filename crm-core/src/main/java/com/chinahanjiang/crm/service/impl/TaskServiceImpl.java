@@ -436,4 +436,10 @@ public class TaskServiceImpl implements TaskService {
 		return md;
 	}
 
+	@Override
+	public List<Task> findAllTask() {
+		
+		return taskDao.findAll();
+	}
+
 }

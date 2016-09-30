@@ -75,7 +75,7 @@ public class FileUploadAction extends BaseAction {
 
 		System.out.println("right");
 
-String root = ServletActionContext.getServletContext().getRealPath("/uploadfile");
+		String root = ServletActionContext.getServletContext().getRealPath("/uploadfile");
         
         InputStream is = new FileInputStream(file);
         

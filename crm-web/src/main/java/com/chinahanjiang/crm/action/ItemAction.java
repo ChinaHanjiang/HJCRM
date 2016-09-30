@@ -1,10 +1,12 @@
 package com.chinahanjiang.crm.action;
 
+import java.io.File;
 import java.sql.Timestamp;
 import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.ExceptionMapping;
 import org.apache.struts2.convention.annotation.ExceptionMappings;
@@ -19,6 +21,7 @@ import com.chinahanjiang.crm.dto.MessageDto;
 import com.chinahanjiang.crm.dto.SearchResultDto;
 import com.chinahanjiang.crm.dto.TaskDto;
 import com.chinahanjiang.crm.dto.UserDto;
+import com.chinahanjiang.crm.service.ItemAttachmentService;
 import com.chinahanjiang.crm.service.ItemService;
 import com.chinahanjiang.crm.service.TaskService;
 import com.chinahanjiang.crm.util.Constant;
@@ -36,7 +39,8 @@ import com.chinahanjiang.crm.util.DateUtil;
 	@Result(name="delete",type="json"),
 	@Result(name="check",type="json"),
 	@Result(name="checkstatus",type="json"),
-	@Result(name="addquote",type="json")})
+	@Result(name="addquote",type="json"),
+	@Result(name="saveattachments",type="json")})
 @ExceptionMappings({ @ExceptionMapping(exception = "java.lange.RuntimeException", result = "error") })
 public class ItemAction extends BaseAction {
 
@@ -47,6 +51,9 @@ public class ItemAction extends BaseAction {
 	
 	@Resource
 	private TaskService taskService;
+	
+	@Resource
+	private ItemAttachmentService itemAttachmentService;
 	
 	private MessageDto md;
 	
@@ -195,6 +202,14 @@ public class ItemAction extends BaseAction {
 		UserDto ud = (UserDto) this.session.get(Constant.USERKEY);
 		md = itemService.update(id,td,ud);
 		
+		int tid = md.getIntF();
+		String root = ServletActionContext.getServletContext().getRealPath("/uploadfile");
+		File file =new File(root + "\\" + td.getId() + "\\" + tid ); 
+		
+		if(!file .exists()  && !file .isDirectory()){
+			file .mkdir();
+		}
+		
 		return "add";
 	}
 	
@@ -237,5 +252,14 @@ public class ItemAction extends BaseAction {
 		md = itemService.addQuoteItem(td,ud);
 		
 		return "addquote";
+	}
+	
+	@Action("saveattttachments")
+	public String saveAttachements(){
+		
+		UserDto ud = (UserDto) this.session.get(Constant.USERKEY);
+		md = itemAttachmentService.save(id,ud);
+		
+		return "saveattachments";
 	}
 }

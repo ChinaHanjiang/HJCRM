@@ -17,6 +17,14 @@ public class DataUtilTest {
 	}
 
 	@Test
+	public void testSplit(){
+		
+		String st = "\\20\\89\\CorelDRAW_X7_keygen.zip";
+		String[] s = st.split("\\\\");
+		System.out.println(s.length);
+	}
+	
+	@Test
 	public void testGson() {
 
 		String insert = "[{'productCatalogId':7,'productId':5,'productCatalog':'缝焊机','name':'半自动缝焊机FH-3A'},{'productCatalogId':8,'productId':8,'productCatalog':'粉末喷涂机','name':'粉末喷涂机FM-5'}]";

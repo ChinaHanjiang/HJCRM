@@ -19,6 +19,8 @@
 	<constant name="struts.action.extension" value="do,action,jhtml" />
 	<!-- Struts Annotation -->
 	<constant name="actionPackages" value="com.chinahanjiang.crm" />
+	<!-- 文件上传的最大字节 -->
+	<constant name="struts.multipart.maxSize" value="100000000"/> 
 	
 	<package name="default" extends="struts-default">
 		 

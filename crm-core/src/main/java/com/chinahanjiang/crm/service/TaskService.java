@@ -1,5 +1,7 @@
 package com.chinahanjiang.crm.service;
 
+import java.util.List;
+
 import com.chinahanjiang.crm.dto.MessageDto;
 import com.chinahanjiang.crm.dto.SearchResultDto;
 import com.chinahanjiang.crm.dto.TaskDto;
@@ -30,5 +32,7 @@ public interface TaskService {
 	SearchResultDto searchAndCount(String order, String sort, int page,
 			int row, String begin, String end, int status, int taskId,
 			int tasktypeId, String name, String customerName);
+	
+	List<Task> findAllTask();
 
 }

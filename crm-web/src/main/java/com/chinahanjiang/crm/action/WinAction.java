@@ -60,7 +60,8 @@ import com.chinahanjiang.crm.service.UnitService;
 	@Result(name = "addproduct", location = "/WEB-INF/content/product/productedit.jsp"),
 	@Result(name = "modifyproduct", location = "/WEB-INF/content/product/productedit.jsp"),
 	@Result(name = "productdetail", location = "/WEB-INF/content/product/productdetails.jsp"),
-	@Result(name = "cataloglist", location = "/WEB-INF/content/product/productcataloglist.jsp")})
+	@Result(name = "cataloglist", location = "/WEB-INF/content/product/productcataloglist.jsp"),
+	@Result(name = "uploadtest", location = "/WEB-INF/content/upload/uploadtest.jsp")})
 @ExceptionMappings({ @ExceptionMapping(exception = "java.lange.RuntimeException", result = "error") })
 public class WinAction extends BaseAction {
 
@@ -444,5 +445,11 @@ public class WinAction extends BaseAction {
 	public String catalogList(){
 		
 		return "cataloglist";
+	}
+	
+	@Action("uploadtest")
+	public String uploadTest(){
+		
+		return "uploadtest";
 	}
 }

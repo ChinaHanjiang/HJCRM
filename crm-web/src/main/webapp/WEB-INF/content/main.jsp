@@ -165,6 +165,11 @@
 						<img alt="产品类型列表" src="<%=basePath%>icon/key_blue.png">
 						<div>产品类型管理</div>
 					</div>
+					<div style="padding-top: 10px; cursor: pointer;"
+						onclick="addPanel('uploadtest','上传测试','<%=basePath%>win/uploadtest.do')">
+						<img alt="上传测试" src="<%=basePath%>icon/key_blue.png">
+						<div>上传测试</div>
+					</div>
 				</div>
 			</div>
 		</div>

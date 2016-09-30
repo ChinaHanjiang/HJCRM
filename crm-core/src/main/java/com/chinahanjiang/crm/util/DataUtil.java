@@ -13,6 +13,7 @@ import com.chinahanjiang.crm.dto.ContactDto;
 import com.chinahanjiang.crm.dto.CustomerDto;
 import com.chinahanjiang.crm.dto.DataListDto;
 import com.chinahanjiang.crm.dto.EyTreeDto;
+import com.chinahanjiang.crm.dto.FileUploadDto;
 import com.chinahanjiang.crm.dto.GroupsDto;
 import com.chinahanjiang.crm.dto.ItemDto;
 import com.chinahanjiang.crm.dto.ProductCatalogDto;
@@ -1003,5 +1004,15 @@ public class DataUtil {
 		}
 		
 		return pcds;
+	}
+
+	public static String convertFileUploadDtoToStr(FileUploadDto fud) {
+		Gson gson = new Gson();
+
+		String str = null;
+		if (fud != null) {
+			str = gson.toJson(fud);
+		}
+		return str;
 	}
 }

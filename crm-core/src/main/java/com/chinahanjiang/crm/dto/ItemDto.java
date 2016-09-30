@@ -49,6 +49,16 @@ public class ItemDto {
 	
 	private String ids;
 	
+	private String attachments;
+	
+	public String getAttachments() {
+		return attachments;
+	}
+
+	public void setAttachments(String attachments) {
+		this.attachments = attachments;
+	}
+
 	public String getIds() {
 		return ids;
 	}
