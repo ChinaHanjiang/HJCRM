@@ -469,7 +469,7 @@ public class DataUtil {
 				id.setStatus(i.getStatus());
 				id.setStatusStr(i.getStatus() == 0 ? "N":(i.getStatus() == 1? "R" : "O"));
 				id.setFlag(i.getFlag());
-				id.setFlagStr(i.getFlag()==-1 ? "" :(i.getFlag()==0 ? " 未报" : "已报"));
+				id.setFlagStr(i.getFlag()==-1 ? "" :(i.getFlag()==0 ? "未报" : "已报"));
 				id.setTask(i.getTask() == null ? "" : i.getTask().getCode());
 				id.setTaskId(i.getTask() == null ? 0 : i.getTask().getId());
 				id.setTasktype(i.getTask() == null ? "" : (i.getTask()

@@ -58,6 +58,7 @@ public class Task {
 	
 	public Task(){
 		
+		this.status = 0;
 		this.isDelete = 1;
 		this.flag = 1;
 	}

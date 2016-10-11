@@ -581,6 +581,7 @@ public class ItemServiceImpl implements ItemService {
 		Item i = new Item();
 		i.setName("项目-" + task.getCode() + "-报价");
 		i.setFlag(0);
+		task.setFlag(0);
 		i.setTask(task);
 		
 		TaskType tt = task.getTaskType();

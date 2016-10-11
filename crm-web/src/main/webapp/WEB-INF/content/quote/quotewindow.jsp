@@ -375,6 +375,20 @@ html  {
 			gindex[id] = undefined;
 		}
 		
+		$('#pq_bcancel').click(function(){
+			
+			var id = ${task.id};
+			
+			 var newObj = {
+				 id:'taskdetail',
+				 title:'项目详情',
+				 href:'<%=basePath%>win/taskdetail.do?taskId=' + id
+			 };
+			 
+			parent.openAndClose(newObj,'产品报价');
+			
+		});
+		
 		$('#pq_bsubmit').click(function(){
 			
 			$.each(_pm_i,function(j,o){

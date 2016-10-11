@@ -496,7 +496,7 @@
 			
 			<div style="float: left;">
 				<a id="t_closeTask" href="#" class="easyui-linkbutton" plain="true"
-					icon="icon-remove">关闭项目</a>
+					icon="icon-complete">关闭项目</a>
 			</div>
 			
 			

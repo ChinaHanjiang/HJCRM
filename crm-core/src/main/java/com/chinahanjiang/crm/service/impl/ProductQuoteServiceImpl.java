@@ -285,6 +285,10 @@ public class ProductQuoteServiceImpl implements ProductQuoteService {
 			save(pq);
 			
 			md.setT(true);
+			
+			//生成pdf文件
+			
+			
 		} else {
 			
 			md.setT(false);

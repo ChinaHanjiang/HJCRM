@@ -94,3 +94,18 @@
 .icon-large-chart{
 	background:url('icons/large_chart.png') no-repeat center center;
 }
+.icon-upload{
+	background:url('icons/upload.png') no-repeat center center;
+}
+.icon-download{
+	background:url('icons/download.png') no-repeat center center;
+}
+.icon-quote{
+	background:url('icons/quote.png') no-repeat center center;
+}
+.icon-attachement{
+	background:url('icons/attachement.png') no-repeat center center;
+}
+.icon-complete{
+	background:url('icons/complete.png') no-repeat center center;
+}

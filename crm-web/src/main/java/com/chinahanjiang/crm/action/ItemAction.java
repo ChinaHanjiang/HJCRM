@@ -40,6 +40,7 @@ import com.chinahanjiang.crm.util.DateUtil;
 	@Result(name="check",type="json"),
 	@Result(name="checkstatus",type="json"),
 	@Result(name="addquote",type="json"),
+	@Result(name="finish",type="json"),
 	@Result(name="saveattachments",type="json")})
 @ExceptionMappings({ @ExceptionMapping(exception = "java.lange.RuntimeException", result = "error") })
 public class ItemAction extends BaseAction {

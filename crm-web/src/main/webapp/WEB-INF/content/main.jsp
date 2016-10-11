@@ -8,10 +8,6 @@
 			+ path + "/";
 %>
 
-<%
-	
-%>
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -101,74 +97,89 @@
 	<div data-options="region:'west',title:'导航栏',border:true"
 		style="width: 150px;">
 		<div class="easyui-accordion" data-options="fit:true,border:false">
-			<div title="任务管理" style="padding: 10px;">
+			<div title="项目管理" data-options="selected:true" style="padding: 10px;">
 				<div style="width: 100%; text-align: center">
 					<div style="padding-top: 10px; cursor: pointer;"
 						onclick="addPanel('tasklist','项目列表','<%=basePath%>win/tasklist.do')">
-						<img alt="项目列表" src="<%=basePath%>icon/document_new.png">
+						<img alt="项目列表" src="<%=basePath%>icon/project.png">
 						<div>项目列表</div>
 					</div>
+				</div>
+				<div style="width: 100%; text-align: center">
 					<div style="padding-top: 10px; cursor: pointer;"
-						onclick="addPanel('quotelist','报价列表','<%=basePath%>win/quotelist.do')">
-						<img alt="报价列表" src="<%=basePath%>icon/document_new.png">
-						<div>报价列表</div>
+						onclick="addPanel('itemlist','任务列表','<%=basePath%>win/itemlist.do')">
+						<img alt="任务列表" src="<%=basePath%>icon/task.png">
+						<div>任务列表</div>
 					</div>
+				</div>
+				<div style="width: 100%; text-align: center">
 					<div style="padding-top: 10px; cursor: pointer;"
-						onclick="addPanel('quotelist','报价窗口','<%=basePath%>win/quotewindow.do')">
-						<img alt="报价窗口" src="<%=basePath%>icon/document_new.png">
-						<div>报价窗口</div>
+						onclick="addPanel('tasktypemgr','项目类型管理','<%=basePath%>win/tasktypelist.do')">
+						<img alt="项目类型管理" src="<%=basePath%>icon/projecttype.png">
+						<div>项目类型管理</div>
+					</div>
+				</div>
+				<div style="width: 100%; text-align: center">
+					<div style="padding-top: 10px; cursor: pointer;"
+						onclick="addPanel('itemtypemgr','任务类型管理','<%=basePath%>win/itemtypelist.do')">
+						<img alt="任务类型管理" src="<%=basePath%>icon/tasktype.png">
+						<div>任务类型管理</div>
 					</div>
 				</div>
 			</div>
-			<div title="客户管理" data-options="selected:true" style="padding: 10px;">
+			<div title="客户管理" style="padding: 10px;">
 				<div style="width: 100%; text-align: center">
 					<div style="padding-top: 10px; cursor: pointer;"
-						onclick="addPanel('customerlist','客户管理','<%=basePath%>win/customerlist.do')">
-						<img alt="客户管理" src="<%=basePath%>icon/evolution_tasks.png">
-						<div>客户管理</div>
+						onclick="addPanel('customerlist','客户列表','<%=basePath%>win/customerlist.do')">
+						<img alt="客户列表" src="<%=basePath%>icon/customer.png">
+						<div>客户列表</div>
+					</div>
+				</div>
+				<div style="width: 100%; text-align: center">
+					<div style="padding-top: 10px; cursor: pointer;"
+						onclick="addPanel('groupslist','集团管理','<%=basePath%>win/groupslist.do')">
+						<img alt="集团管理" src="<%=basePath%>icon/groups.png">
+						<div>集团管理</div>
+					</div>
+				</div>
+				<div style="width: 100%; text-align: center">
+					<div style="padding-top: 10px; cursor: pointer;"
+						onclick="addPanel('arealist','区域管理','<%=basePath%>win/arealist.do')">
+						<img alt="区域管理" src="<%=basePath%>icon/area.png">
+						<div>区域管理</div>
 					</div>
 				</div>
 			</div>
-			<div title="报表管理" data-options="selected:true" style="padding: 10px;">
+			<div title="产品管理" style="padding: 10px;">
 				<div style="width: 100%; text-align: center">
 					<div style="padding-top: 10px; cursor: pointer;"
-						onclick="addPanel('customerlist','aaa','<%=basePath%>win/customerlist.do')">
-						<img alt="客户管理" src="<%=basePath%>icon/evolution_tasks.png">
-						<div>客户管理</div>
+						onclick="addPanel('productslist','产品列表','<%=basePath%>win/productlist.do')">
+						<img alt="产品列表" src="<%=basePath%>icon/product.png">
+						<div>产品列表</div>
 					</div>
+					<div style="padding-top: 10px; cursor: pointer;"
+						onclick="addPanel('catalogManager','产品类型列表','<%=basePath%>win/cataloglist.do')">
+						<img alt="产品类型列表" src="<%=basePath%>icon/catalog.png">
+						<div>产品类型管理</div>
+					</div>
+					<div style="padding-top: 10px; cursor: pointer;"
+						onclick="addPanel('unitmgr','单位管理','<%=basePath%>win/unitlist.do')">
+						<img alt="单位管理" src="<%=basePath%>icon/unit.png">
+						<div>单位管理</div>
+					</div>
+				</div>
+			</div>
+			<div title="报表管理" style="padding: 10px">
+				<div style="width: 100%; text-align: center">
+					
 				</div>
 			</div>
 			<div title="系统设置" style="padding: 10px">
 				<div style="width: 100%; text-align: center">
 					<div style="padding-top: 10px; cursor: pointer;"
 						onclick="addPanel('userlist','用户管理','<%=basePath%>win/userlist.do')">
-						<img alt="用户管理" src="<%=basePath%>icon/wlm.png">
+						<img alt="用户管理" src="<%=basePath%>icon/user.png">
 						<div>用户管理</div>
-					</div>
-					<div style="padding-top: 10px; cursor: pointer;"
-						onclick="addPanel('tasktypelist','任务类型管理','<%=basePath%>win/tasktypelist.do')">
-						<img alt="任务类型管理" src="<%=basePath%>icon/wlm.png">
-						<div>任务类型管理</div>
-					</div>
-					<div style="padding-top: 10px; cursor: pointer;"
-						onclick="addPanel('groupsManager','集团管理','<%=basePath%>win/groupslist.do')">
-						<img alt="集团管理" src="<%=basePath%>icon/key_blue.png">
-						<div>集团管理</div>
-					</div>
-					<div style="padding-top: 10px; cursor: pointer;"
-						onclick="addPanel('productsManager','产品管理','<%=basePath%>win/productlist.do')">
-						<img alt="产品管理" src="<%=basePath%>icon/key_blue.png">
-						<div>产品管理</div>
-					</div>
-					<div style="padding-top: 10px; cursor: pointer;"
-						onclick="addPanel('catalogManager','产品类型列表','<%=basePath%>win/cataloglist.do')">
-						<img alt="产品类型列表" src="<%=basePath%>icon/key_blue.png">
-						<div>产品类型管理</div>
-					</div>
-					<div style="padding-top: 10px; cursor: pointer;"
-						onclick="addPanel('uploadtest','上传测试','<%=basePath%>win/uploadtest.do')">
-						<img alt="上传测试" src="<%=basePath%>icon/key_blue.png">
-						<div>上传测试</div>
 					</div>
 				</div>
 			</div>

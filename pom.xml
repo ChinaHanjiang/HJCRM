@@ -16,20 +16,9 @@
 	</organization>
 	<repositories>
 		<repository>
-			<id>spy</id>
-			<name>Spy Repository</name>
-			<url>http://files.couchbase.com/maven2/</url>
-		</repository>
-		<repository>
-			<id>java</id>
-			<name>java official repository</name>
-			<url>http://download.java.net/maven/2/</url>
-		</repository>
-		<repository>
-			<id>proxool</id>
-			<name>proxool Repository</name>
-			<layout>default</layout>
-			<url>http://repo.fusesource.com/maven2/</url>
+			<id>sonatype</id>
+			<name>sonatype Repository</name>
+			<url>http://repository.sonatype.org/content/groups/public/</url>
 		</repository>
 	</repositories>
 	<properties>

@@ -444,10 +444,11 @@
 					<th data-options="field:'user',width:80,align:'center'">跟进者</th>
 					<th data-options="field:'createTime',width:100,align:'center'">创建时间</th>
 					<th data-options="field:'updateTime',width:100,align:'center'">修改时间</th>
-					<th data-options="field:'statusStr',width:50,align:'center'">状态</th>
+					<th data-options="field:'statusStr',width:40,align:'center'">状态</th>
 					<th data-options="field:'flag',hidden:true"></th>
-					<th data-options="field:'flagStr',width:50,align:'center',styler:cellStyler">报价</th>
-					<th data-options="field:'remark',width:60,align:'center'">备注</th>
+					<th data-options="field:'flagStr',width:40,align:'center',styler:cellStyler">报价</th>
+					<th data-options="field:'attachments',width:40,align:'center'">附件数</th>
+					<th data-options="field:'remark',width:40,align:'center'">备注</th>
 				</tr>
 			</thead>
 		</table>
@@ -470,22 +471,27 @@
 			
 			<div style="float: left;">
 				<a id="i_finishItem" href="#" class="easyui-linkbutton" plain="true"
-					icon="icon-remove">关闭任务</a>
+					icon="icon-complete">关闭任务</a>
 			</div>
 			
 			<div style="float: left;">
 				<a id="i_quoteItem" href="#" class="easyui-linkbutton" plain="true"
-					icon="icon-remove">报价</a>
+					icon="icon-quote">报价</a>
 			</div>
 			
 			<div style="float: left;">
 				<a id="i_upload" href="#" class="easyui-linkbutton" plain="true"
-					icon="icon-remove">上传</a>
+					icon="icon-upload">上传附件</a>
 			</div>
 			
 			<div style="float: left;">
 				<a id="i_download" href="#" class="easyui-linkbutton" plain="true"
-					icon="icon-remove">下载</a>
+					icon="icon-download">下载附件</a>
+			</div>
+			
+			<div style="float: left;">
+				<a id="i_check" href="#" class="easyui-linkbutton" plain="true"
+					icon="icon-attachement">查看附件</a>
 			</div>
 		</div>
 	</div>
@@ -518,7 +524,6 @@
 			    			 if(_data.t){
 			    				 
 			    				 itemId = _data.intF;
-			    				 
 			    				 
 			    				 if(itemId!=0){
 			 						
