@@ -38,7 +38,7 @@
 	<!-- 一个自定义的filter，必须包含authenticationManager，accessDecisionManager,securityMetadataSource三个属性 
 		我们的所有控制将在这三个类中实现，解释详见具体配置 -->
 	<beans:bean id="myFilter"
-		class="com.chinahanjiang.crm.security.support.MyFilterSe     curityInterceptor">
+		class="com.chinahanjiang.crm.security.support.MyFilterSecurityInterceptor">
 		<beans:property name="authenticationManager" ref="authenticationManager" />
 		<beans:property name="accessDecisionManager" ref="myAccessDecisionManagerBean" />
 		<beans:property name="securityMetadataSource" ref="mySecurityMetadaSource" />
@@ -47,7 +47,9 @@
 	<!-- 验证配置，认证管理器，实现用户认证的入口，主要实现UserDetailService接口即可 -->
 	<authentication-manager alias="authenticationManager">
 		<authentication-provider user-service-ref="userDetailsService">
-			<!-- <s:password-encoder hash="sha" /> -->
+			<password-encoder ref="passwordEncoder">
+				<salt-source user-property="username" />
+			</password-encoder>
 		</authentication-provider>
 	</authentication-manager>
 

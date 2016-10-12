@@ -9,6 +9,7 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -16,9 +17,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.util.Assert;
 
@@ -119,6 +123,8 @@ public class User implements MyUserDetails, java.io.Serializable {
 		this.accountNonExpired = accountNonExpired;
 		this.accountNonLocked = accountNonLocked;
 		this.credentialsNonExpired = credentialsNonExpired;
+		this.username = cardName;
+		this.password = userPassword;
 	}
 
 	@Id
@@ -241,6 +247,8 @@ public class User implements MyUserDetails, java.io.Serializable {
 		this.department = department;
 	}
 
+	@OneToMany(targetEntity = UserRoles.class, cascade = { CascadeType.ALL }, fetch = FetchType.LAZY, mappedBy = "user")
+	@Fetch(FetchMode.SUBSELECT)
 	public Set<UserRoles> getUserRoles() {
 		return userRoles;
 	}
@@ -249,6 +257,7 @@ public class User implements MyUserDetails, java.io.Serializable {
 		this.userRoles = userRoles;
 	}
 
+	@Column(name = "u_enabled")
 	public boolean getEnabled() {
 		return enabled;
 	}
@@ -257,6 +266,7 @@ public class User implements MyUserDetails, java.io.Serializable {
 		this.enabled = enabled;
 	}
 
+	@Column(name = "u_issys")
 	public Boolean getIssys() {
 		return issys;
 	}
@@ -265,6 +275,7 @@ public class User implements MyUserDetails, java.io.Serializable {
 		this.issys = issys;
 	}
 
+	@Column(name = "u_subsystem")
 	public String getSubSystem() {
 		return subSystem;
 	}

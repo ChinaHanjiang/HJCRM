@@ -2,6 +2,18 @@ package com.chinahanjiang.crm.pojo;
 
 import java.sql.Timestamp;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "authoritieresources")
 public class AuthoritieResources {
 
 	private int id;
@@ -10,17 +22,22 @@ public class AuthoritieResources {
 	
 	private Resources resources;
 	
-	private int isDelet;
+	private int isDelete;
 	
 	private Timestamp createTime;
 	
 	private Timestamp updateTime;
 	
+	private boolean enabled;
+	
 	public AuthoritieResources() {
 		
-		this.isDelet = 1;
+		this.isDelete = 1;
 	}
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "aur_id", unique = true, nullable = false)
 	public int getId() {
 		return id;
 	}
@@ -29,6 +46,8 @@ public class AuthoritieResources {
 		this.id = id;
 	}
 
+	@OneToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "rar_auid", referencedColumnName = "au_id")
 	public Authorities getAuthorities() {
 		return authorities;
 	}
@@ -37,6 +56,8 @@ public class AuthoritieResources {
 		this.authorities = authorities;
 	}
 
+	@OneToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "rar_rsid", referencedColumnName = "rs_id")
 	public Resources getResources() {
 		return resources;
 	}
@@ -45,14 +66,16 @@ public class AuthoritieResources {
 		this.resources = resources;
 	}
 
-	public int getIsDelet() {
-		return isDelet;
+	@Column(name = "aur_isdelete")
+	public int getIsDelete() {
+		return isDelete;
 	}
 
-	public void setIsDelet(int isDelet) {
-		this.isDelet = isDelet;
+	public void setIsDelete(int isDelete) {
+		this.isDelete = isDelete;
 	}
 
+	@Column(name = "aur_createtime")
 	public Timestamp getCreateTime() {
 		return createTime;
 	}
@@ -61,12 +84,22 @@ public class AuthoritieResources {
 		this.createTime = createTime;
 	}
 
+	@Column(name = "aur_updatetime")
 	public Timestamp getUpdateTime() {
 		return updateTime;
 	}
 
 	public void setUpdateTime(Timestamp updateTime) {
 		this.updateTime = updateTime;
+	}
+
+	@Column(name = "aur_enabled")
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
 	}
 	
 }

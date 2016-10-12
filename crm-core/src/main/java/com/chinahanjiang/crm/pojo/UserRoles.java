@@ -2,6 +2,18 @@ package com.chinahanjiang.crm.pojo;
 
 import java.sql.Timestamp;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "userroles")
 public class UserRoles {
 
 	private int id;
@@ -16,11 +28,16 @@ public class UserRoles {
 	
 	private int isDelete;
 	
+	private boolean enabled;
+	
 	public UserRoles() {
 		
 		this.isDelete = 0;
 	}
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "ur_id", unique = true, nullable = false)
 	public int getId() {
 		return id;
 	}
@@ -29,6 +46,8 @@ public class UserRoles {
 		this.id = id;
 	}
 
+	@OneToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "ur_uid", referencedColumnName = "u_id")
 	public User getUser() {
 		return user;
 	}
@@ -37,6 +56,8 @@ public class UserRoles {
 		this.user = user;
 	}
 
+	@OneToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "ur_rlid", referencedColumnName = "rl_id")
 	public Role getRole() {
 		return role;
 	}
@@ -45,6 +66,7 @@ public class UserRoles {
 		this.role = role;
 	}
 
+	@Column(name = "ur_createtime")
 	public Timestamp getCreateTime() {
 		return createTime;
 	}
@@ -53,6 +75,7 @@ public class UserRoles {
 		this.createTime = createTime;
 	}
 
+	@Column(name = "ur_updatetime")
 	public Timestamp getUpdateTime() {
 		return updateTime;
 	}
@@ -61,6 +84,7 @@ public class UserRoles {
 		this.updateTime = updateTime;
 	}
 
+	@Column(name = "ur_isdelete")
 	public int getIsDelete() {
 		return isDelete;
 	}
@@ -68,4 +92,14 @@ public class UserRoles {
 	public void setIsDelete(int isDelete) {
 		this.isDelete = isDelete;
 	}
+
+	@Column(name = "ur_enabled")
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+	
 }

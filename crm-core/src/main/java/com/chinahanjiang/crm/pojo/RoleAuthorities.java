@@ -2,6 +2,18 @@ package com.chinahanjiang.crm.pojo;
 
 import java.sql.Timestamp;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "roleauthorities")
 public class RoleAuthorities {
 
 	private int id;
@@ -15,12 +27,17 @@ public class RoleAuthorities {
 	private Timestamp updateTime;
 	
 	private int isDelete;
+	
+	private boolean enabled;
 
 	public RoleAuthorities(){
 		
 		this.isDelete = 1;
 	}
 	
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "ra_id", unique = true, nullable = false)
 	public int getId() {
 		return id;
 	}
@@ -29,6 +46,8 @@ public class RoleAuthorities {
 		this.id = id;
 	}
 
+	@OneToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "ra_rlid", referencedColumnName = "rl_id")
 	public Role getRole() {
 		return role;
 	}
@@ -37,6 +56,8 @@ public class RoleAuthorities {
 		this.role = role;
 	}
 
+	@OneToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "ra_auid", referencedColumnName = "au_id")
 	public Authorities getAuthorities() {
 		return authorities;
 	}
@@ -45,6 +66,7 @@ public class RoleAuthorities {
 		this.authorities = authorities;
 	}
 
+	@Column(name = "ra_createtime")
 	public Timestamp getCreateTime() {
 		return createTime;
 	}
@@ -53,6 +75,7 @@ public class RoleAuthorities {
 		this.createTime = createTime;
 	}
 
+	@Column(name = "ra_updatetime")
 	public Timestamp getUpdateTime() {
 		return updateTime;
 	}
@@ -61,6 +84,7 @@ public class RoleAuthorities {
 		this.updateTime = updateTime;
 	}
 
+	@Column(name = "ra_isdelete")
 	public int getIsDelete() {
 		return isDelete;
 	}
@@ -68,6 +92,14 @@ public class RoleAuthorities {
 	public void setIsDelete(int isDelete) {
 		this.isDelete = isDelete;
 	}
-	
+
+	@Column(name = "ra_enabled")
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
 	
 }
