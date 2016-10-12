@@ -15,14 +15,6 @@ import org.springframework.security.access.intercept.InterceptorStatusToken;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 
-/**
- * 该过滤器的主要作用就是用过spring注明的IoC生成securityMetadataSource。
- * securityMetadataSource相当于本包中自定义的MyInvocationSecurityMetadataSourceService。
- * 该MyInvocationSecurityMetadataSourceService的作用提从数据库提取的权限和资源，装配到HashMap中，
- * 供Spring Security使用，用于权限校验
- * @author tree
- *
- */
 public class MyFilterSecurityInterceptor extends AbstractSecurityInterceptor implements Filter {
 
 	private FilterInvocationSecurityMetadataSource securityMetadataSource;

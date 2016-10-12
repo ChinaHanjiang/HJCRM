@@ -19,20 +19,14 @@ import org.springframework.security.web.access.intercept.FilterInvocationSecurit
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
-import com.chinahanjiang.crm.security.dao.PubAuthoritiesResourcesDao;
-
-/**
- * 最核心的地方，就是提供某个资源对应的权限定义，即getAttributes方法返回的结果，此类在初始化时，应渠道所有资源及其对应角色的定义。
- * @author tree
- *
- */
+import com.chinahanjiang.crm.service.AuthotitiesResourcesService;
 
 public class MyInvocationSecurityMetadataSourceService implements
 	FilterInvocationSecurityMetadataSource {
 
 	@Autowired
-	private PubAuthoritiesResourcesDao pubAuthoritiesResourcesDao;
-
+	private AuthotitiesResourcesService authotitiesResourcesService;
+	
 	private static Map<String, Collection<ConfigAttribute>> resourceMap = null;
 
 	private Session session;
@@ -95,6 +89,7 @@ public class MyInvocationSecurityMetadataSourceService implements
 				}
 			}
 		}
+		
 	}
 	
 	@Override
@@ -118,11 +113,15 @@ public class MyInvocationSecurityMetadataSourceService implements
 		//object是一个url，被用户请求的url
 		String url = filterInvocation.getRequestUrl();
 		int firstQuestionMarkIndex = url.indexOf("?");
+		
 		if (firstQuestionMarkIndex != -1) {  
             url = url.substring(0, firstQuestionMarkIndex);  
         }
+		
 		Iterator<String> ite = resourceMap.keySet().iterator();
+		
 		while(ite.hasNext()){
+			
 			String resUrl = ite.next();
 			 RequestMatcher requestMatcher = new AntPathRequestMatcher(resUrl);
 			    if(requestMatcher.matches(filterInvocation.getHttpRequest())) {

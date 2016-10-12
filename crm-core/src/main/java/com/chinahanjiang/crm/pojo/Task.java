@@ -11,12 +11,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 
 /**
  * 任务 2016-8-15
@@ -35,7 +34,7 @@ public class Task {
 	
 	private User createUser;
 	
-	private int status;/*0-进行中,1-关闭*/
+	private int status;/*0-进行中,1-完成,2-放弃*/
 	
 	private int isDelete;/*0-删除,1-没删除*/
 	
@@ -49,18 +48,24 @@ public class Task {
 	
 	private List<Item> items;
 	
+	private List<Product> products;
+	
+	private int flag;//是否修改了产品配置 1表示修改了配置,0表示没有
+	
 	private TaskType taskType;
 	
 	private String remarks;
 	
 	public Task(){
 		
+		this.status = 0;
 		this.isDelete = 1;
+		this.flag = 1;
 	}
 
 	public Task(int id, String name, String code, User createUser, int status, int isDelete,
-			Timestamp createTime, Timestamp updateTime, User updateUser,
-			Customer customer, List<Item> items, TaskType taskType,
+			Timestamp createTime, Timestamp updateTime, User updateUser,int flag,
+			Customer customer, List<Item> items, TaskType taskType, List<Product> products,
 			String remarks) {
 		super();
 		this.id = id;
@@ -75,7 +80,9 @@ public class Task {
 		this.customer = customer;
 		this.items = items;
 		this.taskType = taskType;
+		this.products = products;
 		this.remarks = remarks;
+		this.flag = flag;
 	}
 
 	@Id
@@ -174,7 +181,7 @@ public class Task {
 	}
 
 	@OneToMany(targetEntity = Item.class, cascade = { CascadeType.ALL }, fetch = FetchType.LAZY, mappedBy = "task")
-	@Fetch(FetchMode.SUBSELECT)
+	//@Fetch(FetchMode.SUBSELECT)
 	public List<Item> getItems() {
 		return items;
 	}
@@ -183,7 +190,7 @@ public class Task {
 		this.items = items;
 	}
 
-	@OneToOne(fetch = FetchType.EAGER)
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "t_ttid",referencedColumnName="tt_id")
 	public TaskType getTaskType() {
 		return taskType;
@@ -200,6 +207,27 @@ public class Task {
 
 	public void setRemarks(String remarks) {
 		this.remarks = remarks;
+	}
+
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinTable(name = "TaskProducts",
+	joinColumns = {@JoinColumn(name = "tp_tid", referencedColumnName = "t_id")},
+	inverseJoinColumns = {@JoinColumn(name = "tp_pid", referencedColumnName ="p_id")})
+	public List<Product> getProducts() {
+		return products;
+	}
+
+	public void setProducts(List<Product> products) {
+		this.products = products;
+	}
+
+	@Column(name="t_flag")
+	public int getFlag() {
+		return flag;
+	}
+
+	public void setFlag(int flag) {
+		this.flag = flag;
 	}
 	
 }

@@ -16,27 +16,16 @@
 	</organization>
 	<repositories>
 		<repository>
-			<id>spy</id>
-			<name>Spy Repository</name>
-			<url>http://files.couchbase.com/maven2/</url>
-		</repository>
-		<repository>
-			<id>java</id>
-			<name>java official repository</name>
-			<url>http://download.java.net/maven/2/</url>
-		</repository>
-		<repository>
-			<id>proxool</id>
-			<name>proxool Repository</name>
-			<layout>default</layout>
-			<url>http://repo.fusesource.com/maven2/</url>
+			<id>sonatype</id>
+			<name>sonatype Repository</name>
+			<url>http://repository.sonatype.org/content/groups/public/</url>
 		</repository>
 	</repositories>
 	<properties>
 
-		<spring.version>2.5.6</spring.version>
-		<hibernate.version>3.6.7.Final</hibernate.version>
-		<struts2.version>2.2.3</struts2.version>
+		<spring.version>4.0.2.RELEASE</spring.version>
+		<hibernate.version>4.3.4.Final</hibernate.version>
+		<struts2.version>2.3.16.1</struts2.version>
 		<jetty.version>6.1.24</jetty.version>
 		<slf4j.version>1.6.0</slf4j.version>
 		<org.springframework.security.version>
@@ -388,6 +377,16 @@
 				<groupId>org.springframework.security</groupId>
 				<artifactId>spring-security-taglibs</artifactId>
 				<version>${org.springframework.security.version}</version>
+			</dependency>
+			<dependency>
+			    <groupId>org.freemarker</groupId>
+			    <artifactId>freemarker</artifactId>
+			    <version>2.3.16</version>
+			</dependency>
+			<dependency>
+			    <groupId>net.sf.jacob-project</groupId>
+			    <artifactId>jacob</artifactId>
+			    <version>1.18</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

@@ -21,7 +21,7 @@
 		 
 		<!-- C3P0连接池 -->
 		<property name="hibernate.connection.provider_class">
-			org.hibernate.connection.C3P0ConnectionProvider
+			org.hibernate.c3p0.internal.C3P0ConnectionProvider
 		</property>
 		<property name="hibernate.c3p0.max_size">20</property>
 		<property name="hibernate.c3p0.min_size">5</property>
@@ -42,8 +42,25 @@
 		<mapping class="com.chinahanjiang.crm.pojo.Location" />
 		<mapping class="com.chinahanjiang.crm.pojo.Task" />
 		<mapping class="com.chinahanjiang.crm.pojo.TaskType" />
-		<mapping class="com.chinahanjiang.crm.pojo.User" />
 		<mapping class="com.chinahanjiang.crm.pojo.Groups" />
+		<mapping class="com.chinahanjiang.crm.pojo.Department" />
+		<mapping class="com.chinahanjiang.crm.pojo.ItemAttachment" />
+		<mapping class="com.chinahanjiang.crm.pojo.ItemType" />
+		<mapping class="com.chinahanjiang.crm.pojo.Product" />
+		<mapping class="com.chinahanjiang.crm.pojo.ProductConfiguration" />
+		<mapping class="com.chinahanjiang.crm.pojo.ProductAndQuoteRelation" />
+		<mapping class="com.chinahanjiang.crm.pojo.ProductCatalog" />
+		<mapping class="com.chinahanjiang.crm.pojo.ProductQuote" />
+		<mapping class="com.chinahanjiang.crm.pojo.ProductQuoteDetails" />
+		<mapping class="com.chinahanjiang.crm.pojo.ProductProperty" />
+		<mapping class="com.chinahanjiang.crm.pojo.Unit" />
+		<mapping class="com.chinahanjiang.crm.pojo.User" />
+		<mapping class="com.chinahanjiang.crm.pojo.Role" />
+		<mapping class="com.chinahanjiang.crm.pojo.Authorities" />
+		<mapping class="com.chinahanjiang.crm.pojo.Resources" />
+		<mapping class="com.chinahanjiang.crm.pojo.UserRoles" />
+		<mapping class="com.chinahanjiang.crm.pojo.RoleAuthorities" />
+		<mapping class="com.chinahanjiang.crm.pojo.AuthoritieResources" />
 		
 	</session-factory>
 </hibernate-configuration>

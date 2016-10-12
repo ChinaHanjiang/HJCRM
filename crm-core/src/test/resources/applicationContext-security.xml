@@ -1,77 +1,82 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans:beans xmlns="http://www.springframwork.org/schema/security"
-    xmlns:beans="http://www.springframework.org/schema/beans"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.springframwwork.org/schema/beans
+	xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframwwork.org/schema/beans
     	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
     	http://www.springframework.org/schema/security
     	http://www.springframework.org/schema/security/spring-security-3.0.xsd">
-	
-    <beans>Springsecurity安全配置</beans>
+
+	<beans>Springsecurity安全配置</beans>
 	<!-- http安全配置 -->
 	<http auto-config="true">
 		<intercept-url pattern="/css/**" filters="none" />
 		<intercept-url pattern="/images/**" filters="none" />
 		<intercept-url pattern="/js/**" filters="none" />
 		<intercept-url pattern="/login.jsp" filters="none" />
-		<!-- 
-			<intercept-url pattern="/index.jsp" access="ROLE_USER" />
-			<intercept-url pattern="/main.jsp" access="ROLE_ADMIN" />
-		 -->
-		 <form-login login-page="/login.jsp" default-target-url="/index.jsp"
-		     authentication-failure-url="/login.jsp?error=1" />
-		 <!-- 尝试访问没有权限的页面时跳转的页面 -->
-		 <access-denied-handler error-page="/common/403.jsp" />
-		 
-		 <logout logout-success-url="/login.jsp" />
-		 
-		 <session-management>
-		     <concurrency-control max-session="1" error-if-maximum-exceeded="true" />
-		 </session-management>
-		 
-		 <!-- 增加一个Filter，这点与Acegi是不一样的，不能修改默认的filter，这个filter位于
-		 FILTER——SECURITY_INTERCEPTOR之前 -->
-		 
-		 <customer-filter ref="myFilter" before="FILTER_SECURITY_INTERCEPTOR" />
+
+		<form-login login-page="/login.jsp" default-target-url="/index.jsp"
+			authentication-failure-url="/login.jsp?error=1" />
+		<!-- 尝试访问没有权限的页面时跳转的页面 -->
+		<access-denied-handler error-page="/common/403.jsp" />
+
+		<logout logout-success-url="/login.jsp" />
+
+		<session-management>
+			<concurrency-control max-session="1"
+				error-if-maximum-exceeded="true" />
+		</session-management>
+
+		<!-- "记住我"功能，采用持久化策略（将用户的登录信息存放在数据库表中） -->
+		<remember-me data-source-ref="dataSource" />
+
+		<!-- 检测失效的sessionId,超时时定位到另外一个URL -->
+		<session-management invalid-session-url="/sessionTimeout.jsp" />
+
+		<customer-filter ref="myFilter" before="FILTER_SECURITY_INTERCEPTOR" />
 	</http>
-	
-	<!-- 一个自定义的filter，必须包含authenticationManager，accessDecisionManager,securityMetadataSource三个属性
-	我们的所有控制将在这三个类中实现，解释详见具体配置 -->
-	<beans:bean id="myFilter" class="com.chinahanjiang.crm.security.support.MyFilterSecurityInterceptor">
-	    
-	    <beans:property name="authenticationManager"
-	        ref="authenticationManager" />
-	    <beans:property name="accessDecisionManager"
-	        ref="myAccessDecisionManagerBean" />
-	    <beans:property name="securityMetadataSource"
-	        ref="mySecurityMetadaSource" />
+
+	<!-- 一个自定义的filter，必须包含authenticationManager，accessDecisionManager,securityMetadataSource三个属性 
+		我们的所有控制将在这三个类中实现，解释详见具体配置 -->
+	<beans:bean id="myFilter"
+		class="com.chinahanjiang.crm.security.support.MyFilterSe     curityInterceptor">
+		<beans:property name="authenticationManager" ref="authenticationManager" />
+		<beans:property name="accessDecisionManager" ref="myAccessDecisionManagerBean" />
+		<beans:property name="securityMetadataSource" ref="mySecurityMetadaSource" />
 	</beans:bean>
-	
+
 	<!-- 验证配置，认证管理器，实现用户认证的入口，主要实现UserDetailService接口即可 -->
 	<authentication-manager alias="authenticationManager">
-	    <authentication-provider user-service-ref="userDetailsService">
-	        <!-- 
-	        <s:password-encoder hash="sha" />
-	         -->
-	    </authentication-provider>
+		<authentication-provider user-service-ref="userDetailsService">
+			<!-- <s:password-encoder hash="sha" /> -->
+		</authentication-provider>
 	</authentication-manager>
-	
+
 	<!-- 项目实现的用户查询服务，将用户信息查询出来 -->
-	<beans:bean id="userDetailsService" 
-	    class="com.chinahanjiang.crm.security.support.MyUserDetailService" />
-	
+	<beans:bean id="userDetailsService"
+		class="com.chinahanjiang.crm.security.support.MyUserDetailService" />
+
 	<!-- 访问决策器，决定某个用户具有的角色，是否有足够的权限去访问某个资源 -->
 	<beans:bean id="myAccessDecisionManagerBean"
-	    class="com.chinahanjiang.crm.security.support.MyAccessDecisionManager" />
-	
+		class="com.chinahanjiang.crm.security.support.MyAccessDecisionManager" />
+
 	<!-- 资源数据定义，将所有资源与权限对应关系建立起来，即定义某一资源可以被哪些角色访问 -->
 	<beans:bean id="mySecurityMetadataSource"
-	    class="com.chinahanjiang.crm.security.MyInvocationSecurityMetadataSource" />
-	
+		class="com.chinahanjiang.crm.security.MyInvocationSecurityMetadataSource" />
+
 	<!-- 定义国际化 -->
-	<beans:bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource" >
-	    
-	    <beans:property name="basename" 
-	        value="classpath:org/springframwork/security/messages_zh_CN" />
+	<beans:bean id="messageSource"
+		class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+
+		<beans:property name="basename"
+			value="classpath:org/springframwork/security/messages_zh_CN" />
 	</beans:bean>
+
+	<!-- 缓存信息 -->
+	<!-- <beans:bean id="userCache" class="org.springframework.security.providers.dao.cache.EhCacheBasedUserCache"> 
+		<beans:property name="cache" ref="userEhCache"/> </beans:bean> <beans:bean 
+		id="userEhCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean"> 
+		<beans:property name="cacheManager" ref="cacheManager"/> <beans:property 
+		name="cacheName" value="userCache"/> </beans:bean> <beans:bean id="cacheManager" 
+		class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean"/> -->
+
 </beans:beans>

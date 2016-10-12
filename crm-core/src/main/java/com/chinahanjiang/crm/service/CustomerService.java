@@ -8,6 +8,7 @@ import com.chinahanjiang.crm.dto.LocationDto;
 import com.chinahanjiang.crm.dto.MessageDto;
 import com.chinahanjiang.crm.dto.SearchResultDto;
 import com.chinahanjiang.crm.pojo.Customer;
+import com.chinahanjiang.crm.pojo.Location;
 
 public interface CustomerService {
 
@@ -27,5 +28,11 @@ public interface CustomerService {
 	List<DataListDto> search(CustomerDto cd);
 
 	String generateCode(LocationDto ld);
+
+	int countById(Location l);
+
+	String searchByName(String q);
+
+	List<Customer> findLikeName(String customerName);
 
 }

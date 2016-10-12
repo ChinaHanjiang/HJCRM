@@ -1,10 +1,14 @@
 package com.chinahanjiang.crm.action;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.ExceptionMapping;
 import org.apache.struts2.convention.annotation.ExceptionMappings;
@@ -58,6 +62,8 @@ public class CustomerAction extends BaseAction {
 	private LocationDto ld;
 	
 	private MessageDto md;
+	
+	private String q;
 	
 	public MessageDto getMd() {
 		return md;
@@ -139,6 +145,14 @@ public class CustomerAction extends BaseAction {
 		this.ld = ld;
 	}
 
+	public String getQ() {
+		return q;
+	}
+
+	public void setQ(String q) {
+		this.q = q;
+	}
+
 	@Action("list")
 	public String list(){
 		
@@ -202,5 +216,18 @@ public class CustomerAction extends BaseAction {
 		
 		code = customerService.generateCode(ld);
 		return "generatecode";
+	}
+	
+	@Action("find")
+	public void find() throws IOException{
+		
+		HttpServletResponse response=ServletActionContext.getResponse();
+		response.setContentType("text/html");  
+		PrintWriter out;  
+		out = response.getWriter();
+		String treeStr =  customerService.searchByName(q.trim());
+		out.println(treeStr);  
+		out.flush();  
+		out.close();  
 	}
 }

@@ -18,6 +18,7 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
 import com.chinahanjiang.crm.dto.LocationDto;
+import com.chinahanjiang.crm.dto.ProductDto;
 import com.chinahanjiang.crm.pojo.Contact;
 import com.chinahanjiang.crm.pojo.Customer;
 import com.chinahanjiang.crm.pojo.Groups;
@@ -301,6 +302,97 @@ public class ExcelUtil {
 		}
 		
 		return lds;
+	}
+	
+	public static List<List<String>> readProductCatalogInfo(File f) throws IOException {
+	
+		List<List<String>> catalogs = new ArrayList<List<String>>();
+		
+		InputStream is = new FileInputStream(f.getAbsolutePath());
+		HSSFWorkbook hssfWorkbook = new HSSFWorkbook(is);
+		
+		for (int numSheet = 0; numSheet < hssfWorkbook.getNumberOfSheets(); numSheet++) {
+			HSSFSheet hssfSheet = hssfWorkbook.getSheetAt(numSheet);
+			if(hssfSheet == null){
+				continue;
+			}
+			
+			List<String> catalog = null;
+			int i = 0;
+			for(int rowNum = 2; rowNum <= hssfSheet.getLastRowNum(); rowNum++){
+				HSSFRow hssfRow = hssfSheet.getRow(rowNum);
+				if(hssfRow==null){
+					continue;
+				}
+				
+				catalog = new ArrayList<String>();
+				
+				for(;;){
+					
+					//读取数值
+					HSSFCell cell = hssfRow.getCell(i);
+					if(cell != null){
+						
+						String str = getValue(cell);
+						catalog.add(str);
+						i++;
+						
+					} else {
+						i=0;
+						break;
+					}
+				}
+				
+				catalogs.add(catalog);
+			}
+		}
+		return catalogs;
+	}
+	
+	public static List<ProductDto> readProductInfo(File f) throws IOException{
+		
+		List<ProductDto> pds = new ArrayList<ProductDto>();
+		
+		InputStream is = new FileInputStream(f.getAbsolutePath());
+		HSSFWorkbook hssfWorkbook = new HSSFWorkbook(is);
+		
+		for (int numSheet = 0; numSheet < hssfWorkbook.getNumberOfSheets(); numSheet++) {
+			HSSFSheet hssfSheet = hssfWorkbook.getSheetAt(numSheet);
+			if(hssfSheet == null){
+				continue;
+			}
+			
+			for(int rowNum = 2; rowNum <= hssfSheet.getLastRowNum(); rowNum++){
+				HSSFRow hssfRow = hssfSheet.getRow(rowNum);
+				if(hssfRow==null){
+					continue;
+				}
+				
+				ProductDto pd = new ProductDto();
+				
+				HSSFCell name = hssfRow.getCell(0);
+				pd.setName(name==null?"":getValue(name));
+				
+				HSSFCell shotCode = hssfRow.getCell(1);
+				pd.setShortCode(shotCode==null?"":getValue(shotCode));
+				
+				HSSFCell parentCatalog = hssfRow.getCell(2);
+				pd.setParentCatalog(parentCatalog==null?"":getValue(parentCatalog));
+				
+				HSSFCell catalog = hssfRow.getCell(3);
+				pd.setProductCatalog(catalog==null?"":getValue(catalog));
+				
+				HSSFCell standardPrice = hssfRow.getCell(4);
+				pd.setStandardPrice(standardPrice==null?"0.0":getValue(standardPrice));
+				
+				HSSFCell remarks = hssfRow.getCell(5);
+				pd.setRemarks(remarks==null?"":getValue(remarks));
+				
+				pds.add(pd);
+			}
+		}
+		
+		return pds;
 	}
 	
 	@SuppressWarnings("static-access")

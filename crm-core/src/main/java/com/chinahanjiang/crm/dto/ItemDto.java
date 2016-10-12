@@ -25,6 +25,10 @@ public class ItemDto {
 	
 	private String tasktype;
 	
+	private int itemTypeId;
+	
+	private String itemType;
+	
 	private int customerId;
 	
 	private String customer;
@@ -36,6 +40,48 @@ public class ItemDto {
 	private int status;/*0-进行中，1-完成*/
 	
 	private String remarks;
+
+	private String statusStr;
+	
+	private int flag;
+	
+	private String flagStr;
+	
+	private String ids;
+	
+	private String attachments;
+	
+	public String getAttachments() {
+		return attachments;
+	}
+
+	public void setAttachments(String attachments) {
+		this.attachments = attachments;
+	}
+
+	public String getIds() {
+		return ids;
+	}
+
+	public void setIds(String ids) {
+		this.ids = ids;
+	}
+
+	public String getFlagStr() {
+		return flagStr;
+	}
+
+	public void setFlagStr(String flagStr) {
+		this.flagStr = flagStr;
+	}
+
+	public int getFlag() {
+		return flag;
+	}
+
+	public void setFlag(int flag) {
+		this.flag = flag;
+	}
 
 	public int getId() {
 		return id;
@@ -172,4 +218,29 @@ public class ItemDto {
 	public void setTasktype(String tasktype) {
 		this.tasktype = tasktype;
 	}
+
+	public String getStatusStr() {
+		return statusStr;
+	}
+
+	public void setStatusStr(String statusStr) {
+		this.statusStr = statusStr;
+	}
+
+	public int getItemTypeId() {
+		return itemTypeId;
+	}
+
+	public void setItemTypeId(int itemTypeId) {
+		this.itemTypeId = itemTypeId;
+	}
+
+	public String getItemType() {
+		return itemType;
+	}
+
+	public void setItemType(String itemType) {
+		this.itemType = itemType;
+	}
+	
 }

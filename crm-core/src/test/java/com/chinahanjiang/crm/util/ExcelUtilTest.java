@@ -16,15 +16,24 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.chinahanjiang.crm.dto.LocationDto;
+import com.chinahanjiang.crm.dto.ProductCatalogDto;
+import com.chinahanjiang.crm.dto.ProductDto;
 import com.chinahanjiang.crm.pojo.Customer;
 import com.chinahanjiang.crm.pojo.Groups;
 import com.chinahanjiang.crm.pojo.Location;
+import com.chinahanjiang.crm.pojo.Product;
+import com.chinahanjiang.crm.pojo.ProductCatalog;
+import com.chinahanjiang.crm.pojo.ProductConfiguration;
 import com.chinahanjiang.crm.service.CustomerService;
 import com.chinahanjiang.crm.service.GroupsService;
 import com.chinahanjiang.crm.service.LocationService;
+import com.chinahanjiang.crm.service.ProductCatalogService;
+import com.chinahanjiang.crm.service.ProductService;
 import com.chinahanjiang.crm.service.impl.CustomerServiceImpl;
 import com.chinahanjiang.crm.service.impl.GroupsServiceImpl;
 import com.chinahanjiang.crm.service.impl.LocationServiceImpl;
+import com.chinahanjiang.crm.service.impl.ProductCatalogServiceImpl;
+import com.chinahanjiang.crm.service.impl.ProductServiceImpl;
 
 public class ExcelUtilTest {
 
@@ -35,6 +44,116 @@ public class ExcelUtilTest {
 
 		context = new ClassPathXmlApplicationContext(
 				new String[] { "applicationContext.xml" });
+	}
+	
+	@Test
+	public void testImportProduct() throws IOException{
+		
+		ProductService ps = (ProductServiceImpl) context
+				.getBean("productService");
+		ProductCatalogService pcs = (ProductCatalogServiceImpl) context
+				.getBean("productCatalogService");
+		
+		Timestamp now = new Timestamp(System.currentTimeMillis());
+		
+		File f = new File("C:\\Users\\tree\\Desktop\\客户关系管理\\40基础资料\\4-products.xls");
+		
+		List<ProductDto> pds = ExcelUtil.readProductInfo(f);
+		
+		Iterator<ProductDto> it = pds.iterator();
+		while(it.hasNext()){
+			
+			ProductDto pd = it.next();
+			Product p = new Product();
+			
+			String pcCode = pd.getParentCatalog();
+			String catalog = pd.getProductCatalog();
+			
+			ProductCatalog pc = pcs.findProductCatalogByCodeAndName(pcCode,catalog);
+			if(pc!=null){
+				
+				p.setProductCatalog(pc);
+				p.setName(pd.getName());
+				p.setShortCode(pd.getShortCode());
+				p.setCreateTime(now);
+				p.setRemarks(pd.getRemarks());
+				
+				ps.save(p);
+				
+				List<ProductConfiguration> mixs = new ArrayList<ProductConfiguration>();
+				ProductConfiguration pcf = new ProductConfiguration();
+				pcf.setSproduct(p);
+				pcf.setFproduct(p);
+				pcf.setCreateTime(now);
+				mixs.add(pcf);
+				
+				p.setProductMix(mixs);
+				
+				ps.save(p);
+				
+			} else {
+				
+				continue;
+			}
+		}
+	}
+	
+	@Test
+	public void testImportProductCatalog() throws IOException{
+		
+		ProductCatalogService pcs = (ProductCatalogServiceImpl) context
+				.getBean("productCatalogService");
+		
+		Timestamp now = new Timestamp(System.currentTimeMillis());
+		
+		File f = new File("C:\\Users\\tree\\Desktop\\客户关系管理\\40基础资料\\3-productcatalog.xls");
+		List<List<String>> catalogs = ExcelUtil.readProductCatalogInfo(f);
+		Iterator<List<String>> it = catalogs.iterator();
+		while(it.hasNext()){
+			
+			List<String> catalog = it.next();
+			
+			int len = catalog.size();
+			System.out.println(len + "-" + catalog.get(len-2) + "-" + catalog.get(len-1));
+			ProductCatalogDto pcd = new ProductCatalogDto();
+			pcd.setCode(catalog.get(len-1));
+			pcd.setName(catalog.get(len-2));
+			
+			if(len>2){
+				
+				pcd.setParentCode(catalog.get(len-3));
+			}
+			
+			ProductCatalog pPc = null;
+			ProductCatalog pc = new ProductCatalog();
+			String pCode = pcd.getParentCode();
+			if(pCode!=null){
+				try{
+					
+					pPc = pcs.findProductCatalogByCode(pCode);
+					
+				} catch(Exception e){
+					
+					String ppCode = catalog.get(len-5);
+					ProductCatalog ppPc = pcs.findProductCatalogByCode(ppCode);
+					if(ppPc!=null){
+						
+						pPc = pcs.findProductCatalogByCode(pCode,ppPc);
+					}
+				}
+			}
+			pc.setName(pcd.getName());
+			pc.setCode(pcd.getCode());
+			pc.setCreateTime(now);
+			
+			if(pPc!=null){
+				
+				pc.setParentCatalog(pPc);
+			}
+			
+			pcs.save(pc);
+			
+		}
 	}
 	
 	@Test
@@ -226,5 +345,10 @@ public class ExcelUtilTest {
 		l2.setName("中国");
 		
 		System.out.println(l1.equals(l2));
+	}
+	
+	@Test
+	public void testPassword(){
+		
 	}
 }

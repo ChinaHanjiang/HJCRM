@@ -14,7 +14,6 @@ import com.chinahanjiang.crm.dto.DataListDto;
 import com.chinahanjiang.crm.dto.GroupsDto;
 import com.chinahanjiang.crm.dto.MessageDto;
 import com.chinahanjiang.crm.dto.SearchResultDto;
-import com.chinahanjiang.crm.pojo.Customer;
 import com.chinahanjiang.crm.pojo.Groups;
 import com.chinahanjiang.crm.service.GroupsService;
 import com.chinahanjiang.crm.util.DataUtil;

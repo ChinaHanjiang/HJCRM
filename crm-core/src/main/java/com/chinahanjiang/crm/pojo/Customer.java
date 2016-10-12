@@ -11,7 +11,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -30,6 +29,8 @@ public class Customer {
 	private int id;
 	
 	private String name;
+	
+	private String callname;
 	
 	private String code;
 	
@@ -61,7 +62,7 @@ public class Customer {
 	}
 	
 	public Customer(int id, String name, String code, Groups groups, Location location,
-			List<Contact> contacts, String address, Timestamp createTime,
+			List<Contact> contacts, String address, Timestamp createTime,String callname,
 			Timestamp updateTime, String telephone, String fax, int isDelete, String remarks) {
 		super();
 		this.id = id;
@@ -77,6 +78,7 @@ public class Customer {
 		this.fax = fax;
 		this.isDelete = isDelete;
 		this.remarks = remarks;
+		this.callname = callname;
 	}
 
 	@Id
@@ -108,7 +110,7 @@ public class Customer {
 		this.code = code;
 	}
 
-	@ManyToOne(cascade = CascadeType.ALL, optional = false, fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "g_uid",referencedColumnName="g_id")
 	public Groups getGroups() {
 		return groups;
@@ -118,7 +120,7 @@ public class Customer {
 		this.groups = groups;
 	}
 
-	@ManyToOne(cascade = CascadeType.ALL, optional = false, fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "c_lid",referencedColumnName="l_id")
 	public Location getLocation() {
 		return location;
@@ -210,4 +212,14 @@ public class Customer {
 	public void setUser(User user) {
 		this.user = user;
 	}
+
+	@Column(name="c_callname")
+	public String getCallname() {
+		return callname;
+	}
+
+	public void setCallname(String callname) {
+		this.callname = callname;
+	}
+	
 }

@@ -98,7 +98,6 @@
 				});
 			}
 		});
-		
 		/*初始化树形结构  end*/
 		
 		/*区域类型 begin*/
@@ -147,13 +146,14 @@
 							'info');
 		        			$('#addLocationWin').window('close');
 		        			
-		        			var newName = locName + "-" + locCode;
+		        			var newName = locName ;
 		        			
 		        			loc.tree('append', {
 								parent: (node?node.target:null),
 								data: [{
 									id:_id,
-									text: newName
+									text: newName,
+									attributes:{'code':locCode}
 								}]
 							});
 		        		}else{
@@ -227,11 +227,12 @@
 			        			$.messager.alert('成功', _data.message,
 								'info');
 			        			
-			        			var newName = locName + "-" + locCode;
+			        			var newName = locName;
 			        			
 			        			loc.tree('update', {
 			        				target: node.target,
-			        				text: newName
+			        				text: newName,
+									attributes:{'code':locCode}
 			        			});
 			        			
 			        			$('#addLocationWin').window('close');
@@ -478,7 +479,6 @@
 		});
 		
 		/* 客户信息操作 begin*/
-		
 		$('#c_addGrid').click(function(){
 			
 			$('#c_bmodify').hide();
@@ -1026,7 +1026,7 @@
 			
 			searcher:function(value,name){
 				
-				var _tarea = $('#tarea').combobox('getValue');
+				var _tarea = $('#cu_tarea').combobox('getValue');
 				if(_tarea==0){
 					
 					$.messager.alert('注意','请选择区域!',
@@ -1064,9 +1064,9 @@
 				$('#cu_groups').val(id);
 				$('#cu_groups_code').val(code);
 				
-				var _tarea = $('#tarea').combobox('getValue');
+				var _tarea = $('#cu_tarea').combobox('getValue');
 				
-				String str = "ld.id=" + _tarea;
+				var str = "ld.id=" + _tarea;
 				
 				$.ajax({
 					 type:"POST",
@@ -1075,7 +1075,10 @@
 		    		 dataType:'json',
 		    		 success:function(data){
 		    			 
-		    			 
+		    			 var _result = data.code;
+		    			 var str = _result.split('-');
+		    			 var ccode = str[0] + "-" + code + "-" +str[1];
+		    			 $('#cu_code').textbox('setText',ccode);
 		    		 }
 				});
 				
@@ -1244,12 +1247,12 @@
 							<td>客户编码:</td>
 							<td><input id="cu_code" class="easyui-textbox"
 								style="width: 200px" type="text" name="f_c_code"
-								data-options="editable:true,required:true"></td>
+								data-options="editable:false,required:true"></td>
 						</tr>
 						<tr id="c_remarks">
 							<td>备注:</td>
 							<td><textarea id="cu_remarks" rows=5 style="width: 200px;height:60px;"
-									name="f_c_remarks" class="textarea easyui-validatebox"}></textarea></td>
+									name="f_c_remarks" class="textarea easyui-validatebox"} ></textarea></td>
 						</tr>
 
 					</table>
@@ -1312,7 +1315,7 @@
 
 				<div style="float: left;">
 					<a id="ct_editGrid" href="#" class="easyui-linkbutton" plain="true"
-						icon="icon-save"">编辑</a>
+						icon="icon-save">编辑</a>
 				</div>
 
 				<div style="float: left;">
@@ -1387,7 +1390,6 @@
 			data-options="modal:true,closed:true,iconCls:'icon-save',minimizable:false,collapsible:false,maximizable:false"
 			style="width: 480px; height: 160px; padding: 10px;">
 			<div align="center">
-			
 				<form id="addLocationWinForm" method="post">
 					<table cellpadding="5">
 						<tr>
@@ -1476,10 +1478,10 @@
 			var node = loc.tree('getSelected');
 			var nodeId = node.id;
 			var nodeName = node.text;
+			var attibutes = node.attributes;
 			
-			var str = nodeName.split('-');
-			var locName = str[0];
-			var locCode = str[1];
+			var locName = nodeName;
+			var locCode = attributes.code;
 			
 			_loc_id = nodeId;
 			_loc_name = locName;

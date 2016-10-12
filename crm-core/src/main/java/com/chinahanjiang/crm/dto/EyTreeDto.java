@@ -1,6 +1,7 @@
 package com.chinahanjiang.crm.dto;
 
 import java.util.List;
+import java.util.Map;
 
 public class EyTreeDto {
 
@@ -12,6 +13,8 @@ public class EyTreeDto {
 	
 	private int isF;
 	
+	private Map<String,String> attributes;
+	
 	private List<EyTreeDto> children;
 
 	public EyTreeDto(){
@@ -19,12 +22,13 @@ public class EyTreeDto {
 		state = "closed";
 	}
 	
-	public EyTreeDto(int id, int isF,String text, String status) {
+	public EyTreeDto(int id, int isF,String text, String status,Map<String,String> attributes) {
 		super();
 		this.id = id;
 		this.isF = isF;
 		this.text = text;
 		this.state = status;
+		this.attributes = attributes;
 	}
 
 	public int getId() {
@@ -65,5 +69,13 @@ public class EyTreeDto {
 
 	public void setChildren(List<EyTreeDto> children) {
 		this.children = children;
+	}
+
+	public Map<String, String> getAttributes() {
+		return attributes;
+	}
+
+	public void setAttributes(Map<String, String> attributes) {
+		this.attributes = attributes;
 	}
 }

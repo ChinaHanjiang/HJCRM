@@ -2,16 +2,25 @@ package com.chinahanjiang.crm.util;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import com.chinahanjiang.crm.dto.ComboResultDto;
+import com.chinahanjiang.crm.dto.ComboSearchDto;
 import com.chinahanjiang.crm.dto.ContactDto;
 import com.chinahanjiang.crm.dto.CustomerDto;
 import com.chinahanjiang.crm.dto.DataListDto;
 import com.chinahanjiang.crm.dto.EyTreeDto;
+import com.chinahanjiang.crm.dto.FileUploadDto;
 import com.chinahanjiang.crm.dto.GroupsDto;
 import com.chinahanjiang.crm.dto.ItemDto;
+import com.chinahanjiang.crm.dto.ProductCatalogDto;
+import com.chinahanjiang.crm.dto.ProductConfigurationDto;
+import com.chinahanjiang.crm.dto.ProductDto;
+import com.chinahanjiang.crm.dto.ProductPropertyDto;
+import com.chinahanjiang.crm.dto.ProductQuoteDto;
 import com.chinahanjiang.crm.dto.TaskDto;
 import com.chinahanjiang.crm.dto.TaskTypeDto;
 import com.chinahanjiang.crm.dto.UserDto;
@@ -20,10 +29,17 @@ import com.chinahanjiang.crm.pojo.Customer;
 import com.chinahanjiang.crm.pojo.Groups;
 import com.chinahanjiang.crm.pojo.Item;
 import com.chinahanjiang.crm.pojo.Location;
+import com.chinahanjiang.crm.pojo.Product;
+import com.chinahanjiang.crm.pojo.ProductAndQuoteRelation;
+import com.chinahanjiang.crm.pojo.ProductCatalog;
+import com.chinahanjiang.crm.pojo.ProductConfiguration;
+import com.chinahanjiang.crm.pojo.ProductProperty;
+import com.chinahanjiang.crm.pojo.ProductQuote;
 import com.chinahanjiang.crm.pojo.Task;
 import com.chinahanjiang.crm.pojo.TaskType;
 import com.chinahanjiang.crm.pojo.User;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 public class DataUtil {
 
@@ -64,7 +80,7 @@ public class DataUtil {
 				cd.setUpdateTime(c.getUpdateTime() == null ? "" : sdf_dt
 						.format(c.getUpdateTime()));
 
-				cd.setUser(c.getUser() == null ? "" : c.getUser().getName());
+				cd.setUser(c.getUser() == null ? "" : c.getUser().getUserName());
 				cds.add(cd);
 			}
 		}
@@ -74,6 +90,7 @@ public class DataUtil {
 	public static String locationToJson(Location loc) {
 
 		Gson gson = new Gson();
+
 		EyTreeDto btd = convertLocationToDto(loc);
 		String str = null;
 		if (btd != null) {
@@ -89,8 +106,11 @@ public class DataUtil {
 		if (loc != null && isDelete != 0) {
 			btd = new EyTreeDto();
 			btd.setId(loc.getId());
-			btd.setText(loc.getName() + "-" + loc.getCode());
+			btd.setText(loc.getName());
 			btd.setState(loc.getState());
+			Map<String, String> attributes = new HashMap<String, String>();
+			attributes.put("code", loc.getCode());
+			btd.setAttributes(attributes);
 
 			List<Location> children = loc.getChildLocs();
 			if (children != null && children.size() != 0) {
@@ -138,7 +158,7 @@ public class DataUtil {
 				cd.setUpdateTime(c.getUpdateTime() == null ? "" : sdf_dt
 						.format(c.getUpdateTime()));
 				cd.setUserId(c.getUser() == null ? 0 : c.getUser().getId());
-				cd.setUser(c.getUser() == null ? "" : c.getUser().getName());
+				cd.setUser(c.getUser() == null ? "" : c.getUser().getUserName());
 				cd.setCustomerId(c.getCustomer() == null ? 0 : c.getCustomer()
 						.getId());
 				cd.setCustomerName(c.getCustomer() == null ? "" : c
@@ -229,7 +249,7 @@ public class DataUtil {
 				gd.setName(g.getName());
 				gd.setCode(g.getCode());
 				gd.setRemarks(g.getRemarks());
-				gd.setUser(g.getUser() == null ? "" : g.getUser().getName());
+				gd.setUser(g.getUser() == null ? "" : g.getUser().getUserName());
 				gd.setUserId(g.getUser() == null ? 0 : g.getUser().getId());
 
 				gd.setCreateTime(g.getCreateTime() == null ? "" : sdf_dt
@@ -263,7 +283,7 @@ public class DataUtil {
 						.format(tt.getCreateTime()));
 				ttd.setUpdateTime(tt.getUpdateTime() == null ? "" : sdf_dt
 						.format(tt.getUpdateTime()));
-				ttd.setUser(tt.getUser() == null ? "" : tt.getUser().getName());
+				ttd.setUser(tt.getUser() == null ? "" : tt.getUser().getUserName());
 				ttd.setUserId(tt.getUser() == null ? 0 : tt.getUser().getId());
 
 				ttds.add(ttd);
@@ -295,19 +315,20 @@ public class DataUtil {
 				td.setCustomerId(t.getCustomer() == null ? 0 : t.getCustomer()
 						.getId());
 				td.setCreateUser(t.getCreateUser() == null ? "" : t
-						.getCreateUser().getName());
+						.getCreateUser().getUserName());
 				td.setCreateUserId(t.getCreateUser() == null ? 0 : t
 						.getCreateUser().getId());
 				td.setCreateTime(t.getCreateTime() == null ? "" : sdf_dt
 						.format(t.getCreateTime()));
 				td.setUpdateUser(t.getUpdateUser() == null ? "" : t
-						.getUpdateUser().getName());
+						.getUpdateUser().getUserName());
 				td.setUpdateUserId(t.getUpdateUser() == null ? 0 : t
 						.getUpdateUser().getId());
 				td.setUpdateTime(t.getUpdateTime() == null ? "" : sdf_dt
 						.format(t.getUpdateTime()));
 				td.setRemarks(t.getRemarks());
 				td.setStatus(t.getStatus());
+				td.setStatusStr(t.getStatus() == 0 ? "N":(t.getStatus() == 1? "R" : "O"));
 				td.setItemNum(t.getItems() == null ? 0 : t.getItems().size());
 
 				tds.add(td);
@@ -373,7 +394,6 @@ public class DataUtil {
 	}
 
 	public static List<UserDto> convertUserToDto(List<User> uls) {
-		// TODO Auto-generated method stub
 
 		List<UserDto> uds = new ArrayList<UserDto>();
 
@@ -386,7 +406,7 @@ public class DataUtil {
 				UserDto u = new UserDto();
 
 				u.setId(user.getId());
-				u.setName(user.getName());
+				u.setName(user.getUserName());
 				u.setCardName(user.getCardName());
 				u.setMobilephone(user.getMobilephone());
 				u.setEmail(user.getEmail());
@@ -411,8 +431,8 @@ public class DataUtil {
 		if (user != null) {
 
 			ud.setId(user.getId());
-			ud.setName(user.getName());
-			ud.setCardName(user.getName());
+			ud.setName(user.getUserName());
+			ud.setCardName(user.getUserName());
 			ud.setPassword(user.getPassword());
 			ud.setDuty(user.getDuty());
 			ud.setEmail(user.getEmail());
@@ -439,13 +459,18 @@ public class DataUtil {
 				id.setId(i.getId());
 				id.setName(i.getName());
 				id.setCode(i.getCode());
-				id.setCustomer(i.getCustomer() == null ? "" : i.getCustomer()
-						.getName());
-				id.setCustomerId(i.getCustomer() == null ? 0 : i.getCustomer()
-						.getId());
+				id.setCustomer(i.getCustomer() == null ? (i.getTask()
+						.getCustomer() == null ? "" : i.getTask().getCustomer()
+						.getName()) : i.getCustomer().getName());
+				id.setCustomerId(i.getCustomer() == null ? (i.getTask()
+						.getCustomer() == null ? 0 : i.getTask().getCustomer()
+						.getId()) : i.getCustomer().getId());
 				id.setRemarks(i.getRemarks());
 				id.setStatus(i.getStatus());
-				id.setTask(i.getTask() == null ? "" : i.getTask().getName());
+				id.setStatusStr(i.getStatus() == 0 ? "N":(i.getStatus() == 1? "R" : "O"));
+				id.setFlag(i.getFlag());
+				id.setFlagStr(i.getFlag()==-1 ? "" :(i.getFlag()==0 ? "未报" : "已报"));
+				id.setTask(i.getTask() == null ? "" : i.getTask().getCode());
 				id.setTaskId(i.getTask() == null ? 0 : i.getTask().getId());
 				id.setTasktype(i.getTask() == null ? "" : (i.getTask()
 						.getTaskType() == null ? "" : i.getTask().getTaskType()
@@ -453,15 +478,23 @@ public class DataUtil {
 				id.setTasktypeId(i.getTask() == null ? 0 : (i.getTask()
 						.getTaskType() == null ? 0 : i.getTask().getTaskType()
 						.getId()));
-				id.setUser(i.getUser() == null ? "" : i.getUser().getName());
+				id.setItemTypeId(i.getItemType() == null ? 0 : i.getItemType()
+						.getId());
+				id.setItemType(i.getItemType() == null ? "" : i.getItemType()
+						.getName());
+				id.setUser(i.getUser() == null ? "" : i.getUser().getUserName());
 				id.setUserId(i.getUser() == null ? 0 : i.getUser().getId());
 				id.setCreateTime(i.getCreateTime() == null ? "" : sdf_dt
 						.format(i.getCreateTime()));
 				id.setUpdateTime(i.getUpdateTime() == null ? "" : sdf_dt
 						.format(i.getUpdateTime()));
-				id.setContact(i.getContact() == null ? "" : i.getContact().getName());
-				id.setContactId(i.getCode() == null ? 0 : i.getContact().getId());
-				
+				id.setContact(i.getContact() == null ? "" : i.getContact()
+						.getName());
+				id.setContactId(i.getContact() == null ? 0 : i.getContact()
+						.getId());
+
+				/* 附件信息 */
+
 				ids.add(id);
 			}
 		}
@@ -470,7 +503,7 @@ public class DataUtil {
 	}
 
 	public static List<DataListDto> convertGroupsToDld(List<Groups> gls) {
-		
+
 		List<DataListDto> dlds = new ArrayList<DataListDto>();
 		if (gls != null) {
 
@@ -486,8 +519,500 @@ public class DataUtil {
 				dlds.add(dld);
 			}
 		}
-		
+
 		return dlds;
 	}
 
+	public static String converNumToStr(int num) {
+
+		String result = "";
+		String is = String.valueOf(num);
+		int n = 3 - is.length();
+		for (int i = 1; i <= n; i++) {
+
+			result += "0";
+		}
+
+		result += is;
+		return result;
+	}
+
+	public static String productCatalogToJson(ProductCatalog pc) {
+
+		Gson gson = new Gson();
+		EyTreeDto btd = convertProductCatalogToDto(pc);
+		String str = null;
+		if (btd != null) {
+			str = gson.toJson(btd);
+		}
+		return str;
+	}
+
+	private static EyTreeDto convertProductCatalogToDto(ProductCatalog pc) {
+
+		EyTreeDto btd = null;
+		int isDelete = pc.getIsDelete();
+		if (pc != null && isDelete != 0) {
+			btd = new EyTreeDto();
+			btd.setId(pc.getId());
+			btd.setText(pc.getName());
+			Map<String, String> attributes = new HashMap<String, String>();
+			attributes.put("code", pc.getCode());
+			btd.setAttributes(attributes);
+			btd.setState(pc.getState());
+
+			List<ProductCatalog> children = pc.getChildPcs();
+			if (children != null && children.size() != 0) {
+				btd.setIsF(1);
+				List<EyTreeDto> btdchild = new ArrayList<EyTreeDto>();
+				EyTreeDto btdc = null;
+				for (ProductCatalog p : children) {
+
+					btdc = convertProductCatalogToDto(p);
+					if (btdc != null) {
+						btdchild.add(btdc);
+					}
+				}
+
+				btd.setChildren(btdchild);
+			} else {
+
+				btd.setIsF(0);
+			}
+		}
+
+		return btd;
+	}
+
+	public static List<ProductCatalog> getAllPcChildren(ProductCatalog pc) {
+
+		List<ProductCatalog> pcs = new ArrayList<ProductCatalog>();
+
+		List<ProductCatalog> pccs = pc.getChildPcs();
+		if (pccs != null && pccs.size() != 0) {
+
+			Iterator<ProductCatalog> it = pccs.iterator();
+			while (it.hasNext()) {
+
+				ProductCatalog next = it.next();
+				List<ProductCatalog> nextLocs = getAllPcChildren(next);
+				pcs.addAll(nextLocs);
+			}
+		} else {
+
+			pcs.add(pc);
+		}
+
+		return pcs;
+	}
+
+	public static List<ProductDto> convertProductToDto(List<Product> ps) {
+
+		List<ProductDto> pds = new ArrayList<ProductDto>();
+
+		if (ps != null) {
+
+			Iterator<Product> it = ps.iterator();
+			while (it.hasNext()) {
+
+				Product p = it.next();
+				ProductDto pd = new ProductDto();
+
+				pd.setId(p.getId());
+				pd.setName(p.getName());
+				pd.setCode(p.getCode());
+				pd.setShortCode(p.getShortCode());
+				pd.setProductCatalogId(p.getProductCatalog() == null ? 0 : p
+						.getProductCatalog().getId());
+				pd.setProductCatalog(p.getProductCatalog() == null ? "" : p
+						.getProductCatalog().getName());
+				pd.setRemarks(p.getRemarks());
+				pd.setStandardPrice(Double.toString(p.getStandardPrice()));
+				pd.setUserId(p.getUser() == null ? 0 : p.getUser().getId());
+				pd.setUser(p.getUser() == null ? "" : p.getUser().getUserName());
+				pd.setMixNum(p.getProductMix() == null ? 0 : p.getProductMix()
+						.size());
+				pd.setCreateTime(p.getCreateTime() == null ? "" : sdf_dt
+						.format(p.getCreateTime()));
+				pd.setUpdateTime(p.getUpdateTime() == null ? "" : sdf_dt
+						.format(p.getUpdateTime()));
+				pd.setEname(p.getEname());
+				pd.setUnit(p.getUnit()==null?"":p.getUnit().getName());
+				pd.setUnitId(p.getUnit()==null?0:p.getUnit().getId());
+				pd.setFullProductCatalog(p.getProductCatalog() == null ? "" : p
+						.getProductCatalog().getName());
+				pds.add(pd);
+			}
+		}
+		return pds;
+	}
+
+	public static String productCatalogToJson(List<ProductCatalog> pcs) {
+
+		Gson gson = new Gson();
+		List<EyTreeDto> etds = convertProductCatalogToDto(pcs);
+		String str = null;
+		if (etds != null) {
+			str = gson.toJson(etds);
+		}
+		return str;
+
+	}
+
+	private static List<EyTreeDto> convertProductCatalogToDto(
+			List<ProductCatalog> pcs) {
+
+		List<EyTreeDto> etds = new ArrayList<EyTreeDto>();
+
+		if (pcs != null) {
+
+			Iterator<ProductCatalog> it = pcs.iterator();
+			while (it.hasNext()) {
+
+				ProductCatalog pc = it.next();
+				EyTreeDto etd = new EyTreeDto();
+				etd.setId(pc.getId());
+				etd.setText(pc.getName());
+				etd.setState(pc.getState());
+				etd.setIsF(pc.getIsF());
+				etds.add(etd);
+			}
+		}
+		return etds;
+	}
+
+	public static String productToComboboxResult(List<Product> ps) {
+
+		Gson gson = new Gson();
+		List<ComboResultDto> etds = convertProducToDto(ps);
+		String str = null;
+		if (etds != null) {
+			str = gson.toJson(etds);
+		}
+		return str;
+	}
+
+	private static List<ComboResultDto> convertProducToDto(List<Product> ps) {
+
+		List<ComboResultDto> crds = new ArrayList<ComboResultDto>();
+		int i = 0;
+		if (ps != null) {
+
+			Iterator<Product> it = ps.iterator();
+			while (it.hasNext()) {
+
+				Product p = it.next();
+				ComboResultDto crd = new ComboResultDto();
+				crd.setId(p.getId());
+				crd.setText(p.getName());
+				if (i == 0) {
+
+					crd.setSelected(true);
+					i++;
+				} else {
+
+					crd.setSelected(false);
+				}
+
+				crds.add(crd);
+			}
+		}
+
+		return crds;
+	}
+
+	public static ProductDto convertProductToDto(Product p) {
+
+		ProductDto pd = new ProductDto();
+
+		if (p != null) {
+
+			pd.setId(p.getId());
+			pd.setName(p.getName());
+			pd.setShortCode(p.getShortCode());
+			pd.setCode(p.getCode());
+			pd.setStandardPrice(Double.toString(p.getStandardPrice()));
+			pd.setRemarks(p.getRemarks());
+		}
+
+		return pd;
+	}
+
+	public static List<Product> changeConfigurationToProducts(
+			List<ProductConfiguration> pcfgs) {
+
+		List<Product> ps = new ArrayList<Product>();
+		if (pcfgs != null) {
+
+			Iterator<ProductConfiguration> it = pcfgs.iterator();
+			while (it.hasNext()) {
+
+				ProductConfiguration pcf = it.next();
+				Product p = pcf.getSproduct();
+
+				ps.add(p);
+			}
+		}
+
+		return ps;
+	}
+
+	public static List<ProductConfigurationDto> convertJsonToProductConfigurationDto(
+			String json) {
+
+		Gson gs = new Gson();
+		List<ProductConfigurationDto> pds = gs.fromJson(json,
+				new TypeToken<List<ProductConfigurationDto>>() {
+				}.getType());
+
+		return pds;
+	}
+
+	public static List<ProductConfigurationDto> convertProductConfigurationsToDto(
+			List<ProductConfiguration> pcfs) {
+
+		List<ProductConfigurationDto> pcfds = new ArrayList<ProductConfigurationDto>();
+		if (pcfs != null) {
+
+			Iterator<ProductConfiguration> it = pcfs.iterator();
+			while (it.hasNext()) {
+
+				ProductConfiguration pcf = it.next();
+
+				ProductConfigurationDto pcfd = new ProductConfigurationDto();
+				pcfd.setId(pcf.getId());
+				pcfd.setFpid(pcf.getFproduct().getId());
+				pcfd.setFproduct(pcf.getFproduct().getName());
+				pcfd.setSpid(pcf.getSproduct().getId());
+				pcfd.setSproduct(pcf.getSproduct().getName());
+				pcfd.setCode(pcf.getSproduct().getCode());
+				pcfd.setProductCatalogId(pcf.getSproduct().getProductCatalog()
+						.getId());
+				pcfd.setProductCatalog(pcf.getSproduct().getProductCatalog()
+						.getName());
+				pcfd.setQuantity(pcf.getQuantity());
+				pcfd.setStandardPrice(pcf.getSproduct().getStandardPrice());
+				pcfd.setDefinedPrice(pcf.getSproduct().getStandardPrice());
+				pcfd.setRemarks(pcf.getRemarks());
+				pcfd.setCreateTime(pcf.getCreateTime() == null ? "" : sdf_dt
+						.format(pcf.getCreateTime()));
+				pcfd.setUpdateTime(pcf.getUpdateTime() == null ? "" : sdf_dt
+						.format(pcf.getUpdateTime()));
+				pcfd.setUnit(pcf.getSproduct().getUnit().getName());
+
+				pcfds.add(pcfd);
+			}
+		}
+
+		return pcfds;
+	}
+
+	private static List<ComboSearchDto> convertCustomerToCsDto(
+			List<Customer> cls) {
+
+		List<ComboSearchDto> csds = new ArrayList<ComboSearchDto>();
+
+		if (cls != null) {
+
+			Iterator<Customer> it = cls.iterator();
+			while (it.hasNext()) {
+
+				Customer c = it.next();
+				ComboSearchDto csd = new ComboSearchDto();
+				csd.setQ(c.getName());
+				csd.setId(c.getId());
+
+				csds.add(csd);
+			}
+		}
+
+		return csds;
+	}
+
+	public static String customerToComboSearchDto(List<Customer> cls) {
+
+		Gson gson = new Gson();
+		List<ComboSearchDto> etds = convertCustomerToCsDto(cls);
+		String str = null;
+		if (etds != null) {
+			str = gson.toJson(etds);
+		}
+
+		return str;
+	}
+
+	public static String productToComboSearchDto(List<Product> pls) {
+
+		Gson gson = new Gson();
+		List<ComboSearchDto> etds = convertProductToCsDto(pls);
+		String str = null;
+		if (etds != null) {
+			str = gson.toJson(etds);
+		}
+		return str;
+	}
+
+	private static List<ComboSearchDto> convertProductToCsDto(List<Product> pls) {
+
+		List<ComboSearchDto> csds = new ArrayList<ComboSearchDto>();
+		if (pls != null) {
+
+			Iterator<Product> it = pls.iterator();
+			while (it.hasNext()) {
+
+				Product p = it.next();
+				ComboSearchDto csd = new ComboSearchDto();
+				csd.setQ(p.getName());
+				csd.setId(p.getId());
+
+				csds.add(csd);
+			}
+		}
+		return csds;
+	}
+
+	public static List<ProductConfigurationDto> convertPqrsToPcds(
+			List<ProductAndQuoteRelation> pqrs) {
+
+		List<ProductConfigurationDto> pcfds = new ArrayList<ProductConfigurationDto>();
+		if (pqrs != null) {
+
+			Iterator<ProductAndQuoteRelation> it = pqrs.iterator();
+			while (it.hasNext()) {
+
+				ProductAndQuoteRelation pqr = it.next();
+				Product p = pqr.getProduct();
+				ProductConfigurationDto pcfd = new ProductConfigurationDto();
+
+				pcfd.setId(pqr.getId());
+				pcfd.setSpid(p.getId());
+				pcfd.setSproduct(p.getName());
+				pcfd.setCode(p.getCode());
+				pcfd.setProductCatalogId(p.getProductCatalog().getId());
+				pcfd.setProductCatalog(p.getProductCatalog().getName());
+				pcfd.setQuantity(pqr.getQuantity());
+				pcfd.setStandardPrice(p.getStandardPrice());
+				pcfd.setDefinedPrice(pqr.getDefindPrice());
+				pcfd.setRemarks(pqr.getRemarks());
+				pcfd.setCreateTime(pqr.getCreateTime() == null ? "" : sdf_dt
+						.format(pqr.getCreateTime()));
+				pcfd.setUpdateTime(pqr.getUpdateTime() == null ? "" : sdf_dt
+						.format(pqr.getUpdateTime()));
+
+				pcfd.setUnit(pqr.getProduct().getUnit().getName());
+				pcfds.add(pcfd);
+			}
+		}
+		return pcfds;
+	}
+
+	public static List<ProductQuoteDto> convertProductQuoteToDto(
+			List<ProductQuote> pqs) {
+		
+		List<ProductQuoteDto> pqds = new ArrayList<ProductQuoteDto>();
+		
+		if(pqs!=null){
+			
+			Iterator<ProductQuote> it = pqs.iterator();
+			while(it.hasNext()){
+				
+				ProductQuote pq = it.next();
+				
+				ProductQuoteDto pqd = new ProductQuoteDto();
+				pqd.setId(pq.getId());
+				pqd.setItemId(pq.getItem().getId());
+				pqd.setItemCode(pq.getItem().getCode());
+				pqd.setPqId(pq.getId());
+				pqd.setPqCode(pq.getCode());
+				pqd.setPrice(pq.getPrice());
+				pqd.setRemarks(pq.getRemarks());
+				
+				pqds.add(pqd);
+			}
+		}
+		return pqds;
+	}
+
+	public static TaskTypeDto convertTaskTypeToDto(TaskType tt) {
+		
+		TaskTypeDto ttd = new TaskTypeDto();
+		ttd.setId(tt.getId());
+		ttd.setName(tt.getName());
+		ttd.setCode(tt.getCode());
+		ttd.setRemarks(tt.getRemarks());
+		ttd.setCreateTime(tt.getCreateTime() == null ? "" : sdf_dt
+				.format(tt.getCreateTime()));
+		ttd.setUpdateTime(tt.getUpdateTime() == null ? "" : sdf_dt
+				.format(tt.getUpdateTime()));
+		ttd.setUser(tt.getUser() == null ? "" : tt.getUser().getUserName());
+		ttd.setUserId(tt.getUser() == null ? 0 : tt.getUser().getId());
+		
+		return ttd;
+	}
+
+	public static List<ProductPropertyDto> convertPropertiesToDto(
+			List<ProductProperty> productProperties) {
+		
+		List<ProductPropertyDto> ppds = new ArrayList<ProductPropertyDto>();
+		if(productProperties!=null){
+			
+			Iterator<ProductProperty> it = productProperties.iterator();
+			while(it.hasNext()){
+				
+				ProductProperty pp = it.next();
+				ProductPropertyDto ppd = new ProductPropertyDto();
+				ppd.setId(pp.getId());
+				ppd.setName(pp.getName());
+				ppd.setValue(pp.getValue());
+				ppd.setEname(pp.getEname());
+				ppd.setEvalue(pp.getEvalue());
+				ppd.setRemarks(pp.getRemarks());
+				
+				ppds.add(ppd);
+			}
+		}
+		
+		return ppds;
+	}
+
+	public static List<ProductCatalogDto> convertProductCatalogToProductCatalogDto(
+			List<ProductCatalog> pcs) {
+		
+		List<ProductCatalogDto> pcds = new ArrayList<ProductCatalogDto>();
+		if(pcs!=null){
+			
+			Iterator<ProductCatalog> it = pcs.iterator();
+			while(it.hasNext()){
+				
+				ProductCatalog pc = it.next();
+				
+				ProductCatalogDto pcd = new ProductCatalogDto();
+				pcd.setId(pc.getId());
+				pcd.setName(pc.getName());
+				pcd.setEname(pc.getEname());
+				pcd.setCode(pc.getCode());
+				pcd.setParentId(pc.getParentCatalog()==null?0:pc.getParentCatalog().getId());
+				pcd.setParentName(pc.getParentCatalog()==null?"":pc.getParentCatalog().getName());
+				pcd.setCreateTime(pc.getCreateTime() == null ? "" : sdf_dt
+						.format(pc.getCreateTime()));
+				pcd.setUpdateTime(pc.getUpdateTime() == null ? "" : sdf_dt
+						.format(pc.getUpdateTime()));
+				pcd.setRemarks(pc.getRemarks());
+				
+				pcds.add(pcd);
+			}
+		}
+		
+		return pcds;
+	}
+
+	public static String convertFileUploadDtoToStr(FileUploadDto fud) {
+		Gson gson = new Gson();
+
+		String str = null;
+		if (fud != null) {
+			str = gson.toJson(fud);
+		}
+		return str;
+	}
 }

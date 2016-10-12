@@ -202,8 +202,63 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Override
 	public String generateCode(LocationDto ld) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		int id = ld.getId();
+		String result = "";
+		
+		if(id!=0){
+			
+			Location l = locService.findById(id);
+			
+			if(l!=null){
+				
+				int num = countById(l) + 1;
+				Location pl = l.getParentLoc();
+				result += pl.getCode() + l.getCode() + "-" + num;
+				
+			}
+		}
+		
+		return result;
+	}
+
+	@Override
+	public int countById(Location l) {
+		
+		Search search = new Search();
+		search.addFilterEqual("location", l);
+		return customerDao.count(search);
+	}
+
+	@Override
+	public String searchByName(String q) {
+		
+		Search search = new Search();
+		search.addFilterEqual("isDelete", 1);
+		search.addFilterLike("name", "%" + q + "%");
+		SearchResult<Customer> result = searchAndCount(search);
+		List<Customer> cls = result.getResult();
+		if(cls.size()==0){
+			
+			Customer newC = new Customer();
+			newC.setId(-1);
+			newC.setName("查不到客户，请添加(点击)!");
+			cls.add(newC);
+		}
+		String str = DataUtil.customerToComboSearchDto(cls);
+		
+		return str;
+	}
+
+	@Override
+	public List<Customer> findLikeName(String customerName) {
+		
+		Search search = new Search();
+		search.addFilterEqual("isDelete", 1);
+		search.addFilterLike("name", "%" + customerName + "%");
+		SearchResult<Customer> result = searchAndCount(search);
+		List<Customer> cls = result.getResult();
+		return cls;
 	}
 	
 }

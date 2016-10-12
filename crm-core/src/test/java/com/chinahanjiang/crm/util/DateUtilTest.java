@@ -9,4 +9,10 @@ public class DateUtilTest {
 		
 		System.out.println(DateUtil.getCurrentDayStartTime());
 	}
+	
+	@Test
+	public void testGetCurrentDayString(){
+		
+		System.out.println(DateUtil.getCurrentDayString());
+	}
 }

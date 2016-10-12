@@ -85,7 +85,7 @@ public class UserServiceImpl implements UserService {
 		
 		if(u!=null){
 			
-			u.setName(ud.getName());
+			u.setUserName(ud.getName());
 			u.setCardName(ud.getCardName());
 			u.setMobilephone(ud.getMobilephone());
 			u.setEmail(ud.getEmail());
@@ -208,6 +208,11 @@ public class UserServiceImpl implements UserService {
 			
 		}
 		return user;
+	}
+
+	@Override
+	public User findByUsersLogin(String username) {
+		return null;
 	}
 
 	

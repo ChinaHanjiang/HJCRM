@@ -1,0 +1,12 @@
+<w:p w:rsidR="00104347" w:rsidRDefault="00104347" w:rsidP="008434EF">
+						<w:pPr>
+							<w:pStyle w:val="1" />
+							<w:spacing w:after="0" w:line="240" w:lineRule="auto" />
+							<w:ind w:left="0" />
+							<w:rPr>
+								<w:rFonts w:asciiTheme="majorHAnsi" w:hAnsiTheme="majorHAnsi" />
+								<w:sz w:val="32" />
+								<w:lang w:val="en-US" />
+							</w:rPr>
+						</w:pPr>
+					</w:p>

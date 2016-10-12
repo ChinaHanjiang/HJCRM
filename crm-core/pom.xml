@@ -150,6 +150,14 @@
 			<groupId>opensymphony</groupId>
 			<artifactId>quartz-all</artifactId>
 		</dependency>
+		<dependency>
+		    <groupId>org.freemarker</groupId>
+		    <artifactId>freemarker</artifactId>
+		</dependency>
+		<dependency>
+		    <groupId>net.sf.jacob-project</groupId>
+		    <artifactId>jacob</artifactId>
+		</dependency>
 	</dependencies>
 	<build>
 		<resources>
