@@ -9,4 +9,6 @@ public interface UserRolesService {
 
 	List<UserRoles> findRolesByUser(User user);
 
+	List<UserRoles> findRolesByUserName(String username);
+
 }

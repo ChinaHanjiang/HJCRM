@@ -27,8 +27,7 @@ public class MyAccessDecisionManager implements AccessDecisionManager {
 			
 			ConfigAttribute ca = ite.next();
 			String needRole = ((SecurityConfig)ca).getAttribute();
-			
-			//ga 为用户所赋予的权限。needRole为访问相应的资源应该具有的权限
+			//ga为用户所赋予的权限。needRole为访问相应的资源应该具有的权限
 			for(GrantedAuthority ga : authentication.getAuthorities()){
 				
 				if(needRole.trim().equals(ga.getAuthority().trim())){

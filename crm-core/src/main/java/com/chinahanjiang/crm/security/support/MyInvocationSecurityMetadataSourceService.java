@@ -7,11 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.web.FilterInvocation;
@@ -19,17 +15,19 @@ import org.springframework.security.web.access.intercept.FilterInvocationSecurit
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
-import com.chinahanjiang.crm.service.AuthotitiesResourcesService;
+import com.chinahanjiang.crm.service.AuthoritiesResourcesService;
+import com.chinahanjiang.crm.service.AuthoritiesService;
 
 public class MyInvocationSecurityMetadataSourceService implements
 	FilterInvocationSecurityMetadataSource {
 
 	@Autowired
-	private AuthotitiesResourcesService authotitiesResourcesService;
+	private AuthoritiesResourcesService authotitiesResourcesService;
+	
+	@Autowired
+	private AuthoritiesService authoritiesService;
 	
 	private static Map<String, Collection<ConfigAttribute>> resourceMap = null;
-
-	private Session session;
 
 	public MyInvocationSecurityMetadataSourceService() {
 		loadResourceDefine();
@@ -37,38 +35,18 @@ public class MyInvocationSecurityMetadataSourceService implements
 
 	private void loadResourceDefine() {
 		
-		ApplicationContext context = new ClassPathXmlApplicationContext(
-				"classpath:applicationContext.xml");
-		
-		SessionFactory sessionFactory = (SessionFactory)context.getBean("sessionFactory");
-		
-		session = sessionFactory.openSession();
-		
-		String username = "";
-		String sql = "";
-		
-		//在web服务器启动时，提取系统中的所有权限
-		sql = "select authority_name from pub_authorities";
-		
-		@SuppressWarnings("unchecked")
-		List<String> query = session.createSQLQuery(sql).list();
+		List<String> auths = authoritiesService.findAllAuthoritiesName();
 		/**
 		 * 应当是资源为key，权限为value。资源通常为url，权限就是那些以ROLE_为前缀的角色。一个资源可以由多个权限访问
 		 */
 		resourceMap = new HashMap<String,Collection<ConfigAttribute>>();
-		for(String auth : query){
+		for(String auth : auths){
 			
 		ConfigAttribute ca = new SecurityConfig(auth);
 		
-		String sql1 = "select b.resource_string ";
-			sql1 += "from Pub_Authorities_Resources a, Pub_Resource b, ";
-			sql1 += "Pub_authorities c where a.resource_id = b.resource_id ";
-			sql1 += "and a.authority_id = c.authority_id and c.Authority_name=";
-			sql1 += username + "'";
-			
-		@SuppressWarnings("unchecked")
-		List<String> query1 = session.createSQLQuery(sql1).list();
-			for(String res : query1){
+		List<String> resources = authotitiesResourcesService.findResourcesByAuthName(auth);
+		
+			for(String res : resources){
 				String url = res;
 				
 				/**
@@ -89,7 +67,6 @@ public class MyInvocationSecurityMetadataSourceService implements
 				}
 			}
 		}
-		
 	}
 	
 	@Override

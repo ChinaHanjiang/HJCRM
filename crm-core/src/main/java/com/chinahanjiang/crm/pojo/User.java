@@ -20,6 +20,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -306,6 +307,7 @@ public class User implements MyUserDetails, java.io.Serializable {
 				.isEnabled()));
 	}
 
+	@Transient
 	public Collection<GrantedAuthority> getAuthorities() {
 		return authorities;
 	}
@@ -314,10 +316,12 @@ public class User implements MyUserDetails, java.io.Serializable {
 		this.authorities = (Set<GrantedAuthority>) authorities;
 	}
 
+	@Transient
 	public String getPassword() {
 		return password;
 	}
 
+	@Transient
 	public String getUsername() {
 		return username;
 	}
@@ -360,14 +364,17 @@ public class User implements MyUserDetails, java.io.Serializable {
 		return code;
 	}
 
+	@Transient
 	public boolean isAccountNonExpired() {
 		return accountNonExpired;
 	}
 
+	@Transient
 	public boolean isAccountNonLocked() {
 		return this.accountNonLocked;
 	}
 
+	@Transient
 	public boolean isCredentialsNonExpired() {
 		return credentialsNonExpired;
 	}

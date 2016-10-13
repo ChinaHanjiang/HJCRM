@@ -38,7 +38,6 @@ public class MyUserDetailService implements UserDetailsService {
 	public UserDetails loadUserByUsername(String username)
 			throws UsernameNotFoundException {
 		
-		
 		User user = null;
 		try {
 			

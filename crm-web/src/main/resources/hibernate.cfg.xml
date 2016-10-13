@@ -33,7 +33,7 @@
 		<!--是否将运行期生成的SQL输出到日志以供调试-->
 		<property name="show_sql">false</property>
 
-		<property name="current_session_context_class">org.springframework.orm.hibernate3.SpringSessionContext</property>
+		<property name="current_session_context_class">org.springframework.orm.hibernate4.SpringSessionContext</property>
 		 
 		<!-- 数据库的映射 -->
 		<mapping class="com.chinahanjiang.crm.pojo.Customer" />
